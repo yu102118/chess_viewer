@@ -6,6 +6,7 @@ on:
       - master
       - develop
     paths:
+      - 'src/**'
       - '**.js'
       - '**.jsx'
       - '**.json'
@@ -20,6 +21,7 @@ on:
       - master
       - develop
     paths:
+      - 'src/**'
       - '**.js'
       - '**.jsx'
       - '**.json'
@@ -31,7 +33,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: lint-${{ github.workflow }}-${{ github.ref }}
+  group: quality-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -59,8 +61,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-node-quality-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
+            ${{ runner.os }}-node-quality-${{ env.NODE_VERSION }}-
             ${{ runner.os }}-node-${{ env.NODE_VERSION }}-
 
       - name: Install dependencies
@@ -86,12 +89,15 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-node-quality-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-quality-${{ env.NODE_VERSION }}-
+            ${{ runner.os }}-node-${{ env.NODE_VERSION }}-
 
       - name: Run ESLint
         run: |
           echo "Running ESLint..."
-          npm run lint
+          npm run lint || exit 1
 
       - name: Annotate code linting results
         if: failure()
@@ -117,12 +123,15 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-node-quality-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-quality-${{ env.NODE_VERSION }}-
+            ${{ runner.os }}-node-${{ env.NODE_VERSION }}-
 
       - name: Check code formatting
         run: |
           echo "Checking code formatting..."
-          npm run format:check
+          npm run format:check || exit 1
 
       - name: Annotate formatting issues
         if: failure()
@@ -146,7 +155,7 @@ jobs:
           echo ""
 
           if [ "${{ needs.eslint.result }}" != "success" ] || [ "${{ needs.prettier.result }}" != "success" ]; then
-            echo "Code quality checks failed"
+            echo "::error::Code quality checks failed"
             exit 1
           fi
 

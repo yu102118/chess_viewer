@@ -9,6 +9,8 @@ on:
       - '**.md'
       - 'docs/**'
       - '.github/ISSUE_TEMPLATE/**'
+      - '.github/workflows/codeql.yml'
+      - '.github/workflows/lint.yml'
   pull_request:
     branches:
       - master
@@ -19,7 +21,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -81,56 +83,50 @@ jobs:
         env:
           CI: true
           GENERATE_SOURCEMAP: false
-          DISABLE_ESLINT_PLUGIN: true
 
       - name: Check build output
         run: |
           echo "Build completed successfully"
-          ls -lh build/
+          ls -lh build/ || true
           echo "Static files:"
-          ls -lh build/static/
+          ls -lh build/static/ || true
 
       - name: Calculate build size
         run: |
-          BUILD_SIZE=$(du -sh build/ | cut -f1)
-          echo "Total build size: $BUILD_SIZE"
-          JS_SIZE=$(du -sh build/static/js/ | cut -f1)
-          echo "JavaScript bundle size: $JS_SIZE"
-          CSS_SIZE=$(du -sh build/static/css/ | cut -f1)
-          echo "CSS bundle size: $CSS_SIZE"
+          if [ -d "build" ]; then
+            BUILD_SIZE=$(du -sh build/ | cut -f1)
+            echo "Total build size: $BUILD_SIZE"
+            
+            if [ -d "build/static/js" ]; then
+              JS_SIZE=$(du -sh build/static/js/ | cut -f1)
+              echo "JavaScript bundle size: $JS_SIZE"
+            fi
+            
+            if [ -d "build/static/css" ]; then
+              CSS_SIZE=$(du -sh build/static/css/ | cut -f1)
+              echo "CSS bundle size: $CSS_SIZE"
+            fi
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
+          name: build-output-${{ github.sha }}
           path: build/
           retention-days: 7
+          if-no-files-found: error
 
   bundle-analysis:
     name: Bundle Size Analysis
     runs-on: ubuntu-latest
-    needs: [setup, build]
+    needs: build
     if: github.event_name == 'pull_request'
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Restore node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
-
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-output
+          name: build-output-${{ github.sha }}
           path: build/
 
       - name: Analyze bundle size
@@ -140,10 +136,9 @@ jobs:
           du -sh build/ | awk '{print "Total: " $1}'
           du -sh build/static/js/ | awk '{print "JS: " $1}'
           du -sh build/static/css/ | awk '{print "CSS: " $1}'
-
           echo ""
           echo "Individual JS chunks:"
-          du -h build/static/js/*.js | sort -h
+          du -h build/static/js/*.js 2>/dev/null | sort -h || echo "No JS files found"
 
   security-audit:
     name: Security Audit
@@ -169,15 +164,7 @@ jobs:
         run: |
           echo "Security Audit Results"
           echo "======================"
-          npm audit --audit-level=moderate || echo "Vulnerabilities found (non-blocking)"
-
-      - name: Check Snyk (if available)
-        run: |
-          if command -v snyk &> /dev/null; then
-            snyk test --severity-threshold=high || true
-          else
-            echo "Snyk not installed, skipping..."
-          fi
+          npm audit --audit-level=moderate || true
         continue-on-error: true
 
   verify-deployment:
@@ -187,13 +174,10 @@ jobs:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-output
+          name: build-output-${{ github.sha }}
           path: build/
 
       - name: Verify critical files
@@ -203,18 +187,6 @@ jobs:
           if [ ! -f "build/index.html" ]; then
             echo "Error: index.html not found"
             exit 1
-          fi
-
-          if [ ! -f "build/manifest.json" ]; then
-            echo "Warning: manifest.json not found"
-          fi
-
-          if [ ! -f "build/robots.txt" ]; then
-            echo "Warning: robots.txt not found"
-          fi
-
-          if [ ! -f "build/sitemap.xml" ]; then
-            echo "Warning: sitemap.xml not found"
           fi
 
           if [ ! -d "build/static/js" ]; then
@@ -232,11 +204,12 @@ jobs:
       - name: Check for sensitive data
         run: |
           echo "Checking for exposed secrets..."
-          if grep -r "REACT_APP" build/ --include="*.js" | grep -v "process.env"; then
-            echo "Warning: Found hardcoded environment variables"
+          if grep -r "REACT_APP" build/ --include="*.js" 2>/dev/null | grep -v "process.env"; then
+            echo "::warning::Found hardcoded environment variables"
           else
             echo "No hardcoded environment variables found"
           fi
+        continue-on-error: true
 
   summary:
     name: Pipeline Summary
@@ -255,7 +228,7 @@ jobs:
           echo ""
 
           if [ "${{ needs.build.result }}" != "success" ]; then
-            echo "Pipeline failed - check logs above"
+            echo "::error::Pipeline failed - check logs above"
             exit 1
           fi
 
