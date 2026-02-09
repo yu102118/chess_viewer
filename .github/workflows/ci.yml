@@ -26,7 +26,6 @@ concurrency:
 
 env:
   NODE_VERSION: '20.20.0'
-  NODE_ENV: production
 
 jobs:
   setup:
@@ -56,7 +55,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
-        run: npm ci --prefer-offline --no-audit --ignore-scripts
+        run: npm ci --include=dev --prefer-offline --no-audit
 
   build:
     name: Build Application
