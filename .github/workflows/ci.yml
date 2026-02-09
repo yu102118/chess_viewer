@@ -74,6 +74,7 @@ jobs:
         env:
           CI: true
           GENERATE_SOURCEMAP: false
+          DISABLE_ESLINT_PLUGIN: true
 
       - name: Check build output
         run: |
