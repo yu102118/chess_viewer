@@ -63,14 +63,13 @@ jobs:
           queries: security-extended,security-and-quality
           config: |
             paths-ignore:
-              - node_modules
-              - build
-              - dist
-              - coverage
-              - scripts
-              - public
-              - '**.config.js'
-              - '**.config.ts'
+              - '**/node_modules/**'
+              - '**/build/**'
+              - '**/dist/**'
+              - '**/coverage/**'
+              - '**/scripts/**'
+              - '**/public/**'
+              - '**/*.config.js'
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3

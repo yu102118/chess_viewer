@@ -56,7 +56,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
-        run: npm ci --prefer-offline --no-audit
+        run: npm ci --prefer-offline --no-audit --ignore-scripts
 
   build:
     name: Build Application
