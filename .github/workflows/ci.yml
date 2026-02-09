@@ -159,6 +159,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
+
       - name: Run npm audit
         run: |
           echo "Security Audit Results"
@@ -242,7 +248,7 @@ jobs:
       - name: Check job statuses
         run: |
           echo "CI Pipeline Summary"
-          echo "=================="
+          echo "======================"
           echo "Setup: ${{ needs.setup.result }}"
           echo "Build: ${{ needs.build.result }}"
           echo "Security Audit: ${{ needs.security-audit.result }}"
