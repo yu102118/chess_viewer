@@ -79,6 +79,11 @@ export const useInteractiveBoard = (initialFen, onFenChange) => {
     lastExternalFenRef.current = fen;
 
     try {
+      if (fen === '8/8/8/8/8/8/8/8 w - - 0 1') {
+        setBoard(createEmptyBoard());
+        return;
+      }
+
       if (fen && validateFEN(fen)) {
         const newBoard = parseFEN(fen);
         if (newBoard && newBoard.length === 8) {
