@@ -13,15 +13,9 @@ import {
   FamousPositionButton,
   PieceSelector
 } from '@/components/features/fen';
-import {
-  BoardSizeControl,
-  ExportSettings,
-  ExportSettingsModal
-} from '../export';
-import { ThemeSelector } from '@/components/features/theme';
 import DisplayOptions from '@/components/features/DisplayOptions';
 
-import { useFENHistory, useTheme } from '@/hooks';
+import { useFENHistory } from '@/hooks';
 
 import { FAMOUS_POSITIONS } from '@/constants/chessConstants';
 
@@ -38,23 +32,15 @@ const ControlPanel = memo((props) => {
     setShowCoords,
     showCoordinateBorder,
     setShowCoordinateBorder,
-    boardSize,
-    setBoardSize,
-    fileName,
-    setFileName,
     exportQuality,
-    setExportQuality,
     addToFavoritesRef,
     onFavoriteStatusChange,
     onNotification,
-    lightSquare: initialLightSquare,
-    darkSquare: initialDarkSquare,
     saveManualFen: externalSaveManualFen,
     saveExportFen: externalSaveExportFen,
     addCurrentToFavorites: externalAddCurrentToFavorites
   } = props;
 
-  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
   const [fenError] = useState('');
   const copyTimeoutRef = useRef(null);
@@ -67,11 +53,6 @@ const ControlPanel = memo((props) => {
       }
     };
   }, []);
-
-  const theme = useTheme({
-    initialLight: initialLightSquare,
-    initialDark: initialDarkSquare
-  });
 
   const localHistory = useFENHistory(fen, onFavoriteStatusChange);
   const addCurrentToFavorites =
@@ -163,7 +144,7 @@ const ControlPanel = memo((props) => {
             <label className="text-sm font-semibold text-text-primary">
               FEN Notation
             </label>
-            <div className="flex gap-3">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => navigate('/fen-history')}
                 className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-accent text-xs sm:text-sm font-medium transition-colors duration-150 border border-accent/20 bg-accent/5 hover:bg-accent/10"
@@ -171,7 +152,7 @@ const ControlPanel = memo((props) => {
                 <History className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
               <button
-                onClick={() => navigate('./settings')}
+                onClick={() => navigate('/settings')}
                 className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-accent text-xs sm:text-sm font-medium transition-colors duration-150 border border-accent/20 bg-accent/5 hover:bg-accent/10"
               >
                 <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -216,32 +197,7 @@ const ControlPanel = memo((props) => {
           setShowCoordinateBorder={setShowCoordinateBorder}
           exportQuality={exportQuality}
         />
-
-        <div className="h-px bg-border/50" />
-
-        <BoardSizeControl boardSize={boardSize} setBoardSize={setBoardSize} />
-        <ThemeSelector
-          lightSquare={theme.lightSquare}
-          darkSquare={theme.darkSquare}
-          onOpenModal={() => navigate('/theme')}
-        />
-        <ExportSettings
-          fileName={fileName}
-          exportQuality={exportQuality}
-          onOpenModal={() => setIsExportModalOpen(true)}
-        />
       </div>
-
-      {isExportModalOpen && (
-        <ExportSettingsModal
-          isOpen={isExportModalOpen}
-          onClose={() => setIsExportModalOpen(false)}
-          fileName={fileName}
-          setFileName={setFileName}
-          exportQuality={exportQuality}
-          setExportQuality={setExportQuality}
-        />
-      )}
     </>
   );
 });
