@@ -40,6 +40,9 @@ export const useLocalStorage = (key, initialValue) => {
         try {
           window.localStorage.setItem(key, JSON.stringify(value));
           pendingValueRef.current = null;
+
+          // Dispatch storage event to notify other components (same tab)
+          window.dispatchEvent(new Event('storage'));
         } catch (storageError) {
           // Handle quota exceeded error gracefully
           if (storageError.name === 'QuotaExceededError') {
@@ -53,6 +56,8 @@ export const useLocalStorage = (key, initialValue) => {
                 window.localStorage.removeItem(keys[0]);
                 // Retry once after clearing
                 window.localStorage.setItem(key, JSON.stringify(value));
+                // Dispatch event after successful retry
+                window.dispatchEvent(new Event('storage'));
               }
             } catch (retryError) {
               logger.error(
