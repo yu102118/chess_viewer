@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect } from 'react';
+import { memo, useCallback, useEffect } from 'react';
 
 import { usePieceImages, useInteractiveBoard } from '@/hooks';
 import DndProvider from '@/components/interactions/DndProvider';
@@ -153,9 +153,9 @@ const ChessEditor = memo(
                   }}
                   className="
                   flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5
-                  text-sm font-semibold text-white
-                  bg-blue-600 hover:bg-blue-700
-                  border border-blue-500/20
+                  text-sm font-semibold text-bg
+                  bg-accent hover:bg-accent-hover
+                  border border-accent/20
                   rounded-lg transition-all duration-200
                   hover:scale-105 active:scale-95 shadow-sm
                 "
@@ -184,9 +184,9 @@ const ChessEditor = memo(
                   }}
                   className="
                   flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5
-                  text-sm font-semibold text-white
-                  bg-gray-600 hover:bg-gray-700
-                  border border-gray-500/20
+                  text-sm font-semibold text-text-secondary
+                  bg-surface-elevated hover:bg-surface-hover
+                  border border-border
                   rounded-lg transition-all duration-200
                   hover:scale-105 active:scale-95 shadow-sm
                 "
