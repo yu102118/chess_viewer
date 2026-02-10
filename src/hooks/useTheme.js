@@ -31,7 +31,17 @@ export const useTheme = ({
           }
         }
 
-        // Fallback to localStorage
+        // Fallback to localStorage - check individual keys first
+        const lightLocal = window.localStorage.getItem('chess-light-square');
+        const darkLocal = window.localStorage.getItem('chess-dark-square');
+
+        if (lightLocal || darkLocal) {
+          setLightSquare(lightLocal?.replace(/"/g, '') || initialLight);
+          setDarkSquare(darkLocal?.replace(/"/g, '') || initialDark);
+          return;
+        }
+
+        // Then check combined theme object
         const localTheme = window.localStorage.getItem('chess-theme');
         if (localTheme) {
           const saved = JSON.parse(localTheme);
@@ -57,6 +67,25 @@ export const useTheme = ({
 
     loadTheme();
     loadHistory();
+
+    // Listen for storage changes
+    const handleStorageChange = () => {
+      const light = window.localStorage.getItem('chess-light-square');
+      const dark = window.localStorage.getItem('chess-dark-square');
+
+      if (light) {
+        setLightSquare(light.replace(/"/g, ''));
+      }
+      if (dark) {
+        setDarkSquare(dark.replace(/"/g, ''));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, [initialLight, initialDark]);
 
   // Save theme whenever it changes
