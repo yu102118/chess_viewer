@@ -726,14 +726,17 @@ const ThemeCustomizerPage = memo(() => {
 
   const handleApplyChanges = useCallback(() => {
     savePresets(presets);
-    localStorage.setItem('chess-light-square', previewLight);
-    localStorage.setItem('chess-dark-square', previewDark);
+    localStorage.setItem('chess-light-square', JSON.stringify(previewLight));
+    localStorage.setItem('chess-dark-square', JSON.stringify(previewDark));
     setSavedLight(previewLight);
     setSavedDark(previewDark);
     setPresetsBackup(null);
     setEditMode(false);
     setEditingPresetId(null);
     setRightTab('main');
+
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('storage'));
   }, [presets, previewLight, previewDark]);
 
   const handleCancelEditMode = useCallback(() => {
@@ -772,11 +775,15 @@ const ThemeCustomizerPage = memo(() => {
   );
 
   const handleSave = useCallback(() => {
-    localStorage.setItem('chess-light-square', previewLight);
-    localStorage.setItem('chess-dark-square', previewDark);
+    localStorage.setItem('chess-light-square', JSON.stringify(previewLight));
+    localStorage.setItem('chess-dark-square', JSON.stringify(previewDark));
     savePresets(presets);
     setSavedLight(previewLight);
     setSavedDark(previewDark);
+
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('storage'));
+
     navigate(-1);
   }, [previewLight, previewDark, presets, navigate]);
 
