@@ -112,7 +112,8 @@ const BoardPreview = memo(
                     style={{
                       backgroundColor: isLight
                         ? currentTheme.light
-                        : currentTheme.dark
+                        : currentTheme.dark,
+                      outline: '1px solid transparent'
                     }}
                   >
                     {piece && pieceImages[piece] && !imagesLoading && (
