@@ -1,46 +1,6 @@
 import { useState, useCallback, useMemo, useRef } from 'react';
 import { parseFEN, validateFEN, logger } from '@/utils';
-
-const createEmptyBoard = () =>
-  Array.from({ length: 8 }, () => Array(8).fill(''));
-
-/**
- * Convert board array to FEN position string
- * @param {string[][]} board - 8x8 board array
- * @returns {string} - FEN position string
- */
-const boardToFEN = (board) => {
-  if (!board || board.length !== 8) return '8/8/8/8/8/8/8/8';
-
-  const rows = [];
-
-  for (let row = 0; row < 8; row++) {
-    let rowStr = '';
-    let emptyCount = 0;
-
-    for (let col = 0; col < 8; col++) {
-      const piece = board[row]?.[col];
-
-      if (piece) {
-        if (emptyCount > 0) {
-          rowStr += emptyCount;
-          emptyCount = 0;
-        }
-        rowStr += piece;
-      } else {
-        emptyCount++;
-      }
-    }
-
-    if (emptyCount > 0) {
-      rowStr += emptyCount;
-    }
-
-    rows.push(rowStr || '8');
-  }
-
-  return rows.join('/');
-};
+import { createEmptyBoard, boardToFEN, isBoardEmpty } from '@/utils/boardUtils';
 
 /**
  * Hook for managing interactive chess board with drag & drop
@@ -163,18 +123,24 @@ export const useInteractiveBoard = (initialFen, onFenChange) => {
    * Clear all pieces from the board
    */
   const clearBoard = useCallback(() => {
-    const emptyBoard = createEmptyBoard();
-    const emptyFen = '8/8/8/8/8/8/8/8 w - - 0 1';
+    setBoard((prevBoard) => {
+      // Check if board is already empty
+      if (isBoardEmpty(prevBoard)) {
+        return prevBoard;
+      }
 
-    lastGeneratedFenRef.current = emptyFen;
-    lastExternalFenRef.current = emptyFen;
+      const emptyBoard = createEmptyBoard();
+      const emptyFen = '8/8/8/8/8/8/8/8 w - - 0 1';
 
-    setBoard(emptyBoard);
-    setBoardKey((prev) => prev + 1);
+      lastGeneratedFenRef.current = emptyFen;
+      lastExternalFenRef.current = emptyFen;
 
-    if (onFenChange) {
-      onFenChange(emptyFen);
-    }
+      if (onFenChange) {
+        onFenChange(emptyFen);
+      }
+
+      return emptyBoard;
+    });
   }, [onFenChange]);
 
   /**
