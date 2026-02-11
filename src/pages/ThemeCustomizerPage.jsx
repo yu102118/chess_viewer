@@ -168,7 +168,10 @@ const BoardPreview = memo(({ light, dark }) => {
                 <div
                   key={`sq-${row}-${col}`}
                   className="transition-colors duration-200"
-                  style={{ backgroundColor: isLight ? light : dark }}
+                  style={{
+                    backgroundColor: isLight ? light : dark,
+                    outline: '1px solid transparent'
+                  }}
                 />
               );
             })}
