@@ -569,7 +569,8 @@ const AdvancedFENInputModal = ({
                             style={{
                               backgroundColor: isLight
                                 ? lightSquare
-                                : darkSquare
+                                : darkSquare,
+                              outline: '1px solid transparent'
                             }}
                           >
                             {pieceImage && (
