@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Download, Image, Copy, Heart, RefreshCcw, Check } from 'lucide-react';
+import { Download, Image, Copy, RefreshCcw, Check } from 'lucide-react';
 
 const ActionButtons = React.memo(
   ({
@@ -9,9 +9,7 @@ const ActionButtons = React.memo(
     onCopyImage,
     onFlip,
     onBatchExport,
-    onAddToFavorites,
-    isExporting,
-    isFavorite
+    isExporting
   }) => {
     const [showBatchMenu, setShowBatchMenu] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -128,7 +126,7 @@ const ActionButtons = React.memo(
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           <button
             onClick={handleCopy}
             disabled={isExporting}
@@ -146,27 +144,6 @@ const ActionButtons = React.memo(
                 <span className="hidden sm:inline">Copy</span>
               </>
             )}
-          </button>
-
-          <button
-            onClick={onAddToFavorites}
-            disabled={isExporting}
-            aria-label={isFavorite ? 'Saved' : 'Save'}
-            aria-pressed={isFavorite}
-            className={`group px-2 sm:px-3 py-2.5 sm:py-3 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed border ${
-              isFavorite
-                ? 'bg-warning/15 border-warning/40 text-warning hover:bg-warning/20'
-                : 'bg-surface-elevated hover:bg-surface-hover border-border text-text-primary hover:border-warning/50'
-            }`}
-          >
-            <Heart
-              className={`w-4 h-4 sm:w-4.5 sm:h-4.5 transition-all duration-200 ${
-                isFavorite ? 'fill-current' : 'group-hover:scale-105'
-              }`}
-            />
-            <span className="hidden sm:inline">
-              {isFavorite ? 'Saved' : 'Save'}
-            </span>
           </button>
 
           <button
