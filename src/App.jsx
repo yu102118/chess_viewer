@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 import { Navbar } from '@/components/layout';
 import { ErrorBoundary } from '@/components/ui';
-import { ThemeSettingsProvider } from '@/contexts';
+import { ThemeSettingsProvider, FENBatchProvider } from '@/contexts';
 import Routes from '@/routes/Router';
 
 /**
@@ -97,20 +97,26 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeSettingsProvider>
-        <div className="min-h-screen bg-gradient-to-br from-bg-gradient-start to-bg-gradient-end transition-colors duration-500">
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-accent focus:text-bg focus:rounded-xl focus:shadow-glow focus:font-semibold"
-          >
-            Skip to main content
-          </a>
+        <FENBatchProvider>
+          <div className="min-h-screen bg-gradient-to-br from-bg-gradient-start to-bg-gradient-end transition-colors duration-500">
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-accent focus:text-bg focus:rounded-xl focus:shadow-glow focus:font-semibold"
+            >
+              Skip to main content
+            </a>
 
-          {!isToolPage && <Navbar theme={theme} toggleTheme={toggleTheme} />}
+            {!isToolPage && <Navbar theme={theme} toggleTheme={toggleTheme} />}
 
-          <main id="main-content" tabIndex={-1} className="focus:outline-none">
-            <Routes />
-          </main>
-        </div>
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="focus:outline-none"
+            >
+              <Routes />
+            </main>
+          </div>
+        </FENBatchProvider>
       </ThemeSettingsProvider>
     </ErrorBoundary>
   );
