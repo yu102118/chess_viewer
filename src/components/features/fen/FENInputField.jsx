@@ -1,5 +1,16 @@
-import { memo } from 'react';
-import { Copy, CheckCircle, Clipboard, AlertCircle } from 'lucide-react';
+import { memo, useState, useEffect, useCallback } from 'react';
+import {
+  Copy,
+  CheckCircle,
+  Clipboard,
+  AlertCircle,
+  Plus,
+  Heart,
+  List
+} from 'lucide-react';
+import { validateFEN } from '@/utils';
+import { useFENBatch } from '@/contexts/FENBatchContext';
+import ClipboardHistory from '@/components/features/ClipboardHistory/ClipboardHistory';
 
 const FENInputField = memo(
   ({
@@ -10,101 +21,293 @@ const FENInputField = memo(
     onCopy,
     onPaste,
     copySuccess,
-    onAdvancedClick
+    onAdvancedClick,
+    onNotification
   }) => {
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [isClipboardOpen, setIsClipboardOpen] = useState(false);
+    const { addToBatch } = useFENBatch();
+
+    // Load favorite status from localStorage
+    useEffect(() => {
+      try {
+        const favorites = JSON.parse(
+          localStorage.getItem('favoriteFens') || '{}'
+        );
+        setIsFavorite(!!favorites[fen]);
+      } catch {
+        setIsFavorite(false);
+      }
+    }, [fen]);
+
+    // Store FEN in clipboard history when copied
+    const handleCopyWithHistory = useCallback(async () => {
+      if (onCopy) {
+        await onCopy();
+
+        // Save to clipboard history
+        if (fen && validateFEN(fen.trim())) {
+          try {
+            const history = JSON.parse(
+              localStorage.getItem('fenClipboardHistory') || '[]'
+            );
+
+            const newEntry = {
+              fen: fen.trim(),
+              timestamp: Date.now()
+            };
+
+            // Add to beginning and limit to 50 items
+            const updatedHistory = [
+              newEntry,
+              ...history.filter((item) => item.fen !== fen.trim())
+            ].slice(0, 50);
+
+            localStorage.setItem(
+              'fenClipboardHistory',
+              JSON.stringify(updatedHistory)
+            );
+          } catch (err) {
+            console.error('Failed to save to clipboard history:', err);
+          }
+        }
+      }
+    }, [fen, onCopy]);
+
+    // Handle Add to Batch - NO navigation, just add to context
+    const handleAddToBatch = useCallback(() => {
+      if (!fen || !fen.trim()) {
+        onNotification?.('FEN is empty', 'error');
+        return;
+      }
+
+      const trimmedFen = fen.trim();
+      if (!validateFEN(trimmedFen)) {
+        onNotification?.('Invalid FEN - cannot add to batch', 'error');
+        return;
+      }
+
+      const success = addToBatch(trimmedFen);
+      if (success) {
+        onNotification?.('Added to batch', 'success');
+      } else {
+        onNotification?.('FEN already in batch', 'warning');
+      }
+    }, [fen, addToBatch, onNotification]);
+
+    // Handle Favorite toggle - using Heart icon
+    const handleToggleFavorite = useCallback(() => {
+      if (!fen || !fen.trim()) {
+        onNotification?.('FEN is empty', 'error');
+        return;
+      }
+
+      const trimmedFen = fen.trim();
+      if (!validateFEN(trimmedFen)) {
+        onNotification?.('Invalid FEN - cannot favorite', 'error');
+        return;
+      }
+
+      try {
+        const favorites = JSON.parse(
+          localStorage.getItem('favoriteFens') || '{}'
+        );
+        const newFavoriteState = !favorites[trimmedFen];
+
+        if (newFavoriteState) {
+          favorites[trimmedFen] = true;
+        } else {
+          delete favorites[trimmedFen];
+        }
+
+        localStorage.setItem('favoriteFens', JSON.stringify(favorites));
+        setIsFavorite(newFavoriteState);
+        onNotification?.(
+          newFavoriteState ? 'Added to favorites' : 'Removed from favorites',
+          'success'
+        );
+      } catch {
+        onNotification?.('Failed to update favorites', 'error');
+      }
+    }, [fen, onNotification]);
+
+    const handleSelectFromClipboard = useCallback(
+      (selectedFen) => {
+        if (onChange) {
+          onChange({ target: { value: selectedFen } });
+          onNotification?.('FEN loaded from clipboard history', 'success');
+        }
+      },
+      [onChange, onNotification]
+    );
+
     return (
-      <div className="space-y-2">
-        <div className="relative">
-          <textarea
-            value={fen}
-            onChange={onChange}
-            onBlur={onBlur}
-            aria-label="FEN notation input"
-            aria-describedby={error ? 'fen-error' : undefined}
-            aria-invalid={error ? 'true' : 'false'}
-            className={`
-              w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-20 sm:pr-24 
-              bg-surface/50 rounded-lg text-xs sm:text-sm text-text-primary 
-              font-mono resize-none min-h-[80px] sm:min-h-[90px] 
-              focus-visible:outline-none focus:outline-none outline-none 
-              focus:ring-2 focus:ring-accent/50 transition-all border
-              ${error ? 'border-error' : 'border-border hover:border-border'}
-            `}
-            placeholder="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-            spellCheck="false"
-            autoComplete="off"
-          />
+      <>
+        <div className="space-y-2">
+          <div className="bg-surface/50 border border-border rounded-lg overflow-hidden">
+            {/* Toolbar */}
+            <div className="flex items-center gap-2 px-3 py-2 bg-surface-elevated border-b border-border">
+              {/* Clipboard History Button (Icon Only) */}
+              <button
+                onClick={() => setIsClipboardOpen(true)}
+                className="p-2 rounded-md transition-all bg-surface hover:bg-surface-hover border border-border/50 text-text-secondary hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                title="View clipboard history"
+                aria-label="View clipboard history"
+                type="button"
+              >
+                <List
+                  className="w-3.5 h-3.5"
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                />
+              </button>
 
-          <button
-            onClick={onAdvancedClick}
-            className="absolute bottom-2 right-2 text-xs text-accent/80 hover:text-accent font-semibold transition-colors underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded px-1"
-            type="button"
-            aria-label="Open advanced FEN input modal"
-          >
-            Advanced FEN Input
-          </button>
+              {/* Paste Button */}
+              <button
+                onClick={onPaste}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md transition-all bg-surface hover:bg-surface-hover border border-border/50 text-text-secondary hover:text-accent text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                title="Paste FEN from clipboard"
+                aria-label="Paste FEN from clipboard"
+                type="button"
+              >
+                <Clipboard
+                  className="w-3.5 h-3.5"
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                />
+                <span>Paste</span>
+              </button>
 
-          <div
-            className="absolute top-2 right-2 flex gap-1"
-            role="group"
-            aria-label="FEN actions"
-          >
-            <button
-              onClick={onPaste}
-              className="p-1.5 sm:p-2 rounded-md transition-all bg-surface-elevated hover:bg-surface-hover border border-border/50 text-text-secondary hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-              title="Paste FEN from clipboard"
-              aria-label="Paste FEN from clipboard"
-              type="button"
-            >
-              <Clipboard
-                className="w-3 h-3 sm:w-4 sm:h-4"
-                strokeWidth={2.5}
-                aria-hidden="true"
+              {/* Copy Button */}
+              <button
+                onClick={handleCopyWithHistory}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md transition-all text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                  copySuccess
+                    ? 'bg-success/20 text-success border border-success/30'
+                    : 'bg-surface hover:bg-surface-hover border border-border/50 text-text-secondary hover:text-accent'
+                }`}
+                title={copySuccess ? 'Copied!' : 'Copy FEN to clipboard'}
+                aria-label={
+                  copySuccess
+                    ? 'FEN copied to clipboard'
+                    : 'Copy FEN to clipboard'
+                }
+                type="button"
+              >
+                {copySuccess ? (
+                  <>
+                    <CheckCircle
+                      className="w-3.5 h-3.5"
+                      strokeWidth={2.5}
+                      aria-hidden="true"
+                    />
+                    <span>Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy
+                      className="w-3.5 h-3.5"
+                      strokeWidth={2.5}
+                      aria-hidden="true"
+                    />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+
+              {/* Add to Batch Button */}
+              <button
+                onClick={handleAddToBatch}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md transition-all bg-surface hover:bg-surface-hover border border-border/50 text-text-secondary hover:text-accent text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                title="Add to batch (no redirect)"
+                aria-label="Add to batch"
+                type="button"
+              >
+                <Plus
+                  className="w-3.5 h-3.5"
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                />
+                <span>Add</span>
+              </button>
+
+              {/* Favorite Button with Heart Icon */}
+              <button
+                onClick={handleToggleFavorite}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md transition-all text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                  isFavorite
+                    ? 'bg-red-500/20 text-red-500 border border-red-500/30'
+                    : 'bg-surface hover:bg-surface-hover border border-border/50 text-text-secondary hover:text-red-500'
+                }`}
+                title={
+                  isFavorite ? 'Remove from favorites' : 'Add to favorites'
+                }
+                aria-label={
+                  isFavorite ? 'Remove from favorites' : 'Add to favorites'
+                }
+                type="button"
+              >
+                <Heart
+                  className="w-3.5 h-3.5"
+                  strokeWidth={2.5}
+                  fill={isFavorite ? 'currentColor' : 'none'}
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+
+            {/* Textarea - Reduced font size and padding */}
+            <div className="relative">
+              <textarea
+                value={fen}
+                onChange={onChange}
+                onBlur={onBlur}
+                aria-label="FEN notation input"
+                aria-describedby={error ? 'fen-error' : undefined}
+                aria-invalid={error ? 'true' : 'false'}
+                className={`
+                  w-full px-3 py-2
+                  bg-surface/50 text-text-primary 
+                  font-mono text-[11px] leading-tight resize-none min-h-[60px]
+                  focus-visible:outline-none focus:outline-none outline-none 
+                  transition-all border-0
+                  ${error ? 'text-error' : ''}
+                `}
+                placeholder="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+                spellCheck="false"
+                autoComplete="off"
               />
-            </button>
-            <button
-              onClick={onCopy}
-              className={`p-1.5 sm:p-2 rounded-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                copySuccess
-                  ? 'bg-success/20 text-success border border-success/30'
-                  : 'bg-surface-elevated hover:bg-surface-hover border border-border/50 text-text-secondary hover:text-accent'
-              }`}
-              title={copySuccess ? 'Copied!' : 'Copy FEN to clipboard'}
-              aria-label={
-                copySuccess
-                  ? 'FEN copied to clipboard'
-                  : 'Copy FEN to clipboard'
-              }
-              type="button"
-            >
-              {copySuccess ? (
-                <CheckCircle
-                  className="w-3 h-3 sm:w-4 sm:h-4"
-                  strokeWidth={2.5}
-                  aria-hidden="true"
-                />
-              ) : (
-                <Copy
-                  className="w-3 h-3 sm:w-4 sm:h-4"
-                  strokeWidth={2.5}
-                  aria-hidden="true"
-                />
-              )}
-            </button>
+
+              <button
+                onClick={onAdvancedClick}
+                className="absolute bottom-2 right-2 text-[10px] text-accent/80 hover:text-accent font-semibold transition-colors underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
+                type="button"
+                aria-label="Open advanced FEN input modal"
+              >
+                Advanced FEN Input
+              </button>
+            </div>
           </div>
+
+          {error && (
+            <div
+              id="fen-error"
+              className="flex items-center gap-2 text-red-400 text-xs mt-1"
+              role="alert"
+            >
+              <AlertCircle className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>{error}</span>
+            </div>
+          )}
         </div>
 
-        {error && (
-          <div
-            id="fen-error"
-            className="flex items-center gap-2 text-red-400 text-xs mt-1"
-            role="alert"
-          >
-            <AlertCircle className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>{error}</span>
-          </div>
-        )}
-      </div>
+        {/* Clipboard History Modal */}
+        <ClipboardHistory
+          isOpen={isClipboardOpen}
+          onClose={() => setIsClipboardOpen(false)}
+          onSelectFen={handleSelectFromClipboard}
+        />
+      </>
     );
   },
   (prevProps, nextProps) => {
