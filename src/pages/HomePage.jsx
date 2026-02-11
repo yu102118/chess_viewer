@@ -7,7 +7,6 @@ import {
   useEffect
 } from 'react';
 import { useLocation } from 'react-router-dom';
-
 import { ChessBoard } from '@/components/board';
 import { ChessEditor } from '@/components/interactions';
 import {
@@ -374,8 +373,8 @@ const HomePage = () => {
   );
 
   return (
-    <div className="min-h-screen pt-16 sm:pt-20 pb-12 px-3 sm:px-4 lg:px-6">
-      <div className="max-w-[1600px] mx-auto w-full">
+    <div className="h-screen overflow-hidden pt-16 sm:pt-20 px-3 sm:px-4 lg:px-6">
+      <div className="max-w-[1600px] mx-auto w-full h-full overflow-hidden">
         {/* Main Content Grid - Responsive */}
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
           {/* Board Section - Left/Center */}
