@@ -7,9 +7,6 @@ import {
   Trash2,
   X,
   Plus,
-  RotateCcw,
-  Download,
-  Upload,
   GripVertical,
   AlertTriangle
 } from 'lucide-react';
@@ -106,23 +103,6 @@ function readSquare(key, fallback) {
 }
 
 /**
- * @param {Array<Object>} data - Imported preset data to validate
- * @returns {boolean} Whether the data is valid
- */
-function validateImportedPresets(data) {
-  if (!Array.isArray(data)) return false;
-  return data.every(
-    (p) =>
-      typeof p.id === 'string' &&
-      typeof p.name === 'string' &&
-      typeof p.light === 'string' &&
-      typeof p.dark === 'string' &&
-      /^#[0-9a-fA-F]{6}$/.test(p.light) &&
-      /^#[0-9a-fA-F]{6}$/.test(p.dark)
-  );
-}
-
-/**
  * @param {Object} props
  * @param {string} props.light - Light square color
  * @param {string} props.dark - Dark square color
@@ -165,7 +145,10 @@ const BoardPreview = memo(({ light, dark }) => {
                 <div
                   key={`sq-${row}-${col}`}
                   className="transition-colors duration-200"
-                  style={{ backgroundColor: isLight ? light : dark }}
+                  style={{
+                    backgroundColor: isLight ? light : dark,
+                    outline: '1px solid transparent'
+                  }}
                 />
               );
             })}
@@ -686,76 +669,6 @@ const DuplicateWarningDialog = memo(
 DuplicateWarningDialog.displayName = 'DuplicateWarningDialog';
 
 /**
- * @param {Object} props
- * @param {Function} props.onResetPresets - Reset presets handler
- * @param {Function} props.onImport - Import handler
- * @param {Function} props.onExport - Export handler
- * @returns {JSX.Element}
- */
-const PresetManagement = memo(({ onResetPresets, onImport, onExport }) => {
-  const fileInputRef = useRef(null);
-
-  /**
-   * @param {Event} e - File input change event
-   * @returns {void}
-   */
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      try {
-        const data = JSON.parse(evt.target?.result);
-        onImport(data);
-      } catch {
-        alert('Invalid JSON file');
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  };
-
-  return (
-    <div className="bg-surface rounded-lg p-3 border border-border">
-      <h3 className="text-xs font-bold text-text-primary mb-2">
-        Preset Management
-      </h3>
-      <div className="flex gap-2">
-        <button
-          onClick={onResetPresets}
-          className="flex items-center justify-center gap-1.5 flex-1 py-2 px-3 rounded-lg bg-surface-elevated hover:bg-surface-hover border border-border text-xs font-semibold text-text-secondary hover:text-text-primary transition-all"
-        >
-          <RotateCcw className="w-3 h-3" />
-          Reset
-        </button>
-        <button
-          onClick={onExport}
-          className="flex items-center justify-center gap-1.5 flex-1 py-2 px-3 rounded-lg bg-surface-elevated hover:bg-surface-hover border border-border text-xs font-semibold text-text-secondary hover:text-text-primary transition-all"
-        >
-          <Download className="w-3 h-3" />
-          Export
-        </button>
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="flex items-center justify-center gap-1.5 flex-1 py-2 px-3 rounded-lg bg-surface-elevated hover:bg-surface-hover border border-border text-xs font-semibold text-text-secondary hover:text-text-primary transition-all"
-        >
-          <Upload className="w-3 h-3" />
-          Import
-        </button>
-      </div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".json"
-        onChange={handleFileChange}
-        className="hidden"
-      />
-    </div>
-  );
-});
-PresetManagement.displayName = 'PresetManagement';
-
-/**
  * Theme Customization tab for the Settings page.
  * Manages board theme presets, custom color editing, and preset management.
  *
@@ -1083,53 +996,6 @@ const ThemeCustomization = memo(() => {
   );
 
   /**
-   * @returns {void}
-   */
-  const handleResetPresets = useCallback(() => {
-    if (
-      window.confirm(
-        'Reset all presets to defaults? Custom presets will be lost.'
-      )
-    ) {
-      const defaults = getDefaultPresets();
-      setPresets(defaults);
-      savePresets(defaults);
-      setCurrentPage(0);
-    }
-  }, []);
-
-  /**
-   * @returns {void}
-   */
-  const handleExportPresets = useCallback(() => {
-    const data = JSON.stringify(presets, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'chess-theme-presets.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [presets]);
-
-  /**
-   * @param {Array<Object>} data - Imported preset data
-   * @returns {void}
-   */
-  const handleImportPresets = useCallback((data) => {
-    if (!validateImportedPresets(data)) {
-      alert('Invalid preset format');
-      return;
-    }
-    const hasWood = data.some((p) => p.id === WOOD_PRESET.id);
-    const imported = hasWood ? data : [WOOD_PRESET, ...data];
-    const limited = imported.slice(0, MAX_TOTAL_PRESETS);
-    setPresets(limited);
-    savePresets(limited);
-    setCurrentPage(0);
-  }, []);
-
-  /**
    * @param {PointerEvent} e - Pointer down on grid for swipe detection
    * @returns {void}
    */
@@ -1273,13 +1139,6 @@ const ThemeCustomization = memo(() => {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
               />
-              <div className="mt-4">
-                <PresetManagement
-                  onResetPresets={handleResetPresets}
-                  onImport={handleImportPresets}
-                  onExport={handleExportPresets}
-                />
-              </div>
             </>
           ) : (
             <div>
