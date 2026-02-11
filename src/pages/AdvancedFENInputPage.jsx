@@ -1,8 +1,20 @@
-import { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  ExportProgress,
+  BoardSizeControl,
+  ExportSettings,
+  ExportSettingsModal,
+  DisplayOptions
+} from '@/components/features';
+import { PieceSelector } from '@/components/features/fen';
+import { ThemeSelector } from '@/components/features/theme';
+import { useChessBoard, usePieceImages, useTheme } from '@/hooks';
+import { useFENBatch } from '@/contexts';
+import { validateFEN, logger } from '@/utils';
+import { ADVANCED_FEN_CONFIG } from '@/constants/chessConstants';
 import {
   ArrowLeft,
-  Plus,
   Trash2,
   Play,
   Pause,
@@ -17,19 +29,6 @@ import {
   Copy,
   FlipVertical2
 } from 'lucide-react';
-
-import {
-  ExportProgress,
-  BoardSizeControl,
-  ExportSettings,
-  ExportSettingsModal,
-  DisplayOptions
-} from '@/components/features';
-import { PieceSelector } from '@/components/features/fen';
-import { ThemeSelector } from '@/components/features/theme';
-import { useChessBoard, usePieceImages, useTheme } from '@/hooks';
-import { validateFEN, logger } from '@/utils';
-import { ADVANCED_FEN_CONFIG } from '@/constants/chessConstants';
 
 const {
   MAX_FENS,
@@ -56,13 +55,21 @@ const AdvancedFENInputPage = memo(
     darkSquare: initialDarkSquare = '#b58863'
   }) => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { batchList, removeFromBatch, updateBatchItem } = useFENBatch();
     const duplicateTimeoutRef = useRef(null);
     const pastedTimeoutRef = useRef(null);
+    const addedFenRef = useRef(false);
 
-    const [fens, setFens] = useState(() => {
-      const saved = localStorage.getItem(STORAGE_KEYS.HISTORY);
-      return saved ? JSON.parse(saved) : Array(10).fill(''); // Start with 10 positions
-    });
+    // Use context batchList as source of truth, fill with empty slots if needed
+    const fens = useMemo(() => {
+      const arr = [...batchList];
+      while (arr.length < 3) {
+        arr.push(''); // Ensure minimum 3 slots
+      }
+      return arr;
+    }, [batchList]);
+    const setFens = () => {}; // Deprecated - using context now
 
     const [favorites, setFavorites] = useState(() => {
       const saved = localStorage.getItem(STORAGE_KEYS.FAVORITES);
@@ -111,9 +118,10 @@ const AdvancedFENInputPage = memo(
     const [isPaused, setIsPaused] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
 
-    // Get valid FENs
+    // Get valid FENs and filled slots count
     const validFens = fens.filter((f) => f.trim() && validateFEN(f));
     const hasValidFens = validFens.length > 0;
+    const filledSlots = fens.filter((f) => f.trim()).length;
 
     // Ensure currentIndex is always valid
     const safeCurrentIndex = Math.min(
@@ -135,10 +143,7 @@ const AdvancedFENInputPage = memo(
       pieceImages &&
       Object.keys(pieceImages).length > 0;
 
-    // Save to localStorage
-    useEffect(() => {
-      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(fens));
-    }, [fens]);
+    // Note: fens are now saved automatically by FENBatchContext
 
     useEffect(() => {
       localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(favorites));
@@ -157,7 +162,6 @@ const AdvancedFENInputPage = memo(
       if (currentFen) {
         const settings = positionSettings[currentFen];
         if (settings) {
-          // Load saved settings for this position
           setPieceStyle(settings.pieceStyle ?? initialPieceStyle);
           setBoardSize(settings.boardSize ?? initialBoardSize);
           setFileName(settings.fileName ?? initialFileName);
@@ -173,7 +177,6 @@ const AdvancedFENInputPage = memo(
             theme.setDarkSquare(settings.darkSquare);
           }
         } else {
-          // Reset to defaults for new position
           setPieceStyle(initialPieceStyle);
           setBoardSize(initialBoardSize);
           setFileName(initialFileName);
@@ -221,16 +224,24 @@ const AdvancedFENInputPage = memo(
       theme.darkSquare
     ]);
 
-    // Validate FENs
     useEffect(() => {
       const errors = {};
+      const filledFens = [];
+
       fens.forEach((fen, index) => {
-        if (fen.trim() && !validateFEN(fen)) {
-          errors[index] = 'Invalid FEN notation';
+        const trimmedFen = fen.trim();
+        if (trimmedFen) {
+          if (!validateFEN(trimmedFen)) {
+            errors[index] = 'Invalid FEN notation';
+          } else {
+            filledFens.push(trimmedFen);
+          }
         }
       });
+
       setFenErrors(errors);
 
+      // Auto-expand logic removed - context manages batch list
       const validCount = fens.filter((f) => f.trim() && validateFEN(f)).length;
       if (currentIndex >= validCount && validCount > 0) {
         setCurrentIndex(0);
@@ -257,34 +268,71 @@ const AdvancedFENInputPage = memo(
       };
     }, []);
 
+    // Handle incoming FEN from navigation state (Add to Batch)
+    useEffect(() => {
+      if (location.state?.addFen && !addedFenRef.current) {
+        const fenToAdd = location.state.addFen;
+
+        // Check if FEN already exists
+        if (!fens.some((f) => f.trim() === fenToAdd)) {
+          // Find first empty slot or add to end
+          const emptyIndex = fens.findIndex((f) => !f.trim());
+
+          if (emptyIndex !== -1) {
+            // Fill empty slot
+            const newFens = [...fens];
+            newFens[emptyIndex] = fenToAdd;
+            setFens(newFens);
+            setPastedIndex(emptyIndex);
+          } else if (fens.length < MAX_FENS) {
+            // Add to end
+            setFens([...fens, fenToAdd]);
+            setPastedIndex(fens.length);
+          }
+
+          // Clear the pasted indicator after 2 seconds
+          if (pastedTimeoutRef.current) clearTimeout(pastedTimeoutRef.current);
+          pastedTimeoutRef.current = setTimeout(
+            () => setPastedIndex(null),
+            2000
+          );
+        }
+
+        addedFenRef.current = true;
+
+        // Clear the state to prevent re-adding on re-render
+        window.history.replaceState({}, document.title);
+      }
+    }, [location.state, fens]);
+
     const handleBack = useCallback(() => {
       navigate(-1);
     }, [navigate]);
 
-    const addFenInput = () => {
-      if (fens.length < MAX_FENS) {
-        setFens([...fens, '']);
-      }
-    };
-
     const removeFenInput = (index) => {
-      if (fens.length > 1) {
-        const newFens = fens.filter((_, i) => i !== index);
-        setFens(newFens);
-        if (currentIndex >= newFens.length) {
-          setCurrentIndex(Math.max(0, newFens.length - 1));
+      // Only remove if index is within batch list
+      if (index < batchList.length) {
+        removeFromBatch(index);
+        if (currentIndex >= batchList.length - 1) {
+          setCurrentIndex(Math.max(0, batchList.length - 2));
         }
-        const newFavorites = { ...favorites };
-        delete newFavorites[fens[index]];
-        setFavorites(newFavorites);
+        // Remove from favorites if it exists
+        const fenToRemove = batchList[index];
+        if (fenToRemove) {
+          const newFavorites = { ...favorites };
+          delete newFavorites[fenToRemove];
+          setFavorites(newFavorites);
+        }
       }
     };
 
     const updateFen = (index, value) => {
       const trimmedValue = value.trim();
+
+      // Check for duplicates
       if (
         trimmedValue &&
-        fens.some((f, i) => i !== index && f.trim() === trimmedValue)
+        batchList.some((f, i) => i !== index && f === trimmedValue)
       ) {
         setDuplicateWarning(index);
         if (duplicateTimeoutRef.current)
@@ -293,10 +341,14 @@ const AdvancedFENInputPage = memo(
           () => setDuplicateWarning(null),
           3000
         );
+        return; // Don't update if duplicate
       }
-      const newFens = [...fens];
-      newFens[index] = value;
-      setFens(newFens);
+
+      // If updating existing item in batch
+      if (index < batchList.length && trimmedValue) {
+        updateBatchItem(index, trimmedValue);
+      }
+      // If it's a new empty slot being filled, context handles this via addToBatch elsewhere
     };
 
     const handlePasteFEN = async (index) => {
@@ -370,6 +422,51 @@ const AdvancedFENInputPage = memo(
 
     return (
       <div className="h-screen flex flex-col bg-bg overflow-hidden">
+        <style>{`
+          @keyframes slideInUp {
+            from {
+              opacity: 0;
+              transform: translateY(16px) scale(0.98);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+          
+          @keyframes collapseWidth {
+            from {
+              grid-column: span 2;
+              opacity: 1;
+            }
+            to {
+              grid-column: span 1;
+              opacity: 1;
+            }
+          }
+          
+          .input-enter {
+            animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+          }
+          
+          .layout-transition {
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+          }
+          
+          @keyframes pulseGlow {
+            0%, 100% {
+              box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+            }
+            50% {
+              box-shadow: 0 0 0 8px rgba(99, 102, 241, 0);
+            }
+          }
+          
+          .pulse-glow {
+            animation: pulseGlow 2s ease-in-out;
+          }
+        `}</style>
+
         {/* Header - Prominent Back Button */}
         <header className="flex-shrink-0 bg-surface border-b border-border">
           <div className="px-6 py-4">
@@ -389,8 +486,8 @@ const AdvancedFENInputPage = memo(
                 <h1 className="text-2xl font-display font-bold text-text-primary">
                   Advanced FEN Editor
                 </h1>
-                <span className="px-3 py-1 bg-surface-elevated text-text-secondary text-sm font-semibold rounded-full">
-                  {validFens.length}/{fens.length}
+                <span className="px-3 py-1 bg-surface-elevated text-accent text-sm font-semibold rounded-full">
+                  {filledSlots} / {MAX_FENS}
                 </span>
               </div>
 
@@ -434,98 +531,90 @@ const AdvancedFENInputPage = memo(
           <div className="px-6 py-8">
             {activeTab === TABS.POSITIONS && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-text-secondary text-sm">
-                    Add up to {MAX_FENS} FEN positions
-                  </p>
-                  <button
-                    onClick={addFenInput}
-                    disabled={fens.length >= MAX_FENS}
-                    className="px-4 py-2 bg-accent hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed text-bg rounded-lg font-semibold transition-colors flex items-center gap-2 text-sm"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Position
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                  {fens.map((fen, idx) => (
-                    <div
-                      key={fen || `empty-pos-${Date.now()}-${idx}`}
-                      className="bg-surface border border-border rounded-xl p-4 space-y-2"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-text-secondary">
-                          Position {idx + 1}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          {fen && validateFEN(fen) && (
-                            <button
-                              onClick={() => toggleFavorite(fen)}
-                              className={`p-1.5 rounded-lg transition-colors ${
-                                favorites[fen]
-                                  ? 'bg-red-500/20 text-red-500'
-                                  : 'text-text-muted hover:text-red-500 hover:bg-red-500/10'
-                              }`}
-                              aria-label="Toggle favorite"
-                            >
-                              <Heart
-                                className="w-4 h-4"
-                                fill={favorites[fen] ? 'currentColor' : 'none'}
-                              />
-                            </button>
-                          )}
-                          <button
-                            onClick={() => handlePasteFEN(idx)}
-                            className="p-1.5 text-text-muted hover:text-accent hover:bg-accent/10 rounded-lg transition-colors"
-                            aria-label="Paste FEN"
-                          >
-                            {pastedIndex === idx ? (
-                              <Check className="w-4 h-4 text-success" />
-                            ) : (
-                              <Clipboard className="w-4 h-4" />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 transition-all duration-500 mt-1">
+                  {fens.map((fen, idx) => {
+                    const isLastOdd =
+                      fens.length % 2 === 1 && idx === fens.length - 1;
+                    return (
+                      <div
+                        key={fen ? `fen-${fen}` : `empty-${idx}`}
+                        className={`bg-surface border border-border rounded-xl px-3 py-[0.5rem] space-y-2 layout-transition ${isLastOdd ? 'lg:col-span-2' : ''}`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-semibold text-text-secondary">
+                            Position {idx + 1}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            {fen && validateFEN(fen) && (
+                              <button
+                                onClick={() => toggleFavorite(fen)}
+                                className={`p-1.5 rounded-lg transition-colors ${
+                                  favorites[fen]
+                                    ? 'bg-red-500/20 text-red-500'
+                                    : 'text-text-muted hover:text-red-500 hover:bg-red-500/10'
+                                }`}
+                                aria-label="Toggle favorite"
+                              >
+                                <Heart
+                                  className="w-4 h-4"
+                                  fill={
+                                    favorites[fen] ? 'currentColor' : 'none'
+                                  }
+                                />
+                              </button>
                             )}
-                          </button>
-                          {fens.length > 1 && (
                             <button
-                              onClick={() => removeFenInput(idx)}
-                              className="p-1.5 text-text-muted hover:text-error hover:bg-error/10 rounded-lg transition-colors"
-                              aria-label="Remove position"
+                              onClick={() => handlePasteFEN(idx)}
+                              className="p-1.5 text-text-muted hover:text-accent hover:bg-accent/10 rounded-lg transition-colors"
+                              aria-label="Paste FEN"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              {pastedIndex === idx ? (
+                                <Check className="w-4 h-4 text-success" />
+                              ) : (
+                                <Clipboard className="w-4 h-4" />
+                              )}
                             </button>
-                          )}
+                            {fens.length > 3 && idx >= 3 && (
+                              <button
+                                onClick={() => removeFenInput(idx)}
+                                className="p-1.5 text-text-muted hover:text-error hover:bg-error/10 rounded-lg transition-colors"
+                                aria-label="Remove position"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
                         </div>
+
+                        <input
+                          type="text"
+                          value={fen}
+                          onChange={(e) => updateFen(idx, e.target.value)}
+                          placeholder="FEN notation"
+                          className={`w-full px-3 py-2 bg-surface-elevated border rounded-lg font-mono text-sm transition-colors ${
+                            fenErrors[idx]
+                              ? 'border-error focus:ring-error'
+                              : duplicateWarning === idx
+                                ? 'border-warning focus:ring-warning'
+                                : 'border-border focus:border-accent focus:ring-accent'
+                          } focus:ring-1 focus:outline-none`}
+                        />
+
+                        {fenErrors[idx] && (
+                          <div className="flex items-center gap-2 text-error text-xs">
+                            <AlertCircle className="w-3 h-3" />
+                            <span>{fenErrors[idx]}</span>
+                          </div>
+                        )}
+                        {duplicateWarning === idx && (
+                          <div className="flex items-center gap-2 text-warning text-xs">
+                            <AlertCircle className="w-3 h-3" />
+                            <span>Duplicate FEN detected</span>
+                          </div>
+                        )}
                       </div>
-
-                      <input
-                        type="text"
-                        value={fen}
-                        onChange={(e) => updateFen(idx, e.target.value)}
-                        placeholder="FEN notation"
-                        className={`w-full px-3 py-2 bg-surface-elevated border rounded-lg font-mono text-sm transition-colors ${
-                          fenErrors[idx]
-                            ? 'border-error focus:ring-error'
-                            : duplicateWarning === idx
-                              ? 'border-warning focus:ring-warning'
-                              : 'border-border focus:border-accent focus:ring-accent'
-                        } focus:ring-2 focus:outline-none`}
-                      />
-
-                      {fenErrors[idx] && (
-                        <div className="flex items-center gap-2 text-error text-xs">
-                          <AlertCircle className="w-3 h-3" />
-                          <span>{fenErrors[idx]}</span>
-                        </div>
-                      )}
-                      {duplicateWarning === idx && (
-                        <div className="flex items-center gap-2 text-warning text-xs">
-                          <AlertCircle className="w-3 h-3" />
-                          <span>Duplicate FEN detected</span>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -620,10 +709,13 @@ const AdvancedFENInputPage = memo(
                           {/* Board with Coordinates */}
                           <div className="w-full max-w-md flex flex-col">
                             {isBoardReady && boardState && pieceImages && (
-                              <div className="space-y-2 flex-1 flex flex-col">
-                                <div className="flex flex-1">
+                              <div className="inline-flex flex-col">
+                                <div className="flex">
                                   {showCoordinates && (
-                                    <div className="w-6 flex flex-col justify-around text-xs text-text-muted font-semibold">
+                                    <div
+                                      className="flex flex-col flex-shrink-0"
+                                      style={{ width: 20 }}
+                                    >
                                       {(isFlipped
                                         ? [
                                             '1',
@@ -648,106 +740,96 @@ const AdvancedFENInputPage = memo(
                                       ).map((rank) => (
                                         <div
                                           key={rank}
-                                          className="h-[12.5%] flex items-center justify-center"
+                                          className="flex items-center justify-center text-[12px] font-bold text-text-primary"
+                                          style={{
+                                            height: 'calc(min(52vh, 46vw) / 8)'
+                                          }}
                                         >
                                           {rank}
                                         </div>
                                       ))}
                                     </div>
                                   )}
-                                  <div className="flex-1">
-                                    <div className="aspect-square bg-surface-elevated shadow-lg">
-                                      <div className="grid grid-cols-8 gap-0 w-full h-full">
-                                        {(isFlipped
-                                          ? [...boardState].reverse()
-                                          : boardState
-                                        ).map((row, rowIdx) =>
-                                          (isFlipped
-                                            ? [...row].reverse()
-                                            : row
-                                          ).map((piece, colIdx) => {
-                                            const actualRowIdx = isFlipped
-                                              ? 7 - rowIdx
-                                              : rowIdx;
-                                            const actualColIdx = isFlipped
-                                              ? 7 - colIdx
-                                              : colIdx;
-                                            const isLight =
-                                              (actualRowIdx + actualColIdx) %
-                                                2 ===
-                                              0;
-                                            const color =
-                                              piece === piece.toUpperCase()
-                                                ? 'w'
-                                                : 'b';
-                                            const pieceKey = piece
-                                              ? color + piece.toUpperCase()
-                                              : null;
+                                  <div
+                                    className="grid grid-cols-8 grid-rows-8 overflow-hidden border border-border"
+                                    style={{
+                                      width: 'min(52vh, 46vw)',
+                                      height: 'min(52vh, 46vw)',
+                                      contain: 'strict'
+                                    }}
+                                  >
+                                    {Array.from({ length: 64 }).map((_, i) => {
+                                      const row = Math.floor(i / 8);
+                                      const col = i % 8;
 
-                                            return (
-                                              <div
-                                                key={`square-${actualRowIdx * 8 + actualColIdx}`}
-                                                className="relative w-full h-full flex items-center justify-center"
-                                                style={{
-                                                  backgroundColor: isLight
-                                                    ? theme.lightSquare
-                                                    : theme.darkSquare,
-                                                  aspectRatio: '1/1'
-                                                }}
-                                              >
-                                                {pieceKey &&
-                                                  pieceImages[pieceKey] && (
-                                                    <img
-                                                      src={
-                                                        pieceImages[pieceKey]
-                                                          .src
-                                                      }
-                                                      alt={piece}
-                                                      className="w-[90%] h-[90%] object-contain"
-                                                      draggable="false"
-                                                    />
-                                                  )}
-                                              </div>
-                                            );
-                                          })
-                                        )}
-                                      </div>
-                                    </div>
-                                    {showCoordinates && (
-                                      <div className="flex justify-around text-xs text-text-muted font-semibold mt-2">
-                                        {(isFlipped
-                                          ? [
-                                              'h',
-                                              'g',
-                                              'f',
-                                              'e',
-                                              'd',
-                                              'c',
-                                              'b',
-                                              'a'
-                                            ]
-                                          : [
-                                              'a',
-                                              'b',
-                                              'c',
-                                              'd',
-                                              'e',
-                                              'f',
-                                              'g',
-                                              'h'
-                                            ]
-                                        ).map((file) => (
-                                          <div
-                                            key={file}
-                                            className="w-[12.5%] text-center"
-                                          >
-                                            {file}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
+                                      const actualRowIdx = isFlipped
+                                        ? 7 - row
+                                        : row;
+                                      const actualColIdx = isFlipped
+                                        ? 7 - col
+                                        : col;
+                                      const isLight = (row + col) % 2 === 0;
+                                      const piece =
+                                        boardState[actualRowIdx]?.[
+                                          actualColIdx
+                                        ] || '';
+
+                                      const color =
+                                        piece === piece.toUpperCase()
+                                          ? 'w'
+                                          : 'b';
+                                      const pieceKey = piece
+                                        ? color + piece.toUpperCase()
+                                        : null;
+
+                                      return (
+                                        <div
+                                          key={`sq-${row}-${col}`}
+                                          className="relative flex items-center justify-center"
+                                          style={{
+                                            backgroundColor: isLight
+                                              ? theme.lightSquare
+                                              : theme.darkSquare,
+                                            outline: '1px solid transparent',
+                                            minWidth: 0,
+                                            minHeight: 0
+                                          }}
+                                        >
+                                          {pieceKey &&
+                                            pieceImages[pieceKey] && (
+                                              <img
+                                                src={pieceImages[pieceKey].src}
+                                                alt={piece}
+                                                className="w-[85%] h-[85%] object-contain"
+                                                draggable="false"
+                                              />
+                                            )}
+                                        </div>
+                                      );
+                                    })}
                                   </div>
                                 </div>
+                                {showCoordinates && (
+                                  <div
+                                    className="flex"
+                                    style={{ paddingLeft: 20 }}
+                                  >
+                                    {(isFlipped
+                                      ? ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a']
+                                      : ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+                                    ).map((file) => (
+                                      <div
+                                        key={file}
+                                        className="text-[12px] font-bold text-text-primary text-center mt-1"
+                                        style={{
+                                          width: 'calc(min(52vh, 46vw) / 8)'
+                                        }}
+                                      >
+                                        {file}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
