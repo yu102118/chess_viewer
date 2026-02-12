@@ -51,6 +51,7 @@ const AdvancedFENInputPage = memo(
     exportQuality: initialExportQuality = 1.0,
     showCoords: initialShowCoords = true,
     showCoordinateBorder: initialShowCoordinateBorder = true,
+    showThinFrame: initialShowThinFrame = false,
     lightSquare: initialLightSquare = '#f0d9b5',
     darkSquare: initialDarkSquare = '#b58863'
   }) => {
@@ -104,6 +105,7 @@ const AdvancedFENInputPage = memo(
     const [showCoordinateBorder, setShowCoordinateBorder] = useState(
       initialShowCoordinateBorder
     );
+    const [showThinFrame, setShowThinFrame] = useState(initialShowThinFrame);
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
     // Theme hook (per-position)
@@ -170,6 +172,7 @@ const AdvancedFENInputPage = memo(
           setShowCoordinateBorder(
             settings.showCoordinateBorder ?? initialShowCoordinateBorder
           );
+          setShowThinFrame(settings.showThinFrame ?? initialShowThinFrame);
           setIsFlipped(settings.isFlipped ?? false);
           setShowCoordinates(settings.showCoordinates ?? true);
           if (settings.lightSquare && settings.darkSquare) {
@@ -203,6 +206,7 @@ const AdvancedFENInputPage = memo(
             exportQuality,
             showCoords: showCoordsLocal,
             showCoordinateBorder,
+            showThinFrame,
             isFlipped,
             showCoordinates,
             lightSquare: theme.lightSquare,
@@ -218,6 +222,7 @@ const AdvancedFENInputPage = memo(
       exportQuality,
       showCoordsLocal,
       showCoordinateBorder,
+      showThinFrame,
       isFlipped,
       showCoordinates,
       theme.lightSquare,
@@ -956,6 +961,8 @@ const AdvancedFENInputPage = memo(
                             setShowCoords={setShowCoordsLocal}
                             showCoordinateBorder={showCoordinateBorder}
                             setShowCoordinateBorder={setShowCoordinateBorder}
+                            showThinFrame={showThinFrame}
+                            setShowThinFrame={setShowThinFrame}
                             exportQuality={exportQuality}
                           />
 
