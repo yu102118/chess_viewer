@@ -13,7 +13,6 @@ export const useTheme = ({
   const [darkSquare, setDarkSquare] = useState(initialDark);
   const [currentTheme, setCurrentTheme] = useState('custom');
   const [themeHistory, setThemeHistory] = useState([]);
-  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
 
   // Load theme from storage on mount
   useEffect(() => {
@@ -116,15 +115,6 @@ export const useTheme = ({
     const timeoutId = setTimeout(saveTheme, 500);
     return () => clearTimeout(timeoutId);
   }, [lightSquare, darkSquare, currentTheme]);
-
-  // Modal controls
-  const openThemeModal = useCallback(() => {
-    setIsThemeModalOpen(true);
-  }, []);
-
-  const closeThemeModal = useCallback(() => {
-    setIsThemeModalOpen(false);
-  }, []);
 
   // Apply preset theme
   const applyTheme = useCallback(
@@ -294,11 +284,6 @@ export const useTheme = ({
     darkSquare,
     currentTheme,
     themeHistory,
-
-    // Modal state
-    isThemeModalOpen,
-    openThemeModal,
-    closeThemeModal,
 
     // Setters
     setLightSquare,

@@ -1,9 +1,5 @@
 import { memo, useCallback } from 'react';
-
-import {
-  PALETTE_PIECES,
-  getPieceImageKey
-} from '@/components/interactions/dndConstants';
+import { PALETTE_PIECES, getPieceImageKey } from '@/constants';
 import DraggablePiece from '@/components/interactions/DraggablePiece';
 
 const PiecePalette = memo(({ pieceImages, isLoading, className = '' }) => {

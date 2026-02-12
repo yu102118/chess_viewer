@@ -1,7 +1,7 @@
-import React, { memo, useRef, useLayoutEffect } from 'react';
+import { memo, useRef, useLayoutEffect } from 'react';
 import { useDragLayer } from 'react-dnd';
 
-import { ItemTypes } from '@/components/interactions/dndConstants';
+import { ItemTypes } from '@/constants';
 
 const CustomDragLayer = memo(({ pieceImages, boardSize = 400 }) => {
   const dragPreviewRef = useRef(null);

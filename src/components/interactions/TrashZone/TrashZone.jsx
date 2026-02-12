@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useDrop } from 'react-dnd';
 
-import { ItemTypes } from '@/components/interactions/dndConstants';
+import { ItemTypes } from '@/constants';
 
 const TrashZone = memo(({ onDrop, className = '', minimal = false }) => {
   const [{ isOver, canDrop }, drop] = useDrop(

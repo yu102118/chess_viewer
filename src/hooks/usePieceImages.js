@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { PIECE_MAP } from '@/constants/chessConstants';
+import { PIECE_MAP } from '@/constants';
 import { logger } from '@/utils/logger';
 
 /**

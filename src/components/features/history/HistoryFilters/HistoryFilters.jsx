@@ -10,8 +10,8 @@ import {
   Download,
   MousePointer
 } from 'lucide-react';
-import DatePicker from './DatePicker';
-import CustomSelect from './CustomSelect';
+import DatePicker from '@/components/ui/DatePicker';
+import CustomSelect from '@/components/ui/CustomSelect';
 
 /**
  * @typedef {import('@/utils/historyUtils').FilterOptions} FilterOptions

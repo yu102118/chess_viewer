@@ -1,11 +1,8 @@
-import React, { memo, useEffect, useLayoutEffect, useRef } from 'react';
+import { memo, useEffect, useLayoutEffect, useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 
-import {
-  ItemTypes,
-  getPieceImageKey
-} from '@/components/interactions/dndConstants';
+import { ItemTypes, getPieceImageKey } from '@/constants';
 
 const DraggablePiece = memo(
   ({

@@ -1,6 +1,6 @@
 import { memo, useCallback, useState, useEffect, useRef } from 'react';
 import { Palette, Wand2 } from 'lucide-react';
-import { BOARD_THEMES } from '@/constants/chessConstants';
+import { BOARD_THEMES } from '@/constants';
 import { useIntersectionObserver } from '@/hooks';
 import { hexToRgb, rgbToHsv, hsvToRgb, rgbToHex } from '@/utils';
 

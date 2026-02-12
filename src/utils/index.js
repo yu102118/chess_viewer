@@ -37,7 +37,13 @@ export * from './historyUtils';
 export * from './archiveManager';
 
 // Passive event options (distinct from performance utils)
-export { passiveEventOptions, supportsPassive } from './eventUtils';
+export * from './eventUtils';
 
 // Board utilities
 export * from './boardUtils';
+
+// Piece image cache
+export * from './pieceImageCache';
+
+// Error handling utilities (distinct from general error handler)
+export * from './errorHandler';

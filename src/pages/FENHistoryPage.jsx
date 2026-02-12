@@ -6,7 +6,7 @@ import {
   HistoryFilters,
   StatusBadge,
   ConfirmationModal
-} from '@/components/features/history';
+} from '@/components/features/History';
 import { useFENHistory } from '@/hooks';
 
 import {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HelpCircle, Moon, Sun } from 'lucide-react';
-import HelpCenterDrawer from '@/components/features/HelpCenterDrawer/HelpCenterDrawer';
+import HelpCenterDrawer from '@/components/features/HelpCenter/HelpCenter';
 import Logo from '@/assets/Logo.png';
 
 const Navbar = ({ theme, toggleTheme }) => {

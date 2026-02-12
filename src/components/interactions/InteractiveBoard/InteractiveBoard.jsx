@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useDrop } from 'react-dnd';
 
-import { ItemTypes } from '@/components/interactions/dndConstants';
+import { ItemTypes } from '@/constants';
 import DroppableSquare from '@/components/interactions/DroppableSquare';
 import { areBoardsEqual } from '@/utils/boardUtils';
 

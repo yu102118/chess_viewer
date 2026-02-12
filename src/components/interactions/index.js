@@ -6,5 +6,3 @@ export { default as DroppableSquare } from './DroppableSquare/DroppableSquare';
 export { default as InteractiveBoard } from './InteractiveBoard/InteractiveBoard';
 export { default as PiecePalette } from './PiecePalette/PiecePalette';
 export { default as TrashZone } from './TrashZone/TrashZone';
-
-export * from './dndConstants';

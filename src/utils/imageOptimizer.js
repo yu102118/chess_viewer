@@ -1,9 +1,6 @@
 import { drawCoordinates, parseFEN, getCoordinateParams } from './';
 import { logger } from './logger';
-import {
-  EXPORT_MODE_CONFIG,
-  QUALITY_PRESETS
-} from '@/constants/chessConstants';
+import { EXPORT_MODE_CONFIG, QUALITY_PRESETS } from '@/constants';
 
 export const PRINT_DPI = 300;
 export const CM_TO_PIXELS = PRINT_DPI / 2.54;

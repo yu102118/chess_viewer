@@ -1,8 +1,5 @@
 /**
  * The standard chess starting position in FEN notation.
- * Format: piece-placement active-color castling en-passant halfmove fullmove
- * Uppercase = white pieces, lowercase = black pieces
- * Numbers = empty squares in a row
  */
 export const STARTING_FEN =
   'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
@@ -155,27 +152,8 @@ export const BOARD_THEMES = {
   }
 };
 
-export const FAMOUS_POSITIONS = {
-  start: {
-    name: 'Starting Position',
-    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    description: 'Standard chess starting position'
-  },
-  empty: {
-    name: 'Empty Board',
-    fen: '8/8/8/8/8/8/8/8 w - - 0 1',
-    description: 'Empty chessboard'
-  }
-};
-
 /**
  * Export quality presets for professional chess diagram output.
- *
- * Print modes (8x, 16x): Preserve physical board size in centimeters.
- * Higher multiplier = more pixels = sharper print.
- *
- * Social modes (24x, 32x): Fixed large pixel output for social media / zoom.
- * Coordinate borders forced on for professional look.
  */
 export const QUALITY_PRESETS = [
   {

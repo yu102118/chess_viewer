@@ -23,9 +23,9 @@ import {
   batchExport,
   cancelExport,
   pauseExport,
-  resumeExport
-} from '@/utils/canvasExporter';
-import { shouldForceCoordinateBorder } from '@/utils/imageOptimizer';
+  resumeExport,
+  shouldForceCoordinateBorder
+} from '@/utils';
 
 /**
  * Export state reducer - PERFORMANCE OPTIMIZED

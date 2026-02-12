@@ -1,5 +1,5 @@
 import { Checkbox } from '@/components/ui';
-import { QUALITY_PRESETS } from '@/constants/chessConstants';
+import { QUALITY_PRESETS } from '@/constants';
 
 const DisplayOptions = ({
   showCoords,

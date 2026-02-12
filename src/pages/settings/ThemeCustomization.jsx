@@ -10,7 +10,7 @@ import {
   GripVertical,
   AlertTriangle
 } from 'lucide-react';
-import { BOARD_THEMES } from '@/constants/chessConstants';
+import { BOARD_THEMES } from '@/constants';
 import { hexToRgb, rgbToHsv, hsvToRgb, rgbToHex } from '@/utils';
 
 const MAX_TOTAL_PRESETS = 48;

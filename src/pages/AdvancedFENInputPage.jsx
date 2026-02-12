@@ -4,15 +4,15 @@ import {
   ExportProgress,
   BoardSizeControl,
   ExportSettings,
-  ExportSettingsModal,
+  ExportOptionsDialog,
   DisplayOptions
 } from '@/components/features';
-import { PieceSelector } from '@/components/features/fen';
-import { ThemeSelector } from '@/components/features/theme';
+import { PieceSelector } from '@/components/features/Fen';
+import { ThemeSelector } from '@/components/features/Theme';
 import { useChessBoard, usePieceImages, useTheme } from '@/hooks';
 import { useFENBatch } from '@/contexts';
 import { validateFEN, logger } from '@/utils';
-import { ADVANCED_FEN_CONFIG } from '@/constants/chessConstants';
+import { ADVANCED_FEN_CONFIG } from '@/constants';
 import {
   ArrowLeft,
   Trash2,
@@ -1004,9 +1004,9 @@ const AdvancedFENInputPage = memo(
           />
         )}
 
-        {/* Export Settings Modal */}
+        {/* Export Options Dialog */}
         {isExportModalOpen && (
-          <ExportSettingsModal
+          <ExportOptionsDialog
             isOpen={isExportModalOpen}
             onClose={() => setIsExportModalOpen(false)}
             fileName={fileName}

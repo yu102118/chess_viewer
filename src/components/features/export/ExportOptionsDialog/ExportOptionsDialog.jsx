@@ -1,9 +1,9 @@
 import { Settings, Printer, Share2 } from 'lucide-react';
 
 import { Modal, Button, Input } from '@/components/ui';
-import { QUALITY_PRESETS } from '@/constants/chessConstants';
+import { QUALITY_PRESETS } from '@/constants';
 
-const ExportSettingsModal = ({
+const ExportOptionsDialog = ({
   isOpen,
   onClose,
   fileName,
@@ -134,4 +134,4 @@ const ExportSettingsModal = ({
   );
 };
 
-export default ExportSettingsModal;
+export default ExportOptionsDialog;
