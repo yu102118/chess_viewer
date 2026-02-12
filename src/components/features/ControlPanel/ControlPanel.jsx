@@ -23,6 +23,8 @@ const ControlPanel = memo((props) => {
     setShowCoords,
     showCoordinateBorder,
     setShowCoordinateBorder,
+    showThinFrame,
+    setShowThinFrame,
     exportQuality,
     addToFavoritesRef,
     onFavoriteStatusChange,
@@ -157,6 +159,8 @@ const ControlPanel = memo((props) => {
           setShowCoords={setShowCoords}
           showCoordinateBorder={showCoordinateBorder}
           setShowCoordinateBorder={setShowCoordinateBorder}
+          showThinFrame={showThinFrame}
+          setShowThinFrame={setShowThinFrame}
           exportQuality={exportQuality}
         />
       </div>
