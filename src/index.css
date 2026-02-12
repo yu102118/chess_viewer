@@ -719,3 +719,68 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  * {
+    /* Remove all backgrounds and borders for clean printing */
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Ensure the chess board and coordinates are not clipped */
+  canvas,
+  .chess-board,
+  .board-container {
+    page-break-inside: avoid;
+    margin: 0 auto;
+    display: block;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Remove unwanted borders and padding */
+  .glass-card,
+  .card,
+  .panel {
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Hide UI elements that shouldn't be printed */
+  button,
+  .action-buttons,
+  nav,
+  header,
+  footer,
+  .notification,
+  .modal,
+  .tooltip {
+    display: none !important;
+  }
+
+  /* Ensure coordinates and labels are visible */
+  .coordinate-label,
+  .board-label {
+    color: #000 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Keep board colors accurate */
+  .chess-square {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    margin: 1cm;
+    size: auto;
+  }
+}
