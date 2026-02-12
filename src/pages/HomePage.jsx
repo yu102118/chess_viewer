@@ -97,6 +97,10 @@ const HomePage = () => {
     'chess-show-coordinate-border',
     true
   );
+  const [showThinFrame, setShowThinFrame] = useLocalStorage(
+    'chess-show-thin-frame',
+    false
+  );
   const [lightSquare, setLightSquare] = useLocalStorage(
     'chess-light-square',
     '#f0d9b5'
@@ -189,6 +193,7 @@ const HomePage = () => {
       boardSize: boardSize,
       showCoords,
       showCoordinateBorder: effectiveCoordBorder,
+      showThinFrame: showThinFrame,
       lightSquare,
       darkSquare,
       flipped,
@@ -200,6 +205,7 @@ const HomePage = () => {
     boardSize,
     showCoords,
     showCoordinateBorder,
+    showThinFrame,
     lightSquare,
     darkSquare,
     flipped,
@@ -426,6 +432,8 @@ const HomePage = () => {
               setShowCoords={setShowCoords}
               showCoordinateBorder={showCoordinateBorder}
               setShowCoordinateBorder={setShowCoordinateBorder}
+              showThinFrame={showThinFrame}
+              setShowThinFrame={setShowThinFrame}
               exportQuality={exportQuality}
               addToFavoritesRef={addToFavoritesRef}
               onFavoriteStatusChange={setIsFavorite}
