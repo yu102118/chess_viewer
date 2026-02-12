@@ -18,11 +18,13 @@
  * @returns {Object} - { fontSize, borderSize, fontWeight, offset }
  */
 export function getCoordinateParams(boardSize) {
-  // Border size: scales with board, but clamped between 18px and 64px
-  const borderSize = Math.round(Math.max(18, Math.min(64, boardSize * 0.05)));
+  // Border size: scales with board size proportionally
+  // For high-res exports (e.g., 32x), this can be quite large
+  const borderSize = Math.round(Math.max(18, Math.min(800, boardSize * 0.05)));
 
-  // Font size: 72% of the border size, clamped between 10px and 36px
-  const fontSize = Math.round(Math.max(10, Math.min(36, borderSize * 0.72)));
+  // Font size: proportional to border size, with higher max for large exports
+  // Remove the restrictive 36px cap to support high-resolution exports
+  const fontSize = Math.round(Math.max(10, Math.min(480, borderSize * 0.72)));
 
   return {
     fontSize: fontSize,
