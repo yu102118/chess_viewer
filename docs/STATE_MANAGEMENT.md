@@ -1,6 +1,6 @@
 # State Management Documentation
 
-Guide to state management architecture in Chess Diagram Generator.
+Guide to state management architecture in FENForsty Pro.
 
 ---
 
@@ -22,9 +22,11 @@ Guide to state management architecture in Chess Diagram Generator.
 ## Overview
 
 ### Philosophy
-Chess Diagram Generator uses **React Hooks only** for state management - no external libraries (Redux, MobX, Zustand, etc.).
+
+FENForsty Pro uses **React Hooks only** for state management - no external libraries (Redux, MobX, Zustand, etc.).
 
 **Reasons:**
+
 - Application state is relatively simple
 - React's built-in tools are sufficient
 - Smaller bundle size
@@ -110,14 +112,14 @@ const useChessBoard = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showCoordinates, setShowCoordinates] = useState(true);
   const [boardSize, setBoardSize] = useState(800);
-  
+
   // Parse FEN into board array (derived state)
   const board = useMemo(() => parseFEN(fen), [fen]);
-  
+
   // Validation state
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
-  
+
   return {
     fen,
     setFen,
@@ -136,15 +138,15 @@ const useChessBoard = () => {
 
 **State Properties:**
 
-| Property | Type | Default | Purpose |
-|----------|------|---------|---------|
-| `fen` | string | Starting position | Current board position |
-| `isFlipped` | boolean | false | Board orientation |
-| `showCoordinates` | boolean | true | Show rank/file labels |
-| `boardSize` | number | 800 | Display size in pixels |
-| `board` | Array[8][8] | - | Parsed board array |
-| `isValid` | boolean | true | FEN validity |
-| `errorMessage` | string | '' | Validation error |
+| Property          | Type        | Default           | Purpose                |
+| ----------------- | ----------- | ----------------- | ---------------------- |
+| `fen`             | string      | Starting position | Current board position |
+| `isFlipped`       | boolean     | false             | Board orientation      |
+| `showCoordinates` | boolean     | true              | Show rank/file labels  |
+| `boardSize`       | number      | 800               | Display size in pixels |
+| `board`           | Array[8][8] | -                 | Parsed board array     |
+| `isValid`         | boolean     | true              | FEN validity           |
+| `errorMessage`    | string      | ''                | Validation error       |
 
 ---
 
@@ -159,21 +161,21 @@ const useTheme = () => {
     const saved = localStorage.getItem('theme');
     return saved ? JSON.parse(saved) : DEFAULT_THEME;
   });
-  
+
   const [pieceSet, setPieceSet] = useState(() => {
     const saved = localStorage.getItem('pieceSet');
     return saved || 'alpha';
   });
-  
+
   // Persist to localStorage on change
   useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(theme));
   }, [theme]);
-  
+
   useEffect(() => {
     localStorage.setItem('pieceSet', pieceSet);
   }, [pieceSet]);
-  
+
   return {
     theme,
     setTheme,
@@ -210,33 +212,33 @@ const useFENHistory = () => {
     const saved = localStorage.getItem('fenHistory');
     return saved ? JSON.parse(saved) : [];
   });
-  
+
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem('fenFavorites');
     return saved ? JSON.parse(saved) : [];
   });
-  
+
   // Add to history (limit to 50 items)
   const addToHistory = useCallback((fen) => {
-    setHistory(prev => {
-      const newHistory = [fen, ...prev.filter(f => f !== fen)];
+    setHistory((prev) => {
+      const newHistory = [fen, ...prev.filter((f) => f !== fen)];
       const limited = newHistory.slice(0, 50);
       localStorage.setItem('fenHistory', JSON.stringify(limited));
       return limited;
     });
   }, []);
-  
+
   // Toggle favorite
   const toggleFavorite = useCallback((fen) => {
-    setFavorites(prev => {
+    setFavorites((prev) => {
       const newFavorites = prev.includes(fen)
-        ? prev.filter(f => f !== fen)
+        ? prev.filter((f) => f !== fen)
         : [...prev, fen];
       localStorage.setItem('fenFavorites', JSON.stringify(newFavorites));
       return newFavorites;
     });
   }, []);
-  
+
   return {
     history,
     favorites,
@@ -266,15 +268,13 @@ const ControlPanel = () => {
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
-  
+
   return (
     <>
-      <button onClick={() => setShowThemeModal(true)}>
-        Themes
-      </button>
-      
+      <button onClick={() => setShowThemeModal(true)}>Themes</button>
+
       {showThemeModal && (
-        <ThemeModal 
+        <ThemeModal
           isOpen={showThemeModal}
           onClose={() => setShowThemeModal(false)}
         />
@@ -285,6 +285,7 @@ const ControlPanel = () => {
 ```
 
 **Why component state for modals?**
+
 - Modals are UI-only state
 - No need to share across components
 - Simpler than global state
@@ -299,27 +300,24 @@ const FENInput = ({ value, onChange }) => {
   // Local input state for immediate feedback
   const [localValue, setLocalValue] = useState(value);
   const [isValid, setIsValid] = useState(true);
-  
+
   // Debounce updates to parent
-  const debouncedOnChange = useMemo(
-    () => debounce(onChange, 300),
-    [onChange]
-  );
-  
+  const debouncedOnChange = useMemo(() => debounce(onChange, 300), [onChange]);
+
   const handleChange = (e) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
-    
+
     // Validate
     const valid = validateFEN(newValue);
     setIsValid(valid);
-    
+
     // Update parent if valid
     if (valid) {
       debouncedOnChange(newValue);
     }
   };
-  
+
   return (
     <input
       value={localValue}
@@ -338,11 +336,11 @@ const FENInput = ({ value, onChange }) => {
 const ExportButton = ({ format, quality, onExport }) => {
   const [isExporting, setIsExporting] = useState(false);
   const [progress, setProgress] = useState(0);
-  
+
   const handleExport = async () => {
     setIsExporting(true);
     setProgress(0);
-    
+
     try {
       await onExport(format, quality, (p) => setProgress(p));
       // Success notification
@@ -353,12 +351,9 @@ const ExportButton = ({ format, quality, onExport }) => {
       setProgress(0);
     }
   };
-  
+
   return (
-    <button 
-      onClick={handleExport}
-      disabled={isExporting}
-    >
+    <button onClick={handleExport} disabled={isExporting}>
       {isExporting ? `Exporting... ${progress}%` : 'Export'}
     </button>
   );
@@ -370,6 +365,7 @@ const ExportButton = ({ format, quality, onExport }) => {
 ## Derived State
 
 ### What is Derived State?
+
 State that can be **computed** from other state - should not be stored separately.
 
 ### Board Array from FEN
@@ -396,15 +392,15 @@ const board = useMemo(() => parseFEN(fen), [fen]);
 // Derive piece counts from board
 const pieceCounts = useMemo(() => {
   const counts = {};
-  
-  board.forEach(row => {
-    row.forEach(piece => {
+
+  board.forEach((row) => {
+    row.forEach((piece) => {
       if (piece) {
         counts[piece] = (counts[piece] || 0) + 1;
       }
     });
   });
-  
+
   return counts;
 }, [board]);
 ```
@@ -438,7 +434,7 @@ const useLocalStorage = (key, defaultValue) => {
       return defaultValue;
     }
   });
-  
+
   useEffect(() => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
@@ -446,7 +442,7 @@ const useLocalStorage = (key, defaultValue) => {
       console.error(`Error saving ${key}:`, error);
     }
   }, [key, value]);
-  
+
   return [value, setValue];
 };
 
@@ -457,12 +453,14 @@ const [theme, setTheme] = useLocalStorage('theme', DEFAULT_THEME);
 ### What to Persist
 
 **DO persist:**
+
 - ✅ User preferences (theme, piece set)
 - ✅ History and favorites
 - ✅ Display settings (coordinates, flipped)
 - ✅ Last used FEN
 
 **DON'T persist:**
+
 - ❌ Modal open/closed states
 - ❌ Loading states
 - ❌ Temporary form inputs
@@ -483,13 +481,13 @@ const addToHistory = (fen) => {
 
 // ✅ Good: Creating new array
 const addToHistory = (fen) => {
-  setHistory(prev => [...prev, fen]);
+  setHistory((prev) => [...prev, fen]);
 };
 
 // ✅ Good: Functional updates
 const addToHistory = (fen) => {
-  setHistory(prev => {
-    const newHistory = [fen, ...prev.filter(f => f !== fen)];
+  setHistory((prev) => {
+    const newHistory = [fen, ...prev.filter((f) => f !== fen)];
     return newHistory.slice(0, 50);
   });
 };
@@ -504,7 +502,7 @@ const handleExport = async () => {
   setIsExporting(true);
   setProgress(0);
   setError(null);
-  
+
   // Only one re-render!
 };
 ```
@@ -514,11 +512,11 @@ const handleExport = async () => {
 ```javascript
 const loadFENFromFile = async (file) => {
   setLoading(true);
-  
+
   try {
     const text = await file.text();
     const fen = extractFEN(text);
-    
+
     if (validateFEN(fen)) {
       setFen(fen);
       addToHistory(fen);
@@ -614,12 +612,8 @@ const pieceCount = useMemo(() => countPieces(board), [board]);
 const ThemeSelector = () => {
   // Only ThemeSelector needs this
   const [selectedTheme, setSelectedTheme] = useState(null);
-  
-  return (
-    <div>
-      {/* Theme selection UI */}
-    </div>
-  );
+
+  return <div>{/* Theme selection UI */}</div>;
 };
 ```
 
@@ -629,7 +623,7 @@ const ThemeSelector = () => {
 // If multiple components need same state, lift it up
 const App = () => {
   const [theme, setTheme] = useState(DEFAULT_THEME);
-  
+
   return (
     <>
       <ChessBoard theme={theme} />
@@ -661,11 +655,11 @@ const isFavorite = (fen) => favorites.has(fen);
 const [isOpen, setIsOpen] = useState(false);
 
 // Simple toggle
-const toggle = () => setIsOpen(prev => !prev);
+const toggle = () => setIsOpen((prev) => !prev);
 
 // Toggle with callback
 const toggleModal = useCallback(() => {
-  setIsOpen(prev => !prev);
+  setIsOpen((prev) => !prev);
 }, []);
 ```
 
@@ -680,7 +674,7 @@ const [formData, setFormData] = useState({
 
 // Update single field
 const updateField = (field, value) => {
-  setFormData(prev => ({
+  setFormData((prev) => ({
     ...prev,
     [field]: value
   }));
@@ -688,7 +682,7 @@ const updateField = (field, value) => {
 
 // Update multiple fields
 const updateTheme = (newTheme) => {
-  setFormData(prev => ({
+  setFormData((prev) => ({
     ...prev,
     ...newTheme
   }));
@@ -702,20 +696,18 @@ const [items, setItems] = useState([]);
 
 // Add item
 const addItem = (item) => {
-  setItems(prev => [...prev, item]);
+  setItems((prev) => [...prev, item]);
 };
 
 // Remove item
 const removeItem = (id) => {
-  setItems(prev => prev.filter(item => item.id !== id));
+  setItems((prev) => prev.filter((item) => item.id !== id));
 };
 
 // Update item
 const updateItem = (id, updates) => {
-  setItems(prev =>
-    prev.map(item =>
-      item.id === id ? { ...item, ...updates } : item
-    )
+  setItems((prev) =>
+    prev.map((item) => (item.id === id ? { ...item, ...updates } : item))
   );
 };
 ```
@@ -731,7 +723,7 @@ const [state, setState] = useState({
 
 const fetchData = async () => {
   setState({ data: null, loading: true, error: null });
-  
+
   try {
     const data = await api.fetch();
     setState({ data, loading: false, error: null });
@@ -808,11 +800,11 @@ import { renderHook, act } from '@testing-library/react-hooks';
 
 test('useChessBoard updates FEN', () => {
   const { result } = renderHook(() => useChessBoard());
-  
+
   act(() => {
     result.current.setFen(NEW_FEN);
   });
-  
+
   expect(result.current.fen).toBe(NEW_FEN);
   expect(result.current.board).toEqual(parseFEN(NEW_FEN));
 });
@@ -831,7 +823,7 @@ class ChessBoard extends React.Component {
     fen: DEFAULT_FEN,
     isFlipped: false
   };
-  
+
   updateFEN = (fen) => {
     this.setState({ fen });
   };
@@ -841,7 +833,7 @@ class ChessBoard extends React.Component {
 const ChessBoard = () => {
   const [fen, setFen] = useState(DEFAULT_FEN);
   const [isFlipped, setIsFlipped] = useState(false);
-  
+
   const updateFEN = (fen) => {
     setFen(fen);
   };
