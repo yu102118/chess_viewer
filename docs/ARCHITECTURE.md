@@ -1,4 +1,4 @@
-# Chess Diagram Generator - Architecture Documentation
+# FENForsty Pro - Architecture Documentation
 
 ## Table of Contents
 
