@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback, useRef, memo, useMemo } from 'react';
+import { BOARD_THEMES } from '@/constants';
+import { hexToRgb, rgbToHsv, hsvToRgb, rgbToHex } from '@/utils';
 import {
   Check,
   Palette,
@@ -10,8 +12,6 @@ import {
   GripVertical,
   AlertTriangle
 } from 'lucide-react';
-import { BOARD_THEMES } from '@/constants';
-import { hexToRgb, rgbToHsv, hsvToRgb, rgbToHex } from '@/utils';
 
 const MAX_TOTAL_PRESETS = 48;
 const STANDARD_PRESETS_COUNT = 19;
