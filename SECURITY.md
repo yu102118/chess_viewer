@@ -2,7 +2,7 @@
 
 ## Supported Versions## 🔐 Supported Versions
 
-The following versions of Chess Diagram Generator are currently supported:The following versions of **Chess Diagram Generator** are currently supported with security updates:
+The following versions of FENForsty Pro are currently supported:The following versions of **FENForsty Pro** are currently supported with security updates:
 
 | Version | Support Status | Security Updates || Version | Support Status | Security Updates | End of Life |
 
