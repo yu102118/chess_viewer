@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for considering contributing to **Chess Diagram Generator**!  
+Thank you for considering contributing to **FENForsty Pro**!  
 We appreciate all contributions — bug reports, feature requests, documentation improvements, and code contributions.
 
 ---
@@ -32,7 +32,7 @@ Before creating a new issue:
    - **Environment details**:
      - Browser (name and version)
      - Operating system
-     - Chess Diagram Generator version (if applicable)
+     - FENForsty Pro version (if applicable)
 
 ➡️ **Submit bug reports here:**  
 [GitHub Issues](https://github.com/BilgeGates/chess_viewer/issues)
@@ -41,7 +41,7 @@ Before creating a new issue:
 
 ## ✨ Feature Requests
 
-We welcome feature requests that improve Chess Diagram Generator!
+We welcome feature requests that improve FENForsty Pro!
 
 When submitting a feature request, please include:
 
@@ -351,7 +351,7 @@ If you have questions or need assistance:
 
 ## 🙏 Thank You!
 
-Your contributions make Chess Diagram Generator better for everyone. We appreciate your time, effort, and dedication to improving this project!
+Your contributions make FENForsty Pro better for everyone. We appreciate your time, effort, and dedication to improving this project!
 
 Happy coding! ♟️
 
