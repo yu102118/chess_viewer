@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to **Chess Diagram Generator** are documented in this file.  
+All notable changes to **FENForsty Pro** are documented in this file.  
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
@@ -9,6 +9,47 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - SVG export format
 - Keyboard shortcuts
+
+---
+
+## [v5.0.0] - 2026-02-13
+
+### Added
+
+- **Dynamic Board Size Scaling System** - Board exports now correctly respect physical size selection (4cm, 6cm, 8cm) with accurate pixel dimensions
+- **Comprehensive JSDoc Documentation** - Added detailed JSDoc comments across the entire codebase for better code maintainability
+- **Professional Documentation** - Completely rewritten markdown files without emojis, using professional technical writing style
+- **Standardized Import Organization** - All file imports now follow a consistent professional ordering (React/framework, third-party, internal utilities, components, styles)
+
+### Fixed
+
+- **CRITICAL: Export Dimension Bug** - Board exports now produce correctly scaled physical dimensions based on board size selection
+  - 8x quality @ 4cm now produces 3,776px (small diagram for print)
+  - 8x quality @ 6cm now produces 5,664px (medium diagram for print)
+  - 8x quality @ 8cm now produces 7,552px (large diagram for print)
+  - Quality multiplier now correctly affects both image quality and resolution without changing physical print size
+- **Coordinate System Positioning** - Dynamically calculated coordinate positions now scale proportionally with board dimensions
+- **Coordinate Container Borders Removed** - Clean export appearance without borders around rank/file labels
+- **Export Module Issues** - Fixed incorrect property access in `getExportInfo` function (`baseSizeCm` → `physicalSizeCm`, `dpi` → `effectiveDPI`)
+- **Circular Export Dependencies** - Resolved all circular export issues in component index files throughout the codebase
+- **React Build Errors** - Fixed all component export patterns to eliminate Vite build failures
+
+### Changed
+
+- **Export Logic Refactored** - Improved calculation accuracy for dimension scaling across all quality/size combinations
+- **Code Organization** - Enhanced file structure and formatting for better readability
+- **Documentation Structure** - Improved markdown formatting with consistent headers, code blocks, and technical examples
+- **Import Statements** - Alphabetically organized and properly categorized all imports
+- **Comment Cleanup** - Removed redundant code comments (e.g., "set state", "return value") while preserving complex logic explanations
+
+### Technical Details
+
+#### Coordinate System Improvements
+
+- Removed visual borders from coordinate containers for cleaner exports
+- Font sizes now scale dynamically: `fontSize = min(480px, max(10px, borderSize × 0.72))`
+- Border sizes scale proportionally: `borderSize = min(800px, max(18px, boardPixels × 0.05))`
+- Coordinates positioned using dynamic center calculations based on actual square pixel dimensions
 
 ---
 
