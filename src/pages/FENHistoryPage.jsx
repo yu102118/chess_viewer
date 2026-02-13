@@ -1,14 +1,12 @@
 import { useState, useCallback, useEffect, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { MiniChessPreview } from '@/components';
+import { MiniPreview } from '@/components/board';
 import {
   HistoryFilters,
   StatusBadge,
   ConfirmationModal
 } from '@/components/features/History';
 import { useFENHistory } from '@/hooks';
-
 import {
   ArrowLeft,
   Trash2,
@@ -406,7 +404,7 @@ const FENHistoryPage = memo(() => {
                   {/* Preview - Fixed aspect ratio, uses user's theme */}
                   <div className="aspect-square bg-bg/30 p-2 flex-shrink-0 border-b border-border/30">
                     <div className="w-full h-full overflow-hidden">
-                      <MiniChessPreview
+                      <MiniPreview
                         fen={entry.fen}
                         lightSquare={lightSquare}
                         darkSquare={darkSquare}
