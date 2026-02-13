@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-
 import { Navbar } from '@/components/layout';
 import { ErrorBoundary } from '@/components/ui';
 import { ThemeSettingsProvider, FENBatchProvider } from '@/contexts';
