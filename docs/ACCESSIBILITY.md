@@ -1,6 +1,6 @@
 # ♿ Accessibility Documentation
 
-Current accessibility state of Chess Diagram Generator.
+Current accessibility state of FENForsty Pro.
 
 ---
 
@@ -16,9 +16,10 @@ Current accessibility state of Chess Diagram Generator.
 
 ## Overview
 
-This document honestly describes the accessibility status of Chess Diagram Generator based on actual implementation.
+This document honestly describes the accessibility status of FENForsty Pro based on actual implementation.
 
 ### Reality Check
+
 - ❌ **No WCAG compliance testing done**
 - ✅ Basic browser keyboard navigation works
 - ❌ No custom accessibility features implemented
@@ -31,7 +32,9 @@ This document honestly describes the accessibility status of Chess Diagram Gener
 ## What Actually Exists
 
 ### 1. Browser Default Keyboard Navigation
+
 The standard browser keyboard shortcuts work:
+
 - `Tab` / `Shift+Tab` - Navigate between elements
 - `Enter` - Click buttons/links
 - `Space` - Toggle checkboxes, click buttons
@@ -40,7 +43,9 @@ The standard browser keyboard shortcuts work:
 **No custom keyboard shortcuts exist.**
 
 ### 2. Semantic HTML
+
 Basic HTML tags are used:
+
 ```jsx
 <main>
   <button>...</button>
@@ -52,22 +57,27 @@ Basic HTML tags are used:
 **No ARIA attributes implemented.**
 
 ### 3. Responsive Design
+
 - Built with Tailwind CSS
 - Works on mobile, tablet, and desktop
 - Touch-friendly on mobile devices
 
 ### 4. Canvas Board Rendering
+
 - HTML5 Canvas for chess board
 - High-quality rendering
 - Export up to 12,800×12,800px
 
 ### 5. Color Customization
+
 - Multiple board themes
 - Custom color picker
 - Users can adjust board colors
 
 ### 6. Dependencies
+
 Based on `package.json`:
+
 ```json
 {
   "react": "^19.2.3",
@@ -121,19 +131,21 @@ Based on `package.json`:
    - No screen reader testing done
 
 6. **Custom Focus Styles**
+
 ```css
-   /* This doesn't exist - using browser defaults */
-   *:focus-visible {
-     /* No custom styles */
-   }
+/* This doesn't exist - using browser defaults */
+*:focus-visible {
+  /* No custom styles */
+}
 ```
 
 7. **Screen Reader Only Text**
+
 ```css
-   /* This utility class doesn't exist */
-   .sr-only {
-     /* Not implemented */
-   }
+/* This utility class doesn't exist */
+.sr-only {
+  /* Not implemented */
+}
 ```
 
 8. **High Contrast Mode**
@@ -189,10 +201,12 @@ Based on `package.json`:
 ## Testing Status
 
 ### What's Been Tested
+
 - ⚠️ Manual testing on desktop Chrome only
 - ⚠️ Basic responsive testing on mobile
 
 ### What Hasn't Been Tested
+
 - ❌ No screen reader testing (NVDA, JAWS, VoiceOver)
 - ❌ No keyboard-only navigation testing
 - ❌ No color contrast testing
@@ -201,6 +215,7 @@ Based on `package.json`:
 - ❌ No WCAG compliance verification
 
 ### Testing Tools NOT Used
+
 ```bash
 # These are NOT installed or configured:
 # - @axe-core/react
@@ -217,6 +232,7 @@ Based on `package.json`:
 ### If We Add Accessibility (Planned)
 
 #### Phase 1: Basic (Easy to Add)
+
 1. Add ARIA labels to all buttons
 2. Add `sr-only` utility class
 3. Add basic screen reader text for canvas
@@ -224,6 +240,7 @@ Based on `package.json`:
 5. Add custom focus styles
 
 #### Phase 2: Medium (More Work)
+
 1. Implement focus management in modals
 2. Add status announcements (aria-live)
 3. Create FEN position descriptions
@@ -231,6 +248,7 @@ Based on `package.json`:
 5. Support `prefers-reduced-motion`
 
 #### Phase 3: Advanced (Major Effort)
+
 1. SVG board option (better than canvas for accessibility)
 2. Full WCAG 2.1 AA compliance
 3. Comprehensive screen reader support
@@ -242,6 +260,7 @@ Based on `package.json`:
 ## Honest Summary
 
 ### What Works
+
 ✅ Basic HTML structure is semantic  
 ✅ Standard browser keyboard navigation  
 ✅ Responsive layout  
@@ -252,16 +271,19 @@ Based on `package.json`:
 ✅ Error boundary for graceful failures (v3.5.2)
 
 ### What Doesn't Work
+
 ❌ Canvas board is completely inaccessible  
 ❌ No screen reader support for board  
 ❌ No keyboard shortcuts  
 ❌ No accessibility testing  
-❌ No WCAG compliance  
+❌ No WCAG compliance
 
 ### Bottom Line
+
 **This app is built for sighted users who use a mouse or touchscreen.**
 
 Users who rely on:
+
 - Screen readers: **Will have major difficulties**
 - Keyboard-only navigation: **Will be inconvenienced**
 - High contrast: **May struggle with default colors**
@@ -289,16 +311,19 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
 ## Resources
 
 ### For Future Implementation
+
 - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 - [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
 - [WebAIM](https://webaim.org/)
 
 ### Testing Tools to Add
+
 - [axe DevTools](https://www.deque.com/axe/devtools/)
 - [Lighthouse](https://developers.google.com/web/tools/lighthouse)
 - [WAVE Extension](https://wave.webaim.org/)
 
 ### Screen Readers for Testing
+
 - [NVDA](https://www.nvaccess.org/) (Free, Windows)
 - VoiceOver (macOS/iOS built-in)
 - TalkBack (Android built-in)
