@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, memo } from 'react';
-import { Printer, Share2, Ruler, FileText } from 'lucide-react';
 import { Input } from '@/components/ui';
 import { QUALITY_PRESETS } from '@/constants';
+import { Printer, Share2, Ruler, FileText } from 'lucide-react';
 
 /**
  * @param {Object} props
