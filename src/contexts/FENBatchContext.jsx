@@ -1,9 +1,9 @@
 import {
   createContext,
-  useContext,
   useState,
   useEffect,
-  useCallback
+  useCallback,
+  useContext
 } from 'react';
 import { validateFEN } from '@/utils';
 
@@ -37,14 +37,12 @@ export const FENBatchProvider = ({ children }) => {
       if (!fen || !validateFEN(fen)) {
         return false;
       }
-
       const trimmedFen = fen.trim();
 
       // Check for duplicates
       if (batchList.includes(trimmedFen)) {
         return false;
       }
-
       setBatchList((prev) => [...prev, trimmedFen]);
       return true;
     },
@@ -63,7 +61,6 @@ export const FENBatchProvider = ({ children }) => {
     if (!newFen || !validateFEN(newFen)) {
       return false;
     }
-
     setBatchList((prev) => {
       const updated = [...prev];
       updated[index] = newFen.trim();
