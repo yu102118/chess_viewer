@@ -1,4 +1,4 @@
-<h1 align="center">♟️ Chess Diagram Generator</h1>
+<h1 align="center">♟️ FENForsty Pro</h1>
 
 <div align="center">
 
@@ -55,21 +55,55 @@
 
 ## 🌟 Overview
 
-Chess Diagram Generator is a modern web application for creating **high-quality chess diagrams** from FEN notation.  
+FENForsty Pro is a modern web application for creating **high-quality chess diagrams** from FEN notation.  
 It is built for chess players, coaches, authors, streamers, and developers who need **fast, precise, and customizable** board visuals.
 
 ---
 
 ## ✨ Features
 
-- Full FEN notation support with validation
-- Multi-FEN input (up to 10 positions)
-- Ultra-HD PNG & JPEG export (up to 12,800×12,800px)
-- Batch export & clipboard copy
-- 23 professional piece sets
-- Advanced color picker & themes
-- Favorites, history & famous positions
-- Board flip & coordinates
+### Core Features
+
+- **FEN Notation** - Full FEN notation support with real-time validation
+- **Multi-Position Input** - Handle up to 10 positions simultaneously
+- **High-Resolution Export** - PNG & JPEG export with quality up to 24,192×24,192px
+- **Batch Operations** - Export multiple positions or copy to clipboard
+- **23 Professional Piece Sets** - from Classic to Modern styles
+- **Advanced Customization** - Complete color picker with HSL/RGB/HEX support
+- **Theme System** - 20+ preset themes plus custom theme creation
+- **Position Management** - Favorites, history tracking, and famous positions library
+- **Board Controls** - Flip board, toggle coordinates, adjust physical dimensions
+
+### Export Quality System
+
+FENForsty Pro provides professional-grade export with precise control over both **physical dimensions** and **pixel density**:
+
+#### Print Mode (8x, 16x)
+
+Preserves exact physical board dimensions for print-ready diagrams:
+
+| Quality | Board Size | Dimensions        | File Size  | Effective DPI | Use Case                     |
+| ------- | ---------- | ----------------- | ---------- | ------------- | ---------------------------- |
+| 8x      | 4cm        | 3,776 × 3,776px   | 70-150 KB  | 2,400 DPI     | Small print diagrams         |
+| 8x      | 6cm        | 5,664 × 5,664px   | 140-300 KB | 2,400 DPI     | Medium print diagrams        |
+| 8x      | 8cm        | 7,552 × 7,552px   | 250-500 KB | 2,400 DPI     | Large print diagrams         |
+| 16x     | 6cm        | 11,328 × 11,328px | 500-900 KB | 4,800 DPI     | High-quality print, balanced |
+
+#### Social Mode (24x, 32x)
+
+Fixed large output optimized for social media and zoom capabilities:
+
+| Quality | Dimensions        | File Size  | Use Case                              |
+| ------- | ----------------- | ---------- | ------------------------------------- |
+| 24x     | 18,112 × 18,112px | 1.2-2.0 MB | Social media, maximum zoom capability |
+| 32x     | 24,192 × 24,192px | 2.5-4.0 MB | Professional print, ultra quality     |
+
+**Formula**: `pixelDimensions = boardSizeCM × qualityMultiplier × 118.11`
+
+**Key Design**:
+
+- **Print Mode**: Physical size (4cm, 6cm, 8cm) determines output dimensions; quality multiplier increases pixel density
+- **Social Mode**: Fixed large output regardless of board size selection; ideal for screen viewing and zooming
 
 ---
 
@@ -361,7 +395,7 @@ All functionality runs entirely in the user's browser with no external data flow
 
 ### 🛡️ Data Safety Guarantee
 
-> Chess Diagram Generator will **never** upload, sync, or share your data.  
+> FENForsty Pro will **never** upload, sync, or share your data.  
 > All positions, exports, favorites, and settings remain local to your device.
 
 ---
