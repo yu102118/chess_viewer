@@ -12,6 +12,11 @@
 // The main cache: stores piece images for each style (e.g., 'cburnett', 'alpha')
 const globalPieceCache = new Map();
 
+// Tracks in-flight load promises so concurrent callers share the same request
+// instead of each starting their own (replaces the spinning-setInterval pattern).
+const loadingPromises = new Map();
+
+// --- legacy helpers kept for backwards compatibility ---
 // Tracks which styles are currently being loaded (prevents duplicate loads)
 const loadingStyles = new Set();
 
@@ -86,85 +91,64 @@ export function clearPieceCache() {
  * @returns {Promise<Object>} - The loaded images
  */
 export async function preloadPieceStyle(pieceStyle, PIECE_MAP) {
-  // Check if images are already cached
+  // 1. Already cached — return immediately
   const cached = getCachedPieces(pieceStyle);
   if (cached) {
     return cached;
   }
 
-  // If another component is already loading this style, wait for it
-  if (isStyleLoading(pieceStyle)) {
-    return new Promise(function (resolve) {
-      const checkInterval = setInterval(function () {
-        const loaded = getCachedPieces(pieceStyle);
-        if (loaded) {
-          clearInterval(checkInterval);
-          resolve(loaded);
-        }
-      }, 100);
-    });
+  // 2. Load already in-flight — share the existing Promise instead of
+  //    spinning a setInterval that blocks the main thread.
+  if (loadingPromises.has(pieceStyle)) {
+    return loadingPromises.get(pieceStyle);
   }
 
-  // Mark this style as loading so others don't start loading it too
+  // 3. Start a new load and register the Promise so all subsequent callers
+  //    get the same reference.
   markStyleLoading(pieceStyle);
 
   const images = {};
-
-  // Get all the piece keys (e.g., 'wK', 'wQ', 'bP', etc.)
   const keys = Object.keys(PIECE_MAP);
 
-  // Create a load promise for each piece
-  const loadPromises = [];
+  const promise = Promise.all(
+    keys.map(
+      (key) =>
+        new Promise(function (resolve) {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          const url =
+            'https://lichess1.org/assets/piece/' +
+            pieceStyle +
+            '/' +
+            PIECE_MAP[key] +
+            '.svg';
 
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    const value = PIECE_MAP[key];
+          img.onload = function () {
+            images[key] = img;
+            resolve();
+          };
 
-    const promise = new Promise(function (resolve) {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      const url =
-        'https://lichess1.org/assets/piece/' +
-        pieceStyle +
-        '/' +
-        value +
-        '.svg';
+          img.onerror = function () {
+            images[key] = null;
+            resolve();
+          };
 
-      img.onload = function () {
-        images[key] = img;
-        resolve();
-      };
+          img.src = url;
+        })
+    )
+  ).then(function () {
+    setCachedPieces(pieceStyle, images);
+    markStyleLoaded(pieceStyle);
+    loadingPromises.delete(pieceStyle);
+    return images;
+  });
 
-      img.onerror = function () {
-        // If a piece fails to load, store null as a placeholder
-        images[key] = null;
-        resolve();
-      };
-
-      img.src = url;
-    });
-
-    loadPromises.push(promise);
-  }
-
-  // Wait for all pieces to finish loading
-  await Promise.all(loadPromises);
-
-  // Store the loaded images in the cache
-  setCachedPieces(pieceStyle, images);
-  markStyleLoaded(pieceStyle);
-
-  return images;
+  loadingPromises.set(pieceStyle, promise);
+  return promise;
 }
 
-// Preload the default piece style shortly after the page loads.
-// We delay slightly so it doesn't interfere with the initial page render.
-if (typeof window !== 'undefined') {
-  setTimeout(function () {
-    import('../constants/chessConstants').then(function (module) {
-      preloadPieceStyle('cburnett', module.PIECE_MAP).catch(function () {
-        // Silently fail — preloading is optional
-      });
-    });
-  }, 1000);
-}
+// Module-level preload side effect removed.
+// Eagerly loading pieces on every import (even on pages that don't show a board)
+// wastes bandwidth and saturates the network right when the page is loading
+// its own critical assets. Call preloadPieceStyle() explicitly from the
+// component or page that actually renders a chess board.

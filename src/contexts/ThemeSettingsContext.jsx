@@ -8,6 +8,16 @@ import {
 
 const ThemeSettingsContext = createContext(null);
 
+// Singleton AudioContext — created once on first use, reused on every playSound call.
+// Creating a new AudioContext per call exhausts the browser's ~6-context limit.
+let _sharedAudioCtx = null;
+function getAudioCtx() {
+  if (!_sharedAudioCtx) {
+    _sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return _sharedAudioCtx;
+}
+
 export const useThemeSettings = () => {
   const context = useContext(ThemeSettingsContext);
   if (!context) {
@@ -52,6 +62,11 @@ export const ThemeSettingsProvider = ({ children }) => {
 
   // Apply animation setting to CSS
   useEffect(() => {
+  // Merge all DOM-class/style mutations into a single effect keyed on the
+  // three settings that affect the document root. Avoids 3 separate effect
+  // evaluations on every settings change.
+  useEffect(() => {
+    // Animations
     if (settings.enableAnimations) {
       document.documentElement.style.setProperty('--transition-speed', '0.2s');
       document.documentElement.classList.remove('no-animations');
@@ -59,25 +74,19 @@ export const ThemeSettingsProvider = ({ children }) => {
       document.documentElement.style.setProperty('--transition-speed', '0s');
       document.documentElement.classList.add('no-animations');
     }
-  }, [settings.enableAnimations]);
 
-  // Apply compact mode
-  useEffect(() => {
-    if (settings.compactMode) {
-      document.documentElement.classList.add('compact-mode');
-    } else {
-      document.documentElement.classList.remove('compact-mode');
-    }
-  }, [settings.compactMode]);
+    // Compact mode
+    document.documentElement.classList.toggle(
+      'compact-mode',
+      Boolean(settings.compactMode)
+    );
 
-  // Apply color blind mode
-  useEffect(() => {
-    if (settings.enableColorBlindMode) {
-      document.documentElement.classList.add('color-blind-mode');
-    } else {
-      document.documentElement.classList.remove('color-blind-mode');
-    }
-  }, [settings.enableColorBlindMode]);
+    // Color-blind mode
+    document.documentElement.classList.toggle(
+      'color-blind-mode',
+      Boolean(settings.enableColorBlindMode)
+    );
+  }, [settings.enableAnimations, settings.compactMode, settings.enableColorBlindMode]);
 
   // Save settings to localStorage
   useEffect(() => {
@@ -118,11 +127,8 @@ export const ThemeSettingsProvider = ({ children }) => {
     (type = 'click') => {
       if (!settings.enableSoundEffects) return;
 
-      // Create simple beep sounds using Web Audio API
       try {
-        const audioCtx = new (
-          window.AudioContext || window.webkitAudioContext
-        )();
+        const audioCtx = getAudioCtx();
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 

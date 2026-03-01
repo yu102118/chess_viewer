@@ -1,15 +1,7 @@
 import { useMemo } from 'react';
 
 import { parseFEN, logger } from '@/utils';
-
-/**
- * Creates an empty 8x8 chess board.
- *
- * @returns {Array<Array<string>>} Empty board matrix
- */
-function createEmptyBoard() {
-  return Array.from({ length: 8 }, () => Array(8).fill(''));
-}
+import { createEmptyBoard } from '@/utils/boardUtils';
 
 /**
  * Parses FEN string into a stable board array.

@@ -85,12 +85,10 @@ function App() {
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme((currentTheme) => {
-      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', nextTheme);
-      saveTheme(nextTheme);
-      return nextTheme;
-    });
+    setTheme((currentTheme) =>
+      currentTheme === 'dark' ? 'light' : 'dark'
+    );
+    // DOM attribute and localStorage are applied by the useLayoutEffect above
   }, []);
 
   return (

@@ -51,6 +51,7 @@ export default defineConfig({
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-icons': ['lucide-react', 'react-icons'],
+          'vendor-motion': ['framer-motion'],
           'vendor-dnd': [
             'react-dnd',
             'react-dnd-html5-backend',
@@ -79,7 +80,10 @@ export default defineConfig({
 
     cssCodeSplit: true,
 
-    assetsInlineLimit: 10000
+    // Inline only assets smaller than 4 KB (Vite default).
+    // Higher values would base64-encode SVG chess pieces into the JS bundle,
+    // increasing bundle size and disabling HTTP caching for those assets.
+    assetsInlineLimit: 4096
   },
 
   css: {

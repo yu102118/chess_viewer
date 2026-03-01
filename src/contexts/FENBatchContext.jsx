@@ -39,14 +39,17 @@ export const FENBatchProvider = ({ children }) => {
       }
       const trimmedFen = fen.trim();
 
-      // Check for duplicates
-      if (batchList.includes(trimmedFen)) {
-        return false;
-      }
-      setBatchList((prev) => [...prev, trimmedFen]);
-      return true;
+      // Use functional updater so this callback never closes over stale batchList,
+      // giving it a stable reference that doesn't cause child re-renders.
+      let added = false;
+      setBatchList((prev) => {
+        if (prev.includes(trimmedFen)) return prev;
+        added = true;
+        return [...prev, trimmedFen];
+      });
+      return added;
     },
-    [batchList]
+    [] // stable — no batchList dependency
   );
 
   const removeFromBatch = useCallback((index) => {

@@ -60,10 +60,24 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   const dragSessionFenRef = useRef(null);
   const latestFenRef = useRef(fen);
   const autoArchiveTimerRef = useRef(null);
+  // Always-current ref so callbacks can read history without closing over it
+  const fenHistoryRef = useRef(fenHistory);
 
   useEffect(() => {
     latestFenRef.current = fen;
   }, [fen]);
+
+  useEffect(() => {
+    fenHistoryRef.current = fenHistory;
+  }, [fenHistory]);
+
+  // Debounced persistence — replaces all inline persistHistory() calls in mutating callbacks
+  useEffect(() => {
+    const id = setTimeout(() => {
+      persistHistory(fenHistory);
+    }, 300);
+    return () => clearTimeout(id);
+  }, [fenHistory]);
 
   useEffect(() => {
     const loadHistory = async () => {
@@ -105,10 +119,15 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
     };
   }, []);
 
+  // O(1) FEN lookup index — rebuilt only when history array changes
+  const fenIndex = useMemo(
+    () => new Map(fenHistory.map((h) => [h.fen, h])),
+    [fenHistory]
+  );
+
   useEffect(() => {
-    const currentItem = fenHistory.find((h) => h.fen === fen);
-    onFavoriteStatusChange?.(currentItem?.isFavorite || false);
-  }, [fen, fenHistory, onFavoriteStatusChange]);
+    onFavoriteStatusChange?.(fenIndex.get(fen)?.isFavorite ?? false);
+  }, [fen, fenIndex, onFavoriteStatusChange]);
 
   useEffect(() => {
     const performAutoArchive = async () => {
@@ -166,7 +185,7 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
         const newEntry = createHistoryEntry(fenToSave, source, dragSessionId);
         const updatedHistory = sortByMostRecent([newEntry, ...prevHistory]);
 
-        persistHistory(updatedHistory);
+
         return updatedHistory;
       });
     },
@@ -232,29 +251,21 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
    * @param {number} id - Entry ID to toggle
    * @returns {Promise<void>}
    */
-  const toggleFavorite = useCallback(
-    async (id) => {
-      const updated = fenHistory.map((h) =>
+  const toggleFavorite = useCallback(async (id) => {
+    setFenHistory((prev) =>
+      prev.map((h) =>
         h.id === id ? { ...h, isFavorite: !h.isFavorite } : h
-      );
-      setFenHistory(updated);
-      persistHistory(updated);
-    },
-    [fenHistory]
-  );
+      )
+    );
+  }, []);
 
   /**
    * @param {number} id - Entry ID to delete
    * @returns {Promise<void>}
    */
-  const deleteHistory = useCallback(
-    async (id) => {
-      const updated = fenHistory.filter((h) => h.id !== id);
-      setFenHistory(updated);
-      persistHistory(updated);
-    },
-    [fenHistory]
-  );
+  const deleteHistory = useCallback(async (id) => {
+    setFenHistory((prev) => prev.filter((h) => h.id !== id));
+  }, []);
 
   /**
    * @returns {Promise<void>}
@@ -283,31 +294,36 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
         return;
       }
 
-      const existingItem = fenHistory.find((h) => h.fen === currentFen);
+      // Read current history via ref — no stale-closure risk, no dep needed
+      const existingItem = fenHistoryRef.current.find(
+        (h) => h.fen === currentFen
+      );
 
-      let updatedHistory;
       if (existingItem) {
-        updatedHistory = fenHistory.map((h) =>
-          h.fen === currentFen
-            ? { ...h, isFavorite: !h.isFavorite, lastActiveAt: Date.now() }
-            : h
-        );
         const isFav = !existingItem.isFavorite;
         onNotification?.(
           isFav ? 'Added to favorites' : 'Removed from favorites',
           'success'
         );
       } else {
-        const newEntry = createHistoryEntry(currentFen, 'manual');
-        newEntry.isFavorite = true;
-        updatedHistory = sortByMostRecent([newEntry, ...fenHistory]);
         onNotification?.('Added to favorites ★', 'success');
       }
 
-      setFenHistory(updatedHistory);
-      persistHistory(updatedHistory);
+      setFenHistory((prev) => {
+        const existing = prev.find((h) => h.fen === currentFen);
+        if (existing) {
+          return prev.map((h) =>
+            h.fen === currentFen
+              ? { ...h, isFavorite: !h.isFavorite, lastActiveAt: Date.now() }
+              : h
+          );
+        }
+        const newEntry = createHistoryEntry(currentFen, 'manual');
+        newEntry.isFavorite = true;
+        return sortByMostRecent([newEntry, ...prev]);
+      });
     },
-    [fenHistory]
+    []
   );
 
   /**
@@ -331,8 +347,9 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
    */
   const archiveHistoryEntries = useCallback(
     async (ids) => {
-      const toArchive = fenHistory.filter((entry) => ids.includes(entry.id));
-      const remaining = fenHistory.filter((entry) => !ids.includes(entry.id));
+      const current = fenHistoryRef.current;
+      const toArchive = current.filter((entry) => ids.includes(entry.id));
+      const remaining = current.filter((entry) => !ids.includes(entry.id));
 
       try {
         const { archive: newArchive } = await archiveEntriesUtil(
@@ -343,13 +360,13 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
 
         setFenHistory(remaining);
         setArchive(newArchive);
-        persistHistory(remaining);
+        // persistHistory omitted — debounced effect handles it
       } catch (err) {
         logger.error('Failed to archive entries:', err);
         throw err;
       }
     },
-    [fenHistory, archive]
+    [archive]
   );
 
   /**
@@ -366,13 +383,13 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
 
         setArchive(newArchive);
         setFenHistory((prev) => sortByMostRecent([entry, ...prev]));
-        persistHistory([entry, ...fenHistory]);
+        // persistHistory omitted — debounced effect handles it
       } catch (err) {
         logger.error('Failed to reactivate entry:', err);
         throw err;
       }
     },
-    [archive, fenHistory]
+    [archive]
   );
 
   /**

@@ -1,4 +1,11 @@
-const VALID_PIECES = 'pnbrqkPNBRQK';
+// Use Set for O(1) membership tests in the hot parse loop
+const VALID_PIECES = new Set([
+  'p', 'n', 'b', 'r', 'q', 'k',
+  'P', 'N', 'B', 'R', 'Q', 'K'
+]);
+// isNaN is unreliable for single chars (' ' and '' both pass);
+// an explicit range check is correct and faster.
+const VALID_DIGITS = new Set(['1', '2', '3', '4', '5', '6', '7', '8']);
 
 /**
  * Creates an empty 8x8 chess board.
@@ -56,21 +63,17 @@ export function parseFEN(fenString) {
       for (let charIndex = 0; charIndex < row.length; charIndex++) {
         const char = row[charIndex];
 
-        if (isNaN(char)) {
-          if (VALID_PIECES.indexOf(char) === -1) {
-            throw new Error('Invalid piece character: ' + char);
-          }
-          boardRow.push(char);
-        } else {
+        if (VALID_DIGITS.has(char)) {
           const emptySquares = parseInt(char, 10);
-
-          if (emptySquares < 1 || emptySquares > 8) {
-            throw new Error('Invalid empty square count: ' + char);
-          }
 
           for (let i = 0; i < emptySquares; i++) {
             boardRow.push('');
           }
+        } else {
+          if (!VALID_PIECES.has(char)) {
+            throw new Error('Invalid piece character: ' + char);
+          }
+          boardRow.push(char);
         }
       }
 
@@ -119,19 +122,14 @@ export function validateFEN(fen) {
       for (let charIndex = 0; charIndex < row.length; charIndex++) {
         const char = row[charIndex];
 
-        if (isNaN(char)) {
-          if (VALID_PIECES.indexOf(char) === -1) {
+        if (VALID_DIGITS.has(char)) {
+          const num = parseInt(char, 10);
+          squareCount = squareCount + num;
+        } else {
+          if (!VALID_PIECES.has(char)) {
             return false;
           }
           squareCount = squareCount + 1;
-        } else {
-          const num = parseInt(char, 10);
-
-          if (num < 1 || num > 8) {
-            return false;
-          }
-
-          squareCount = squareCount + num;
         }
       }
 
