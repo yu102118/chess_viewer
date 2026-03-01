@@ -9,6 +9,7 @@ import { validateFEN } from '@/utils';
 
 const FENBatchContext = createContext(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useFENBatch = () => {
   const context = useContext(FENBatchContext);
   if (!context) {
