@@ -26,6 +26,8 @@ import {
 const DRAG_INACTIVITY_TIMEOUT = 60000;
 
 /**
+ * Immediately persist the history array to localStorage (and cloud storage if available).
+ *
  * @param {HistoryEntry[]} history - History array to persist
  * @returns {void}
  */
@@ -44,6 +46,8 @@ const persistHistory = (history) => {
 };
 
 /**
+ * Manages FEN position history with support for favorites, filters, drag sessions, and auto-archival.
+ *
  * @param {string} fen - Current FEN string
  * @param {function(boolean):void} [onFavoriteStatusChange] - Callback for favorite status changes
  * @returns {Object}
@@ -60,7 +64,7 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   const dragSessionFenRef = useRef(null);
   const latestFenRef = useRef(fen);
   const autoArchiveTimerRef = useRef(null);
-  // Always-current ref so callbacks can read history without closing over it
+  /** @type {React.MutableRefObject<HistoryEntry[]>} Always-current ref so callbacks avoid stale closure over fenHistory */
   const fenHistoryRef = useRef(fenHistory);
 
   useEffect(() => {
@@ -71,7 +75,6 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
     fenHistoryRef.current = fenHistory;
   }, [fenHistory]);
 
-  // Debounced persistence — replaces all inline persistHistory() calls in mutating callbacks
   useEffect(() => {
     const id = setTimeout(() => {
       persistHistory(fenHistory);
@@ -119,7 +122,6 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
     };
   }, []);
 
-  // O(1) FEN lookup index — rebuilt only when history array changes
   const fenIndex = useMemo(
     () => new Map(fenHistory.map((h) => [h.fen, h])),
     [fenHistory]
@@ -166,6 +168,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   }, [archive, archiveFilters]);
 
   /**
+   * Commit a FEN position to history with deduplication and touch-on-repeat logic.
+   *
    * @param {string} fenToSave - FEN string to save
    * @param {'manual'|'export'|'drag'} source - Entry source
    * @param {string|null} [dragSessionId] - Drag session ID if applicable
@@ -193,6 +197,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   );
 
   /**
+   * Save the current FEN as a manual history entry, cancelling any active drag session.
+   *
    * @param {string} fenToSave - FEN string to save
    * @returns {void}
    */
@@ -211,6 +217,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   );
 
   /**
+   * Save the current FEN as an export history entry.
+   *
    * @param {string} fenToSave - FEN string to save
    * @returns {void}
    */
@@ -222,6 +230,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   );
 
   /**
+   * Signal that a drag action occurred; debounces the final history commit by DRAG_INACTIVITY_TIMEOUT ms.
+   *
    * @returns {void}
    */
   const notifyDragAction = useCallback(() => {
@@ -248,6 +258,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   }, [commitToHistory]);
 
   /**
+   * Toggle the favorite flag of a history entry by its ID.
+   *
    * @param {number} id - Entry ID to toggle
    * @returns {Promise<void>}
    */
@@ -260,6 +272,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   }, []);
 
   /**
+   * Remove a history entry by its ID.
+   *
    * @param {number} id - Entry ID to delete
    * @returns {Promise<void>}
    */
@@ -268,6 +282,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   }, []);
 
   /**
+   * Remove all history entries and clear persisted storage.
+   *
    * @returns {Promise<void>}
    */
   const clearHistory = useCallback(async () => {
@@ -283,6 +299,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   }, []);
 
   /**
+   * Mark the current FEN as a favorite, creating a history entry if one doesn't already exist.
+   *
    * @param {string} currentFen - Current FEN string
    * @param {function(string, string):void} [onNotification] - Notification callback
    * @returns {Promise<void>}
@@ -294,7 +312,6 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
         return;
       }
 
-      // Read current history via ref — no stale-closure risk, no dep needed
       const existingItem = fenHistoryRef.current.find(
         (h) => h.fen === currentFen
       );
@@ -327,6 +344,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   );
 
   /**
+   * Load the full archive from storage into component state.
+   *
    * @returns {Promise<void>}
    */
   const loadArchiveData = useCallback(async () => {
@@ -342,6 +361,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   }, []);
 
   /**
+   * Manually archive a set of history entries by their IDs.
+   *
    * @param {number[]} ids - Entry IDs to archive
    * @returns {Promise<void>}
    */
@@ -370,6 +391,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   );
 
   /**
+   * Restore an archived entry back to active history.
+   *
    * @param {number} id - Archived entry ID to reactivate
    * @returns {Promise<void>}
    */
@@ -393,6 +416,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   );
 
   /**
+   * Permanently delete an entry from the archive.
+   *
    * @param {number} id - Archived entry ID to delete
    * @returns {Promise<void>}
    */
@@ -410,6 +435,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   );
 
   /**
+   * Clear all entries from the archive storage.
+   *
    * @returns {Promise<void>}
    */
   const clearArchiveData = useCallback(async () => {
@@ -423,6 +450,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   }, []);
 
   /**
+   * Update the active history filter criteria.
+   *
    * @param {FilterOptions} newFilters - New filter options
    * @returns {void}
    */
@@ -431,6 +460,8 @@ export const useFENHistory = (fen, onFavoriteStatusChange) => {
   }, []);
 
   /**
+   * Update the archive filter criteria.
+   *
    * @param {FilterOptions} newFilters - New archive filter options
    * @returns {void}
    */
