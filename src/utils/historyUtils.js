@@ -41,6 +41,8 @@ const THIRTY_DAYS_MS = 30 * DAY_MS;
 const NINETY_DAYS_MS = 90 * DAY_MS;
 
 /**
+ * Determine the activity status of a history entry based on its age.
+ *
  * @param {number} lastActiveAt - Last active timestamp
  * @returns {StatusLevel}
  */
@@ -54,6 +56,8 @@ export const calculateStatus = (lastActiveAt) => {
 };
 
 /**
+ * Return true if an entry has been inactive long enough to be auto-archived.
+ *
  * @param {number} lastActiveAt - Last active timestamp
  * @returns {boolean}
  */
@@ -64,7 +68,7 @@ export const shouldArchive = (lastActiveAt) => {
 };
 
 /**
- * Check if entry can be archived (not a favorite)
+ * Check if a history entry is eligible for archival (inactive and not a favorite).
  * @param {HistoryEntry} entry - History entry to check
  * @returns {boolean}
  */
@@ -73,6 +77,8 @@ export const canArchive = (entry) => {
 };
 
 /**
+ * Calculate the number of days remaining before an entry will be auto-archived.
+ *
  * @param {number} lastActiveAt - Last active timestamp
  * @returns {number}
  */
@@ -84,6 +90,8 @@ export const daysUntilArchive = (lastActiveAt) => {
 };
 
 /**
+ * Test whether a single history entry matches all provided filter criteria.
+ *
  * @param {HistoryEntry} entry - History entry to check
  * @param {FilterOptions} filters - Filter criteria
  * @returns {boolean}
@@ -123,6 +131,8 @@ export const matchesFilters = (entry, filters) => {
 };
 
 /**
+ * Filter an array of history entries by the given filter criteria.
+ *
  * @param {HistoryEntry[]} entries - History entries to filter
  * @param {FilterOptions} filters - Filter criteria
  * @returns {HistoryEntry[]}
@@ -136,6 +146,9 @@ export const applyFilters = (entries, filters) => {
 };
 
 /**
+ * Split entries into those that remain active and those ready to be archived.
+ * Favorites are always kept in the active list.
+ *
  * @param {HistoryEntry[]} entries - History entries to partition
  * @returns {{active: HistoryEntry[], toArchive: HistoryEntry[]}}
  */
@@ -144,7 +157,6 @@ export const partitionByArchiveStatus = (entries) => {
   const toArchive = [];
 
   entries.forEach((entry) => {
-    // Favorites never get archived
     if (entry.isFavorite) {
       active.push(entry);
     } else if (shouldArchive(entry.lastActiveAt)) {
@@ -158,6 +170,8 @@ export const partitionByArchiveStatus = (entries) => {
 };
 
 /**
+ * Convert an active history entry to an archived entry record.
+ *
  * @param {HistoryEntry} entry - History entry to convert
  * @param {'auto'|'manual'} archiveSource - How entry is being archived
  * @returns {ArchivedEntry}
@@ -176,6 +190,8 @@ export const convertToArchivedEntry = (entry, archiveSource = 'auto') => {
 };
 
 /**
+ * Restore an archived entry back to an active history entry, resetting its last-active timestamp.
+ *
  * @param {ArchivedEntry} archived - Archived entry to convert
  * @returns {HistoryEntry}
  */
@@ -191,6 +207,8 @@ export const convertFromArchivedEntry = (archived) => {
 };
 
 /**
+ * Update an entry's lastActiveAt timestamp to the current time.
+ *
  * @param {HistoryEntry} entry - Entry to update
  * @returns {HistoryEntry}
  */
@@ -202,6 +220,8 @@ export const touchEntry = (entry) => {
 };
 
 /**
+ * Create a new history entry with the current timestamp as its ID.
+ *
  * @param {string} fen - FEN string
  * @param {'manual'|'export'|'drag'} source - Entry source
  * @param {string} [dragSessionId] - Drag session ID if applicable
@@ -221,6 +241,8 @@ export const createHistoryEntry = (fen, source, dragSessionId = null) => {
 };
 
 /**
+ * Sort history entries by most-recently-active first.
+ *
  * @param {HistoryEntry[]} entries - Entries to sort
  * @returns {HistoryEntry[]}
  */
@@ -229,6 +251,8 @@ export const sortByMostRecent = (entries) => {
 };
 
 /**
+ * Sort archived entries by archive date, most recently archived first.
+ *
  * @param {ArchivedEntry[]} entries - Archived entries to sort
  * @returns {ArchivedEntry[]}
  */
