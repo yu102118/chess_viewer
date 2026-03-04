@@ -19,12 +19,13 @@ let originalBodyStyle = {};
 let originalHtmlStyle = {};
 
 /**
- * Get scrollbar width for layout shift compensation
+ * Measure the browser scrollbar width to compensate for layout shift on lock.
+ *
+ * @returns {number} Scrollbar width in pixels
  */
 function getScrollbarWidth() {
   if (typeof window === 'undefined') return 0;
 
-  // Create temporary element
   const outer = document.createElement('div');
   outer.style.visibility = 'hidden';
   outer.style.overflow = 'scroll';
@@ -33,22 +34,22 @@ function getScrollbarWidth() {
   outer.style.top = '-9999px';
   document.body.appendChild(outer);
 
-  // Force scrollbar
   const inner = document.createElement('div');
   inner.style.width = '100%';
   outer.appendChild(inner);
 
   const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
 
-  // Clean up
   document.body.removeChild(outer);
 
   return scrollbarWidth;
 }
 
 /**
- * Lock body scroll with scrollbar compensation
- * Returns the captured scroll position
+ * Lock body scroll with scrollbar-width compensation to prevent layout shift.
+ * Supports nested locks via a reference counter; styles are applied only on the first lock.
+ *
+ * @returns {number} The scroll position (scrollY) captured at lock time
  */
 function lockScroll() {
   if (typeof window === 'undefined') return 0;
@@ -61,7 +62,6 @@ function lockScroll() {
     const body = document.body;
     const html = document.documentElement;
 
-    // Store original styles
     originalBodyStyle = {
       overflow: body.style.overflow,
       paddingRight: body.style.paddingRight,
@@ -78,7 +78,6 @@ function lockScroll() {
     // Get current scroll position BEFORE locking
     const scrollY = window.scrollY || window.pageYOffset;
 
-    // Apply scroll lock styles
     html.style.overflow = 'hidden';
     html.style.scrollBehavior = 'auto'; // Prevent smooth scroll on restore
 
@@ -103,7 +102,6 @@ function lockScroll() {
       });
     }
 
-    // Store scroll position for restoration
     body.setAttribute('data-scroll-lock-y', scrollY.toString());
 
     return scrollY;
@@ -115,7 +113,8 @@ function lockScroll() {
 }
 
 /**
- * Unlock body scroll and restore original state
+ * Unlock body scroll and restore the original scroll position and styles.
+ * Only restores when the last nested lock is released.
  */
 function unlockScroll() {
   if (typeof window === 'undefined') return;
@@ -127,10 +126,8 @@ function unlockScroll() {
     const body = document.body;
     const html = document.documentElement;
 
-    // Get stored scroll position
     const scrollY = parseInt(body.getAttribute('data-scroll-lock-y') || '0');
 
-    // Restore original styles
     Object.keys(originalBodyStyle).forEach((key) => {
       body.style[key] = originalBodyStyle[key] || '';
     });
@@ -139,10 +136,8 @@ function unlockScroll() {
       html.style[key] = originalHtmlStyle[key] || '';
     });
 
-    // Restore scroll position
     window.scrollTo(0, scrollY);
 
-    // Restore fixed elements padding
     const fixedElements = document.querySelectorAll(
       '[data-scroll-lock-padding]'
     );
@@ -152,10 +147,8 @@ function unlockScroll() {
       el.removeAttribute('data-scroll-lock-padding');
     });
 
-    // Clean up attributes
     body.removeAttribute('data-scroll-lock-y');
 
-    // Reset style objects
     originalBodyStyle = {};
     originalHtmlStyle = {};
   }
