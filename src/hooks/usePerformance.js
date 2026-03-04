@@ -35,10 +35,11 @@ export const useDebounce = (callback, delay = 300) => {
 };
 
 /**
- * useIdleCallback - Execute callback during browser idle time
+ * Execute a callback during browser idle time, falling back to a 100 ms timeout.
  *
  * @param {Function} callback - Function to execute during idle
- * @param {Array} deps - Dependencies array
+ * @param {Array} deps - Dependencies array (passed directly to useEffect)
+ * @returns {void}
  */
 export const useIdleCallback = (callback, deps = []) => {
   useEffect(() => {
