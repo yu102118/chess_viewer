@@ -2,8 +2,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { logger } from '@/utils/logger';
 
 /**
- * useTheme - Advanced theme management hook with persistence
- * Manages board colors, themes, and provides preset theme switching
+ * Advanced theme management hook with persistence.
+ * Manages board square colors, preset themes, and history.
+ *
+ * @param {Object} [options] - Initial color options
+ * @param {string} [options.initialLight='#f0d9b5'] - Initial light square color
+ * @param {string} [options.initialDark='#b58863'] - Initial dark square color
+ * @returns {Object} Theme state, setters, and utility functions
  */
 export const useTheme = ({
   initialLight = '#f0d9b5',
@@ -116,14 +121,18 @@ export const useTheme = ({
     return () => clearTimeout(timeoutId);
   }, [lightSquare, darkSquare, currentTheme]);
 
-  // Apply preset theme
+  /**
+   * Apply a named preset theme.
+   *
+   * @param {string} themeKey - Theme identifier key
+   * @param {{ name?: string, light: string, dark: string }} themeData - Theme color data
+   */
   const applyTheme = useCallback(
     (themeKey, themeData) => {
       setLightSquare(themeData.light);
       setDarkSquare(themeData.dark);
       setCurrentTheme(themeKey);
 
-      // Add to history
       const newHistoryItem = {
         id: Date.now(),
         name: themeData.name || themeKey,
@@ -153,14 +162,19 @@ export const useTheme = ({
     [themeHistory]
   );
 
-  // Apply custom colors
+  /**
+   * Apply custom light and dark square colors.
+   *
+   * @param {string} light - Light square hex color
+   * @param {string} dark - Dark square hex color
+   * @param {string} [name='Custom'] - Theme name for history
+   */
   const applyCustomTheme = useCallback(
     (light, dark, name = 'Custom') => {
       setLightSquare(light);
       setDarkSquare(dark);
       setCurrentTheme(name);
 
-      // Add to history
       const newHistoryItem = {
         id: Date.now(),
         name,
@@ -188,14 +202,22 @@ export const useTheme = ({
     [themeHistory]
   );
 
-  // Reset to default theme
+  /**
+   * Reset board colors to the initial (default) values.
+   */
   const resetTheme = useCallback(() => {
     setLightSquare(initialLight);
     setDarkSquare(initialDark);
     setCurrentTheme('brown');
   }, [initialLight, initialDark]);
 
-  // Get contrast ratio for accessibility
+  /**
+   * Calculate WCAG contrast ratio between two hex colors.
+   *
+   * @param {string} color1 - First hex color
+   * @param {string} color2 - Second hex color
+   * @returns {string} Contrast ratio formatted to two decimal places
+   */
   const getContrastRatio = useCallback((color1, color2) => {
     const getLuminance = (hex) => {
       const rgb = parseInt(hex.slice(1), 16);
@@ -216,13 +238,22 @@ export const useTheme = ({
     return ratio.toFixed(2);
   }, []);
 
-  // Check if current colors have good contrast
+  /**
+   * Check whether the current light/dark square colors meet minimum contrast.
+   *
+   * @returns {boolean} True if contrast ratio is at least 1.5
+   */
   const hasGoodContrast = useCallback(() => {
     const ratio = parseFloat(getContrastRatio(lightSquare, darkSquare));
     return ratio >= 1.5; // Minimum readable contrast for chess board
   }, [lightSquare, darkSquare, getContrastRatio]);
 
-  // Generate complementary color
+  /**
+   * Generate the complementary (inverted) color of a hex color.
+   *
+   * @param {string} hex - Input hex color
+   * @returns {string} Complementary hex color
+   */
   const generateComplementary = useCallback((hex) => {
     const num = parseInt(hex.slice(1), 16);
     const r = 255 - ((num >> 16) & 0xff);
@@ -231,7 +262,13 @@ export const useTheme = ({
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }, []);
 
-  // Lighten/Darken color
+  /**
+   * Lighten or darken a hex color by a percentage.
+   *
+   * @param {string} hex - Input hex color
+   * @param {number} percent - Percentage to adjust (-100 to 100)
+   * @returns {string} Adjusted hex color
+   */
   const adjustBrightness = useCallback((hex, percent) => {
     const num = parseInt(hex.slice(1), 16);
     const amt = Math.round(2.55 * percent);
@@ -241,7 +278,9 @@ export const useTheme = ({
     return '#' + ((1 << 24) + (R << 16) + (G << 8) + B).toString(16).slice(1);
   }, []);
 
-  // Clear theme history
+  /**
+   * Clear the theme change history.
+   */
   const clearThemeHistory = useCallback(() => {
     setThemeHistory([]);
     try {
@@ -251,7 +290,11 @@ export const useTheme = ({
     }
   }, []);
 
-  // Export current theme
+  /**
+   * Export the current theme as a serializable object.
+   *
+   * @returns {{ name: string, light: string, dark: string, contrastRatio: string, timestamp: number }}
+   */
   const exportTheme = useCallback(() => {
     return {
       name: currentTheme,
@@ -262,7 +305,12 @@ export const useTheme = ({
     };
   }, [currentTheme, lightSquare, darkSquare, getContrastRatio]);
 
-  // Import theme from data
+  /**
+   * Import and apply a theme from a serialized theme object.
+   *
+   * @param {{ light: string, dark: string, name?: string }} themeData - Theme to import
+   * @throws {Error} If themeData is missing required color fields
+   */
   const importTheme = useCallback(
     (themeData) => {
       if (!themeData || !themeData.light || !themeData.dark) {
@@ -306,7 +354,9 @@ export const useTheme = ({
 };
 
 /**
- * useThemePresets - Hook for managing theme presets
+ * Manages user-defined custom theme presets with localStorage persistence.
+ *
+ * @returns {{ customPresets: Array, savePreset: Function, deletePreset: Function, clearPresets: Function }}
  */
 export const useThemePresets = () => {
   const [customPresets, setCustomPresets] = useState([]);
@@ -322,6 +372,13 @@ export const useThemePresets = () => {
     }
   }, []);
 
+  /**
+   * Save a new custom color preset.
+   *
+   * @param {string} name - Preset display name
+   * @param {string} light - Light square hex color
+   * @param {string} dark - Dark square hex color
+   */
   const savePreset = useCallback(
     (name, light, dark) => {
       const newPreset = {
@@ -347,6 +404,11 @@ export const useThemePresets = () => {
     [customPresets]
   );
 
+  /**
+   * Delete a custom preset by ID.
+   *
+   * @param {number} id - Preset ID to delete
+   */
   const deletePreset = useCallback(
     (id) => {
       const updated = customPresets.filter((p) => p.id !== id);
@@ -364,6 +426,9 @@ export const useThemePresets = () => {
     [customPresets]
   );
 
+  /**
+   * Remove all custom theme presets.
+   */
   const clearPresets = useCallback(() => {
     setCustomPresets([]);
     try {
