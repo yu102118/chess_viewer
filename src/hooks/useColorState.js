@@ -1,6 +1,12 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { logger } from '@/utils/logger';
 
+/**
+ * Manages color picker modal state and user interactions.
+ *
+ * @param {string} initialValue - Initial hex color value
+ * @returns {Object} Color state and interaction handlers
+ */
 export const useColorState = (initialValue) => {
   const [hexInput, setHexInput] = useState(initialValue);
   const [tempColor, setTempColor] = useState(initialValue);
@@ -17,11 +23,19 @@ export const useColorState = (initialValue) => {
     };
   }, []);
 
+  /**
+   * Select a color from the palette.
+   *
+   * @param {string} color - Hex color to select
+   */
   const handleColorSelect = useCallback((color) => {
     setTempColor(color);
     setHexInput(color);
   }, []);
 
+  /**
+   * Generate and apply a random hex color.
+   */
   const handleRandom = useCallback(() => {
     const randomColor =
       '#' +
@@ -32,11 +46,21 @@ export const useColorState = (initialValue) => {
     setHexInput(randomColor);
   }, []);
 
+  /**
+   * Reset color to the original value.
+   *
+   * @param {string} originalValue - Original hex color to restore
+   */
   const handleReset = useCallback((originalValue) => {
     setTempColor(originalValue);
     setHexInput(originalValue);
   }, []);
 
+  /**
+   * Copy text to clipboard and briefly show confirmation.
+   *
+   * @param {string} text - Text to copy to clipboard
+   */
   const handleCopy = useCallback(async (text) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -50,10 +74,16 @@ export const useColorState = (initialValue) => {
     }
   }, []);
 
+  /**
+   * Toggle the color picker modal open/closed.
+   */
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => !prev);
   }, []);
 
+  /**
+   * Close the color picker modal.
+   */
   const closeModal = useCallback(() => {
     setIsOpen(false);
   }, []);
