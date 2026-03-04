@@ -3,10 +3,11 @@ import { parseFEN, validateFEN, logger } from '@/utils';
 import { createEmptyBoard, boardToFEN, isBoardEmpty } from '@/utils/boardUtils';
 
 /**
- * Hook for managing interactive chess board with drag & drop
- * @param {string} initialFen - Initial FEN string
- * @param {function} onFenChange - Callback when FEN changes
- * @returns {object} - Board state and handlers
+ * Manages interactive chess board state with drag-and-drop piece placement.
+ *
+ * @param {string} initialFen - Initial FEN string for the board position
+ * @param {function(string): void} onFenChange - Callback invoked with the new full FEN when the position changes
+ * @returns {Object} Board state and interaction handlers
  */
 export const useInteractiveBoard = (initialFen, onFenChange) => {
   const [board, setBoard] = useState(() => {
@@ -25,7 +26,10 @@ export const useInteractiveBoard = (initialFen, onFenChange) => {
   const lastExternalFenRef = useRef(initialFen);
 
   /**
-   * Update board from external FEN changes
+   * Synchronise the board from an externally provided FEN string.
+   * No-ops if the FEN was generated internally to avoid update loops.
+   *
+   * @param {string} fen - FEN string to apply
    */
   const syncFromFen = useCallback((fen) => {
     if (fen === lastGeneratedFenRef.current) {
@@ -56,7 +60,9 @@ export const useInteractiveBoard = (initialFen, onFenChange) => {
   }, []);
 
   /**
-   * Generate FEN from current board and notify parent
+   * Convert the current board array to a full FEN string and notify the parent component.
+   *
+   * @param {string[][]} newBoard - Updated 8x8 board array
    */
   const notifyFenChange = useCallback(
     (newBoard) => {
@@ -124,7 +130,6 @@ export const useInteractiveBoard = (initialFen, onFenChange) => {
    */
   const clearBoard = useCallback(() => {
     setBoard((prevBoard) => {
-      // Check if board is already empty
       if (isBoardEmpty(prevBoard)) {
         return prevBoard;
       }
@@ -183,7 +188,9 @@ export const useInteractiveBoard = (initialFen, onFenChange) => {
   );
 
   /**
-   * Get current FEN string
+   * Get the current board position as a full FEN string.
+   *
+   * @type {string}
    */
   const currentFen = useMemo(() => {
     const positionFen = boardToFEN(board);
