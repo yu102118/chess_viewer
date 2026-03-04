@@ -14,19 +14,31 @@ let exportState = {
   paused: false
 };
 
+/**
+ * Cancel the current export operation.
+ */
 export function cancelExport() {
   exportState.cancelled = true;
   exportState.paused = false;
 }
 
+/**
+ * Pause the current export operation.
+ */
 export function pauseExport() {
   exportState.paused = true;
 }
 
+/**
+ * Resume a previously paused export operation.
+ */
 export function resumeExport() {
   exportState.paused = false;
 }
 
+/**
+ * Reset the export state, clearing any cancelled or paused flags.
+ */
 export function resetExportState() {
   exportState = {
     cancelled: false,
