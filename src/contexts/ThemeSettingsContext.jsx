@@ -11,6 +11,12 @@ const ThemeSettingsContext = createContext(null);
 // Singleton AudioContext — created once on first use, reused on every playSound call.
 // Creating a new AudioContext per call exhausts the browser's ~6-context limit.
 let _sharedAudioCtx = null;
+
+/**
+ * Get or create the shared AudioContext singleton.
+ *
+ * @returns {AudioContext}
+ */
 function getAudioCtx() {
   if (!_sharedAudioCtx) {
     _sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -18,6 +24,12 @@ function getAudioCtx() {
   return _sharedAudioCtx;
 }
 
+/**
+ * Access the nearest ThemeSettingsContext value.
+ *
+ * @returns {Object} Theme settings context value
+ * @throws {Error} If used outside a ThemeSettingsProvider
+ */
 // eslint-disable-next-line react-refresh/only-export-components
 export const useThemeSettings = () => {
   const context = useContext(ThemeSettingsContext);
@@ -42,6 +54,12 @@ const defaultSettings = {
   enableColorBlindMode: false
 };
 
+/**
+ * Provides theme UI settings, recent colors, and sound effects to the component tree.
+ *
+ * @param {{ children: React.ReactNode }} props
+ * @returns {JSX.Element}
+ */
 export const ThemeSettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState(() => {
     try {
@@ -65,7 +83,6 @@ export const ThemeSettingsProvider = ({ children }) => {
   // three settings that affect the document root. Avoids 3 separate effect
   // evaluations on every settings change.
   useEffect(() => {
-    // Animations
     if (settings.enableAnimations) {
       document.documentElement.style.setProperty('--transition-speed', '0.2s');
       document.documentElement.classList.remove('no-animations');
@@ -74,54 +91,76 @@ export const ThemeSettingsProvider = ({ children }) => {
       document.documentElement.classList.add('no-animations');
     }
 
-    // Compact mode
     document.documentElement.classList.toggle(
       'compact-mode',
       Boolean(settings.compactMode)
     );
 
-    // Color-blind mode
     document.documentElement.classList.toggle(
       'color-blind-mode',
       Boolean(settings.enableColorBlindMode)
     );
   }, [settings.enableAnimations, settings.compactMode, settings.enableColorBlindMode]);
 
-  // Save settings to localStorage
   useEffect(() => {
     localStorage.setItem('themeSettings', JSON.stringify(settings));
   }, [settings]);
 
-  // Save recent colors to localStorage
   useEffect(() => {
     localStorage.setItem('recentColors', JSON.stringify(recentColors));
   }, [recentColors]);
 
+  /**
+   * Update a single setting by key.
+   *
+   * @param {string} key - Setting key
+   * @param {*} value - New value
+   */
   const updateSetting = useCallback((key, value) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   }, []);
 
+  /**
+   * Replace all settings with a new settings object.
+   *
+   * @param {Object} newSettings - Complete settings object
+   */
   const updateSettings = useCallback((newSettings) => {
     setSettings(newSettings);
   }, []);
 
+  /**
+   * Reset all settings to their default values.
+   */
   const resetSettings = useCallback(() => {
     setSettings(defaultSettings);
   }, []);
 
+  /**
+   * Add a hex color to the top of the recent colors list (max 12 entries).
+   *
+   * @param {string} color - Hex color to add
+   */
   const addRecentColor = useCallback((color) => {
     if (!color) return;
     setRecentColors((prev) => {
       const filtered = prev.filter((c) => c !== color);
-      return [color, ...filtered].slice(0, 12); // Keep max 12 recent colors
+      return [color, ...filtered].slice(0, 12);
     });
   }, []);
 
+  /**
+   * Clear all recent colors.
+   */
   const clearRecentColors = useCallback(() => {
     setRecentColors([]);
   }, []);
 
-  // Play sound effect if enabled
+  /**
+   * Play a brief synthesised beep if sound effects are enabled.
+   *
+   * @param {'click'|'success'|'error'} [type='click'] - Sound type
+   */
   const playSound = useCallback(
     (type = 'click') => {
       if (!settings.enableSoundEffects) return;
