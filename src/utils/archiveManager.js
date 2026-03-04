@@ -15,6 +15,8 @@ const ARCHIVE_STORAGE_KEY = 'fen-history-archive';
 const MAX_ARCHIVE_SIZE = 10000;
 
 /**
+ * Load the archive from cloud or localStorage.
+ *
  * @returns {Promise<ArchivedEntry[]>}
  */
 export const loadArchive = async () => {
@@ -42,6 +44,8 @@ export const loadArchive = async () => {
 };
 
 /**
+ * Persist the archive (trimmed to MAX_ARCHIVE_SIZE) to localStorage and optionally cloud storage.
+ *
  * @param {ArchivedEntry[]} archive - Archive entries to save
  * @returns {Promise<void>}
  */
@@ -62,6 +66,8 @@ export const saveArchive = async (archive) => {
 };
 
 /**
+ * Convert active history entries to archived entries and merge them into the existing archive.
+ *
  * @param {HistoryEntry[]} entries - Entries to archive
  * @param {ArchivedEntry[]} existingArchive - Current archive
  * @param {'auto'|'manual'} source - Archive source
@@ -90,6 +96,8 @@ export const archiveEntries = async (
 };
 
 /**
+ * Partition active history entries into those to keep and those ready to be auto-archived.
+ *
  * @param {HistoryEntry[]} activeEntries - Active history entries
  * @returns {Promise<{toArchive: HistoryEntry[], remaining: HistoryEntry[]}>}
  */
@@ -103,6 +111,8 @@ export const findEntriesForAutoArchive = async (activeEntries) => {
 };
 
 /**
+ * Move an archived entry back to active history and remove it from the archive.
+ *
  * @param {number} id - Archived entry ID to reactivate
  * @param {ArchivedEntry[]} archive - Current archive
  * @returns {Promise<{entry: HistoryEntry, archive: ArchivedEntry[]}>}
@@ -126,6 +136,8 @@ export const reactivateEntry = async (id, archive) => {
 };
 
 /**
+ * Permanently delete an entry from the archive by its ID.
+ *
  * @param {number} id - Archived entry ID to delete
  * @param {ArchivedEntry[]} archive - Current archive
  * @returns {Promise<ArchivedEntry[]>}
@@ -137,6 +149,8 @@ export const deleteArchivedEntry = async (id, archive) => {
 };
 
 /**
+ * Remove all entries from the archive in both localStorage and cloud storage.
+ *
  * @returns {Promise<void>}
  */
 export const clearArchive = async () => {
@@ -153,6 +167,8 @@ export const clearArchive = async () => {
 };
 
 /**
+ * Compute summary statistics for an archive collection.
+ *
  * @param {ArchivedEntry[]} archive - Archive to get statistics for
  * @returns {{total: number, bySource: {manual: number, export: number, drag: number}, favorites: number}}
  */
@@ -178,6 +194,8 @@ export const getArchiveStatistics = (archive) => {
 };
 
 /**
+ * Read active history from localStorage, archive eligible entries, and persist both stores.
+ *
  * @returns {Promise<{entries: HistoryEntry[], archive: ArchivedEntry[], archivedCount: number}>}
  */
 export const performAutoArchival = async () => {
