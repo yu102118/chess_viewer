@@ -19,7 +19,6 @@ export const useIntersectionObserver = ({
     const element = ref.current;
     if (!element) return;
 
-    // Create observer
     const observer = new IntersectionObserver(
       ([entry]) => {
         // Once visible, keep it visible (don't re-hide)
