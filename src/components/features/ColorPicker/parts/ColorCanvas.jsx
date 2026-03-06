@@ -1,3 +1,10 @@
+/**
+ * Horizontal canvas that the parent draws the color picker gradient onto.
+ * @param {Object} props
+ * @param {React.RefObject<HTMLCanvasElement>} props.canvasRef - Ref attached to the canvas element
+ * @param {Function} props.onClick - Called when the user clicks to pick a color
+ * @returns {JSX.Element}
+ */
 const ColorCanvas = ({ canvasRef, onClick }) => {
   return (
     <div className="relative group">
