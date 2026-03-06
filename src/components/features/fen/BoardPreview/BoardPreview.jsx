@@ -1,6 +1,29 @@
 import { memo } from 'react';
 import { Play, Pause, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 
+/**
+ * Interactive board preview with playback controls and favorite toggles.
+ * @param {Object} props
+ * @param {string[]} props.validFens - Array of FEN strings to cycle through
+ * @param {number} props.currentIndex - Index of the currently displayed FEN
+ * @param {string} props.currentFen - FEN string at `currentIndex`
+ * @param {Object} props.boardState - Current board state object
+ * @param {Object} props.currentTheme - Theme colors for the board
+ * @param {Object} props.pieceImages - Map of piece keys to preloaded images
+ * @param {boolean} props.imagesLoading - Whether images are still loading
+ * @param {string[]} props.favorites - Array of favorited FEN strings
+ * @param {boolean} props.isPlaying - Whether auto-play is active
+ * @param {number} props.interval - Auto-play interval in ms
+ * @param {number[]} props.intervalOptions - Available interval options
+ * @param {boolean} props.showIntervalMenu - Whether the interval selection dropdown is open
+ * @param {Function} props.onSetInterval - Called with a new interval value
+ * @param {Function} props.onToggleIntervalMenu - Toggles the interval dropdown
+ * @param {Function} props.onTogglePlay - Toggles playback on/off
+ * @param {Function} props.onPrevious - Moves to the previous FEN
+ * @param {Function} props.onNext - Moves to the next FEN
+ * @param {Function} props.onSetIndex - Jumps to a specific index
+ * @returns {JSX.Element|null}
+ */
 const BoardPreview = memo(
   ({
     validFens,
