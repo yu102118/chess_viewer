@@ -2,6 +2,14 @@ import { memo, useRef, useLayoutEffect } from 'react';
 import { useDragLayer } from 'react-dnd';
 import { ItemTypes } from '@/constants';
 
+/**
+ * Custom HTML5 drag preview layer — renders a scaled piece image that follows the cursor.
+ * Applies `will-change: transform` only during an active drag for GPU compositing.
+ * @param {Object} props
+ * @param {Object} props.pieceImages - Map of piece keys to preloaded Image elements
+ * @param {number} [props.boardSize=400] - Board size in pixels (used to scale the preview image)
+ * @returns {JSX.Element|null}
+ */
 const CustomDragLayer = memo(({ pieceImages, boardSize = 400 }) => {
   const dragPreviewRef = useRef(null);
 
