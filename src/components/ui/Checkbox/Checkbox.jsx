@@ -1,5 +1,16 @@
 import { memo, useId } from 'react';
 
+/**
+ * Styled checkbox with an associated label.
+ * @param {Object} props
+ * @param {boolean} props.checked - Controlled checked state
+ * @param {Function} props.onChange - Change handler
+ * @param {string} [props.label] - Visible label text
+ * @param {string} [props.className=''] - Additional Tailwind classes for the wrapper
+ * @param {string} [props.id] - Explicit `id`; a generated one is used when omitted
+ * @param {boolean} [props.disabled=false] - Whether the checkbox is disabled
+ * @returns {JSX.Element}
+ */
 const Checkbox = memo(
   ({
     checked,
