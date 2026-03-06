@@ -12,6 +12,12 @@ import DisplayOptions from '@/components/features/DisplayOptions';
 import { useFENHistory } from '@/hooks';
 import { History, Settings } from 'lucide-react';
 
+/**
+ * Main control sidebar: FEN input, piece style selector, and display options.
+ * Exposes an `addToFavoritesRef` imperative handle for the parent to trigger saving.
+ * @param {Object} props
+ * @returns {JSX.Element}
+ */
 const ControlPanel = memo((props) => {
   const navigate = useNavigate();
   const {
@@ -52,8 +58,8 @@ const ControlPanel = memo((props) => {
     externalAddCurrentToFavorites || localHistory.addCurrentToFavorites;
 
   /**
+   * Updates the FEN state from the input field's change event.
    * @param {Event} e - Input change event
-   * @returns {void}
    */
   const handleFenChange = useCallback(
     (e) => {
@@ -63,7 +69,7 @@ const ControlPanel = memo((props) => {
   );
 
   /**
-   * @returns {void}
+   * Persists the current FEN value when the input loses focus.
    */
   const handleFenBlur = useCallback(() => {
     if (externalSaveManualFen && fen && fen.trim()) {
@@ -72,6 +78,7 @@ const ControlPanel = memo((props) => {
   }, [fen, externalSaveManualFen]);
 
   /**
+   * Copies the current FEN to the system clipboard and shows a success notification.
    * @returns {Promise<void>}
    */
   const handleCopyFEN = useCallback(async () => {
@@ -92,6 +99,7 @@ const ControlPanel = memo((props) => {
   }, [fen, externalSaveExportFen, onNotification]);
 
   /**
+   * Reads a FEN string from the system clipboard, sets it as the current FEN, and persists it.
    * @returns {Promise<void>}
    */
   const handlePasteFEN = useCallback(async () => {
