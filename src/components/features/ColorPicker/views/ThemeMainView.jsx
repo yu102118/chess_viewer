@@ -4,6 +4,15 @@ import { useIntersectionObserver } from '@/hooks';
 import { hexToRgb, rgbToHsv, hsvToRgb, rgbToHex } from '@/utils';
 import { Palette, Wand2 } from 'lucide-react';
 
+/**
+ * Lazy-rendered theme preset button with intersection-observer-gated rendering.
+ * @param {Object} props
+ * @param {string} props.themeKey - Unique key for this preset
+ * @param {Object} props.theme - Theme object with `light` and `dark` hex colors
+ * @param {boolean} props.isActive - Whether this preset is currently applied
+ * @param {Function} props.onClick - Called with `(themeKey, theme)` when selected
+ * @returns {JSX.Element}
+ */
 const ThemePresetButton = memo(({ themeKey, theme, isActive, onClick }) => {
   const { ref, isVisible } = useIntersectionObserver({
     threshold: 0.1,
@@ -53,6 +62,13 @@ const ThemePresetButton = memo(({ themeKey, theme, isActive, onClick }) => {
 
 ThemePresetButton.displayName = 'ThemePresetButton';
 
+/**
+ * Card that lets the user switch to the custom/advanced theme editor.
+ * @param {Object} props
+ * @param {boolean} props.isActive - Whether the custom theme mode is active
+ * @param {Function} props.onClick - Called when the card is clicked
+ * @returns {JSX.Element}
+ */
 const CustomThemeCard = memo(({ isActive, onClick }) => {
   return (
     <button
@@ -80,6 +96,14 @@ const CustomThemeCard = memo(({ isActive, onClick }) => {
 
 CustomThemeCard.displayName = 'CustomThemeCard';
 
+/**
+ * Main theme picker view: preset cards, custom theme toggle, and square preview.
+ * @param {Object} props
+ * @param {string} props.currentLight - Current light square hex color
+ * @param {string} props.currentDark - Current dark square hex color
+ * @param {Function} props.onThemeApply - Called with `{light, dark}` when a theme is applied
+ * @returns {JSX.Element}
+ */
 const ThemeMainView = memo(({ currentLight, currentDark, onThemeApply }) => {
   const [mode, setMode] = useState('main');
   const [activeSquare, setActiveSquare] = useState('light');
