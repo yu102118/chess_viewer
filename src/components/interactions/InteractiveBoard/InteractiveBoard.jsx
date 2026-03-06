@@ -4,6 +4,20 @@ import { ItemTypes } from '@/constants';
 import { DroppableSquare } from '@/components/interactions';
 import { areBoardsEqual } from '@/utils';
 
+/**
+ * Drag-and-drop chess board built on react-dnd.
+ * Renders 64 DroppableSquare cells and dispatches piece-drop events to the parent.
+ * @param {Object} props
+ * @param {string[][]} props.board - 8×8 board array of FEN piece characters
+ * @param {string} props.lightSquare - Hex color for light squares
+ * @param {string} props.darkSquare - Hex color for dark squares
+ * @param {Object} props.pieceImages - Map of piece keys to preloaded Image elements
+ * @param {boolean} props.isLoading - Whether piece images are still loading
+ * @param {boolean} [props.flipped] - Whether the board is rendered from Black's perspective
+ * @param {Function} [props.onPieceDrop] - Called with `(piece, fromRow, fromCol, toRow, toCol, isFromPalette)`
+ * @param {Function} [props.onPieceRemove] - Called when a piece is dropped on the trash zone
+ * @returns {JSX.Element}
+ */
 const InteractiveBoard = memo(
   ({
     board,
