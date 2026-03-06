@@ -2,6 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui';
 import { FileImage, Pause, Play, XCircle } from 'lucide-react';
 
+/**
+ * Modal with a smoothly animated progress bar shown during batch or multi-format exports.
+ * @param {Object} props
+ * @param {boolean} props.isExporting - Whether an export is in progress
+ * @param {number} props.progress - Export progress (0–100)
+ * @param {string} [props.currentFormat] - The format currently being exported
+ * @param {Function} props.onClose - Closes the modal
+ * @param {Function} [props.onPause] - Pauses the export
+ * @param {Function} [props.onResume] - Resumes a paused export
+ * @param {Function} [props.onCancel] - Cancels the export
+ * @param {boolean} [props.isPaused] - Whether the export is currently paused
+ * @returns {JSX.Element}
+ */
 const ExportProgress = React.memo(
   ({
     isExporting,
