@@ -1,6 +1,18 @@
 import { Checkbox } from '@/components/ui';
 import { QUALITY_PRESETS } from '@/constants';
 
+/**
+ * Coordinate and frame display toggles for the chess board.
+ * @param {Object} props
+ * @param {boolean} props.showCoords - Whether coordinates are rendered on the board
+ * @param {Function} props.setShowCoords - Toggles coordinate display
+ * @param {boolean} props.showCoordinateBorder - Whether the coordinate border is shown
+ * @param {Function} props.setShowCoordinateBorder - Toggles coordinate border
+ * @param {boolean} [props.showThinFrame] - Whether a thin frame around the board is shown
+ * @param {Function} props.setShowThinFrame - Toggles thin frame
+ * @param {number} [props.exportQuality=16] - Current export quality/scale multiplier
+ * @returns {JSX.Element}
+ */
 const DisplayOptions = ({
   showCoords,
   setShowCoords,
