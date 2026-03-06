@@ -4,6 +4,13 @@ import HelpCenter from '@/components/features/HelpCenter';
 import Logo from '@/assets/Logo.png';
 import { HelpCircle, Moon, Sun } from 'lucide-react';
 
+/**
+ * Fixed top navigation bar with logo, theme toggle, and help center button.
+ * @param {Object} props
+ * @param {'light'|'dark'} props.theme - Current theme name
+ * @param {Function} props.toggleTheme - Toggles between light and dark theme
+ * @returns {JSX.Element}
+ */
 const Navbar = ({ theme, toggleTheme }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
@@ -17,14 +24,23 @@ const Navbar = ({ theme, toggleTheme }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  /**
+   * Navigates to the home page when the logo is clicked.
+   */
   const handleLogoClick = useCallback(() => {
     navigate('/');
   }, [navigate]);
 
+  /**
+   * Opens the help center drawer.
+   */
   const handleHelpClick = useCallback(() => {
     setIsHelpOpen(true);
   }, []);
 
+  /**
+   * Closes the help center drawer.
+   */
   const handleCloseHelp = useCallback(() => {
     setIsHelpOpen(false);
   }, []);
