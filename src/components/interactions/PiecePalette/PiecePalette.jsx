@@ -2,6 +2,14 @@ import { memo, useCallback } from 'react';
 import { PALETTE_PIECES, getPieceImageKey } from '@/constants';
 import { DraggablePiece } from '@/components/interactions';
 
+/**
+ * Sidebar palette of all 12 draggable chess pieces (6 white, 6 black).
+ * @param {Object} props
+ * @param {Object} props.pieceImages - Map of piece keys to preloaded Image elements
+ * @param {boolean} props.isLoading - Whether piece images are still loading
+ * @param {string} [props.className=''] - Additional CSS classes
+ * @returns {JSX.Element}
+ */
 const PiecePalette = memo(({ pieceImages, isLoading, className = '' }) => {
   const whitePieces = PALETTE_PIECES.filter((p) => p.color === 'w');
   const blackPieces = PALETTE_PIECES.filter((p) => p.color === 'b');
