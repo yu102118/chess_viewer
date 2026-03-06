@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
 import { Download, Image, Copy, RefreshCcw, Check } from 'lucide-react';
 
+/**
+ * Export action toolbar: PNG/JPEG download, batch export, flip, and clipboard copy.
+ * @param {Object} props
+ * @param {Function} props.onDownloadPNG - Triggers PNG download
+ * @param {Function} props.onDownloadJPEG - Triggers JPEG download
+ * @param {Function} props.onCopyImage - Copies board image to clipboard
+ * @param {Function} props.onFlip - Flips the board orientation
+ * @param {Function} props.onBatchExport - Called with an array of format strings for batch export
+ * @param {boolean} props.isExporting - Whether an export is currently in progress (disables buttons)
+ * @returns {JSX.Element}
+ */
 const ActionButtons = React.memo(
   ({
     onDownloadPNG,
@@ -17,10 +28,17 @@ const ActionButtons = React.memo(
       jpeg: false
     });
 
+    /**
+     * Toggles a format key in the batch-export selection state.
+     * @param {'png'|'jpeg'} format - Format key to toggle
+     */
     const toggleFormat = (format) => {
       setSelectedFormats((prev) => ({ ...prev, [format]: !prev[format] }));
     };
 
+    /**
+     * Validates format selection and fires `onBatchExport` with the chosen formats.
+     */
     const handleBatchExport = () => {
       const formats = Object.keys(selectedFormats).filter(
         (key) => selectedFormats[key]
@@ -33,6 +51,10 @@ const ActionButtons = React.memo(
       setShowBatchMenu(false);
     };
 
+    /**
+     * Copies the board image to the clipboard, then briefly shows a success indicator.
+     * @returns {Promise<void>}
+     */
     const handleCopy = async () => {
       await onCopyImage();
       setCopied(true);
