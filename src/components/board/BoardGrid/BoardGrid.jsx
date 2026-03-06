@@ -1,7 +1,13 @@
 import React from 'react';
 import BoardSquare from '../BoardSquare';
 
-// Shallow board comparison to avoid deep-equal on every render
+/**
+ * Custom memo comparator — performs a shallow board comparison to avoid deep-equal
+ * on every render. Falls back to stringifying flattened rows when the board reference changes.
+ * @param {Object} prevProps - Previous props
+ * @param {Object} nextProps - Next props
+ * @returns {boolean} True if the component should NOT re-render
+ */
 function arePropsEqual(prevProps, nextProps) {
   if (prevProps.board === nextProps.board) {
     return (
@@ -28,6 +34,16 @@ function arePropsEqual(prevProps, nextProps) {
   }
 }
 
+/**
+ * Renders the 8×8 chess board grid by mapping each cell to a BoardSquare.
+ * @param {Object} props
+ * @param {string[][]} props.board - 8×8 board array of FEN piece characters
+ * @param {string} props.lightSquare - Hex color for light squares
+ * @param {string} props.darkSquare - Hex color for dark squares
+ * @param {Object} props.pieceImages - Map of piece keys to preloaded Image elements
+ * @param {boolean} [props.flipped] - Whether the board should be rendered flipped
+ * @returns {JSX.Element}
+ */
 const BoardGrid = React.memo(function BoardGrid(props) {
   const { board, lightSquare, darkSquare, pieceImages } = props;
 
