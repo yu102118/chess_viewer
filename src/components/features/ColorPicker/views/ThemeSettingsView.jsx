@@ -3,6 +3,12 @@ import { Zap, Eye, Grid3X3, RotateCcw } from 'lucide-react';
 
 const STORAGE_KEY = 'chess-viewer-settings';
 
+/**
+ * Settings panel inside the color picker for performance and accessibility tweaks.
+ * @param {Object} props
+ * @param {Function} [props.onSettingsChange] - Called when any setting value changes
+ * @returns {JSX.Element}
+ */
 const ThemeSettingsView = ({ onSettingsChange }) => {
   const [settings, setSettings] = useState(() => {
     try {
