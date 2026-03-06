@@ -2,6 +2,13 @@ import React from 'react';
 import { logger } from '@/utils';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
+/**
+ * Full-page error fallback UI with retry and home-navigation buttons.
+ * @param {Object} props
+ * @param {Error} props.error - The caught error
+ * @param {Function} props.resetErrorBoundary - Callback to reset the error boundary state
+ * @returns {JSX.Element}
+ */
 function ErrorFallback(props) {
   const { error, resetErrorBoundary } = props;
 
@@ -71,7 +78,14 @@ function ErrorFallback(props) {
 
 /**
  * Error boundary class component.
- * Catches JavaScript errors anywhere in the child component tree.
+ * Catches JavaScript errors anywhere in the child component tree and
+ * renders a fallback UI instead of crashing the application.
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - Subtree to protect
+ * @param {JSX.Element} [props.fallback] - Static fallback element
+ * @param {React.ComponentType} [props.FallbackComponent] - Fallback component receiving `error` and `resetErrorBoundary`
+ * @param {Function} [props.onError] - Called when an error is caught
+ * @param {Function} [props.onReset] - Called when the boundary is reset
  */
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -97,6 +111,9 @@ class ErrorBoundary extends React.Component {
     }
   }
 
+  /**
+   * Resets the error state so normal rendering can resume.
+   */
   resetErrorBoundary = () => {
     this.setState({
       hasError: false,
