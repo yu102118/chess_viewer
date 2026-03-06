@@ -2,6 +2,17 @@ import { memo, useState, useEffect, useRef, useCallback } from 'react';
 import { hexToRgb, rgbToHsv, hsvToRgb, rgbToHex } from '@/utils';
 import { Sliders } from 'lucide-react';
 
+/**
+ * Advanced HSV canvas picker for individually customising light and dark squares.
+ * @param {Object} props
+ * @param {'light'|'dark'} props.activeSquare - Which square type is being edited
+ * @param {Function} props.setActiveSquare - Switches between light and dark square editing
+ * @param {string} props.lightSquare - Current light square hex color
+ * @param {Function} props.setLightSquare - Updates the light square color
+ * @param {string} props.darkSquare - Current dark square hex color
+ * @param {Function} props.setDarkSquare - Updates the dark square color
+ * @returns {JSX.Element}
+ */
 const ThemeAdvancedPickerView = memo(
   ({
     activeSquare,
