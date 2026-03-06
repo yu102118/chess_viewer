@@ -2,6 +2,21 @@ import React, { useId } from 'react';
 import { getInputClasses, classNames, cn } from '@/utils';
 import { AlertCircle } from 'lucide-react';
 
+/**
+ * Accessible text input with optional label, error message, and leading icon.
+ * @param {Object} props
+ * @param {string} [props.type='text'] - HTML input type
+ * @param {string} [props.value] - Controlled value
+ * @param {Function} [props.onChange] - Change handler
+ * @param {string} [props.placeholder] - Placeholder text
+ * @param {string} [props.label] - Visible label rendered above the input
+ * @param {string} [props.error] - Error message shown below the input
+ * @param {boolean} [props.disabled=false] - Whether the input is disabled
+ * @param {React.ElementType} [props.icon] - Optional Lucide icon component rendered on the left
+ * @param {string} [props.className=''] - Additional Tailwind classes for the input element
+ * @param {string} [props.id] - Explicit `id`; a generated one is used when omitted
+ * @returns {JSX.Element}
+ */
 const Input = React.memo(
   ({
     type = 'text',
