@@ -2,6 +2,21 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import { useScrollLock } from '@/hooks';
 import { X } from 'lucide-react';
 
+/**
+ * Accessible dialog modal with focus trap, scroll lock, backdrop, and keyboard handling.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Whether the modal is visible
+ * @param {Function} props.onClose - Called when the modal should be dismissed
+ * @param {string} [props.title] - Modal heading text
+ * @param {React.ElementType} [props.icon] - Lucide icon component shown next to the title
+ * @param {string} [props.iconColor='text-accent'] - Tailwind color class for the icon
+ * @param {React.ReactNode} [props.children] - Modal body content
+ * @param {string} [props.maxWidth='max-w-lg'] - Tailwind max-width class for the modal panel
+ * @param {boolean} [props.showCloseButton=true] - Whether to render the close (X) button in the header
+ * @param {boolean} [props.disableScrollLock=false] - Opt out of body scroll locking when open
+ * @param {boolean} [props.disableBackdropClick=false] - Prevent closing on backdrop click
+ * @returns {JSX.Element|null}
+ */
 const Modal = React.memo(
   ({
     isOpen,
@@ -20,12 +35,19 @@ const Modal = React.memo(
 
     useScrollLock(isOpen && !disableScrollLock);
 
+    /**
+     * Closes the modal when the backdrop is clicked, unless `disableBackdropClick` is set.
+     */
     const handleBackdropClick = useCallback(() => {
       if (!disableBackdropClick) {
         onClose();
       }
     }, [onClose, disableBackdropClick]);
 
+    /**
+     * Handles keyboard navigation: Escape closes the modal; Tab cycles focus within it.
+     * @param {KeyboardEvent} e
+     */
     const handleKeyDown = useCallback(
       (e) => {
         if (e.key === 'Escape') {
