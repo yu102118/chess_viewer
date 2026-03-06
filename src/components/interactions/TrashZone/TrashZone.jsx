@@ -2,6 +2,15 @@ import { memo } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '@/constants';
 
+/**
+ * Drop target area — dragging a board piece onto it removes it from the board.
+ * Palette pieces cannot be dropped here (they are not destructible).
+ * @param {Object} props
+ * @param {Function} [props.onDrop] - Called with `(fromRow, fromCol)` when a piece is dropped
+ * @param {string} [props.className=''] - Additional CSS classes
+ * @param {boolean} [props.minimal=false] - Renders a compact version without a label
+ * @returns {JSX.Element}
+ */
 const TrashZone = memo(({ onDrop, className = '', minimal = false }) => {
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
