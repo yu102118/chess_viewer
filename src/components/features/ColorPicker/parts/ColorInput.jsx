@@ -1,6 +1,16 @@
 import React, { useCallback } from 'react';
 import { Pipette } from 'lucide-react';
 
+/**
+ * Hex color text input with RGB tooltip and a pipette icon.
+ * @param {Object} props
+ * @param {string} props.value - The currently applied (committed) color hex
+ * @param {string} props.hexInput - The live text box value (may be mid-edit)
+ * @param {Function} props.onHexChange - Called on every input change event
+ * @param {Function} props.onToggle - Called to toggle the picker open/closed
+ * @param {Function} props.getRgbValues - Returns `{r, g, b}` for the current temp color
+ * @returns {JSX.Element}
+ */
 const ColorInput = React.memo(
   ({ value, hexInput, onHexChange, onToggle, getRgbValues }) => {
     const handleInputChange = useCallback(
