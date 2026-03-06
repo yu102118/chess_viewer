@@ -1,6 +1,18 @@
 import React, { useState, useId, useCallback, useEffect } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 
+/**
+ * Custom accessible select (listbox) with keyboard support.
+ * @param {Object} props
+ * @param {string} props.value - Currently selected value
+ * @param {Function} props.onChange - Called with the new value when selection changes
+ * @param {{value: string, label: string}[]} props.options - Available options
+ * @param {string} [props.label] - Visible label rendered above the control
+ * @param {string} [props.placeholder='Select...'] - Placeholder shown when no value is selected
+ * @param {boolean} [props.disabled=false] - Whether the select is disabled
+ * @param {string} [props.id] - Explicit `id`; a generated one is used when omitted
+ * @returns {JSX.Element}
+ */
 const Select = React.memo(
   ({
     value,
@@ -27,6 +39,11 @@ const Select = React.memo(
       return () => document.removeEventListener('keydown', handleEscape);
     }, [isOpen]);
 
+    /**
+     * Selects an option when Enter or Space is pressed on it.
+     * @param {KeyboardEvent} e
+     * @param {string} optionValue - The value of the focused option
+     */
     const handleKeyDown = useCallback(
       (e, optionValue) => {
         if (e.key === 'Enter' || e.key === ' ') {
