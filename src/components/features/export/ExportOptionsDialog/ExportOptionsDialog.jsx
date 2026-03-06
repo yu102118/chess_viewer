@@ -2,6 +2,17 @@ import { Modal, Button, Input } from '@/components/ui';
 import { QUALITY_PRESETS } from '@/constants';
 import { Settings, Printer, Share2 } from 'lucide-react';
 
+/**
+ * Dialog for configuring export file name and quality preset.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Whether the dialog is open
+ * @param {Function} props.onClose - Closes the dialog
+ * @param {string} props.fileName - Current output file name
+ * @param {Function} props.setFileName - Updates the file name
+ * @param {number} props.exportQuality - Current quality/scale value
+ * @param {Function} props.setExportQuality - Updates the quality value
+ * @returns {JSX.Element}
+ */
 const ExportOptionsDialog = ({
   isOpen,
   onClose,
