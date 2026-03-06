@@ -1,6 +1,13 @@
 import React from 'react';
 import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
 
+/**
+ * Fixed-position container that stacks toast notifications in the top-right corner.
+ * @param {Object} props
+ * @param {Array<{id: string, type: string, message: string}>} props.notifications - Active notifications
+ * @param {Function} props.onRemove - Called with a notification `id` to dismiss it
+ * @returns {JSX.Element|null}
+ */
 const NotificationContainer = ({ notifications, onRemove }) => {
   if (!notifications || notifications.length === 0) return null;
 
@@ -23,6 +30,14 @@ const NotificationContainer = ({ notifications, onRemove }) => {
   );
 };
 
+/**
+ * Individual styled toast notification with an auto-shrink progress bar.
+ * @param {Object} props
+ * @param {{type: string, message: string}} props.notification - Notification data
+ * @param {Function} props.onRemove - Callback to dismiss this toast
+ * @param {number} props.index - Position in the stack (used for stagger animation delay)
+ * @returns {JSX.Element}
+ */
 const Toast = React.memo(({ notification, onRemove, index }) => {
   const { type, message } = notification;
 
