@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { memo, useState } from 'react';
 import { Download, Image, Copy, RefreshCcw, Check } from 'lucide-react';
 
 /**
@@ -12,15 +12,14 @@ import { Download, Image, Copy, RefreshCcw, Check } from 'lucide-react';
  * @param {boolean} props.isExporting - Whether an export is currently in progress (disables buttons)
  * @returns {JSX.Element}
  */
-const ActionButtons = React.memo(
-  ({
+const ActionButtons = memo(function ActionButtons({
     onDownloadPNG,
     onDownloadJPEG,
     onCopyImage,
     onFlip,
     onBatchExport,
     isExporting
-  }) => {
+  }) {
     const [showBatchMenu, setShowBatchMenu] = useState(false);
     const [copied, setCopied] = useState(false);
     const [selectedFormats, setSelectedFormats] = useState({
