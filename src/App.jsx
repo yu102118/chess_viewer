@@ -88,7 +88,6 @@ function App() {
     setTheme((currentTheme) =>
       currentTheme === 'dark' ? 'light' : 'dark'
     );
-    // DOM attribute and localStorage are applied by the useLayoutEffect above
   }, []);
 
   return (
