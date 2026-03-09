@@ -1,10 +1,10 @@
-# ♿ Accessibility Documentation
+# Accessibility Documentation
 
 Current accessibility state of FENForsty Pro.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [What Actually Exists](#what-actually-exists)
@@ -95,7 +95,7 @@ Based on `package.json`:
 
 ## What Doesn't Exist
 
-### ❌ Not Implemented
+### Not Implemented
 
 1. **Custom Keyboard Shortcuts**
    - No Ctrl+E for export

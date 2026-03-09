@@ -1,54 +1,50 @@
-# 🚀 v5.0.0 — Major Update Coming Very Soon
+# v5.0.0 — Major Update
 
-v5.0.0 is a **major release** focused on redesigning the core experience, improving usability, and unlocking powerful new workflows around the chessboard.
-
-This update rethinks both **design and functionality** from the ground up.
+v5.0.0 is a major release focused on redesigning the core experience, improving usability, and adding new workflows around the chessboard. This version reworks both design and functionality from the ground up.
 
 ---
 
-## ✨ What’s Coming in v5.0.0
+## What's Coming in v5.0.0
 
-### ♟️ Core Board Improvements
+### Core Board Improvements
 
 - Refined board layout and spacing
-- Clearer, properly aligned coordinates
-- Reduced visual noise (no heavy shadows, no unnecessary decorations)
-- More focused, distraction-free board experience
+- Clearer coordinate alignment
+- Reduced visual clutter — no heavy shadows or unnecessary decorations
+- More focused board experience
 
-### 🎨 Theme Presets System (Reworked)
+### Theme Presets System (Reworked)
 
-- Up to **48 total theme presets** supported
-- Default presets + user-created presets
-- Pagination / swipe navigation for large preset collections
-- Drag & drop **and** keyboard-based preset reordering
-- Dedicated **Custom Theme** workflow
+- Up to 48 total theme presets
+- Default presets plus user-created presets
+- Pagination and swipe navigation for large preset collections
+- Drag and drop and keyboard-based preset reordering
+- Dedicated custom theme workflow
 - Protected default themes (e.g. Wood theme cannot be deleted)
 
-### 🧠 Smarter History System
+### History System
 
 - Intelligent FEN history tracking
 - Automatic archiving of old positions
-- Visual freshness states (new / aging / about-to-archive)
-- Search & filter by FEN
+- Visual freshness states: new / aging / about-to-archive
+- Search and filter by FEN
 - Clean separation between active history and archive
 
-### 📤 Export & Workflow Enhancements
+### Export Enhancements
 
 - Improved export flow and hierarchy
 - Cleaner export settings UI
 - Batch export refinements
-- Optimized PNG/JPEG output experience
+- Optimized PNG/JPEG output
 
 ---
 
-## ⏳ Release Status
+## Release Status
 
-v5.0.0 is actively under development.  
-Design and interaction details are still being refined to ensure the best possible experience.
+v5.0.0 is actively under development. Design and interaction details are still being finalized.
 
-**Coming very soon.**
+**Status: Coming soon.**
 
 ---
 
-> This project remains **free and open-source**.  
-> Built with care, curiosity, and love for chess ♟️
+This project remains free and open-source.

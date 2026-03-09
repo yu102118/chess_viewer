@@ -893,22 +893,22 @@ components/
 
 ### What Went Well
 
-1. ✅ **Zero-backend** - Users love the privacy
-2. ✅ **Tailwind CSS** - Rapid UI development
-3. ✅ **React Hooks** - Simple state management
-4. ✅ **Canvas rendering** - Excellent export quality
+1. **Zero-backend** - Users love the privacy
+2. **Tailwind CSS** - Rapid UI development
+3. **React Hooks** - Simple state management
+4. **Canvas rendering** - Excellent export quality
 
 ### What Could Be Improved
 
-1. ⚠️ **Canvas accessibility** - Need better screen reader support
-2. ⚠️ **Bundle size** - Could be smaller with more optimization
-3. ⚠️ **Testing** - Need more automated tests
+1. **Canvas accessibility** - Need better screen reader support
+2. **Bundle size** - Could be smaller with more optimization
+3. **Testing** - Need more automated tests
 
 ### What We'd Do Differently
 
-1. 🔄 Consider SVG rendering from start for accessibility
-2. 🔄 Add automated testing earlier in development
-3. 🔄 Document decisions sooner (this file!)
+1. Consider SVG rendering from start for accessibility
+2. Add automated testing earlier in development
+3. Document decisions sooner (this file!)
 
 ---
 

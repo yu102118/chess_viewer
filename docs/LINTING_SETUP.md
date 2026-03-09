@@ -72,7 +72,7 @@ Add these scripts to your `package.json`:
 
 ---
 
-## 🎯 Usage
+## Usage
 
 ### ESLint
 
@@ -135,7 +135,7 @@ echo "invalid message" | npx commitlint
 
 ---
 
-## 📝 Commit Message Format
+## Commit Message Format
 
 ### Conventional Commits
 
@@ -184,7 +184,7 @@ ci: add automated testing workflow
 
 ---
 
-## ⚙️ Configuration Details
+## Configuration Details
 
 ### ESLint Rules
 
@@ -229,7 +229,7 @@ ci: add automated testing workflow
 
 ---
 
-## 🔍 VS Code Integration
+## VS Code Integration
 
 ### Recommended Extensions
 
@@ -271,7 +271,7 @@ Create `.vscode/settings.json`:
 
 ---
 
-## 🚫 Ignoring Files
+## Ignoring Files
 
 ### .eslintignore
 
@@ -291,7 +291,7 @@ Already created - see artifact.
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Husky Hooks Not Running
 
@@ -359,7 +359,7 @@ git commit -m "feat: your feature description"
 
 ---
 
-## 📚 Best Practices
+## Best Practices
 
 ### 1. Always Format Before Commit
 ```bash
@@ -405,7 +405,7 @@ git commit -m "docs: update export documentation"
 
 ---
 
-## 🎯 Quick Reference
+## Quick Reference
 
 ### Common Commands
 
@@ -429,22 +429,22 @@ git commit --no-verify -m "message"
 ### Commit Types Quick Reference
 
 ```
-feat:     ✨ New feature
-fix:      🐛 Bug fix
-docs:     📚 Documentation
-style:    💄 Code style
-refactor: ♻️  Refactoring
-perf:     ⚡ Performance
-test:     ✅ Tests
-chore:    🔧 Maintenance
-ci:       👷 CI/CD
-build:    📦 Build
-revert:   ⏪ Revert
+feat:     New feature
+fix:      Bug fix
+docs:     Documentation
+style:    Code style
+refactor: Refactoring
+perf:     Performance
+test:     Tests
+chore:    Maintenance
+ci:       CI/CD
+build:    Build
+revert:   Revert
 ```
 
 ---
 
-## 🔄 CI/CD Integration
+## CI/CD Integration
 
 ### GitHub Actions
 
