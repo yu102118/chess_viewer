@@ -9,7 +9,7 @@ import { X, Copy, Trash2, Check } from 'lucide-react';
  * @param {Function} [props.onSelectFen] - Called with a FEN string when the user selects an entry
  * @returns {JSX.Element|null}
  */
-const ClipboardHistory = memo(({ isOpen, onClose, onSelectFen }) => {
+const ClipboardHistory = memo(function ClipboardHistory({ isOpen, onClose, onSelectFen }) {
   const [clipboardHistory, setClipboardHistory] = useState([]);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
