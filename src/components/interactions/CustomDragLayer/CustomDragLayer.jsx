@@ -1,29 +1,27 @@
 import { memo, useRef, useLayoutEffect } from 'react';
 import { useDragLayer } from 'react-dnd';
 import { ItemTypes } from '@/constants';
-
 /**
- * Custom HTML5 drag preview layer — renders a scaled piece image that follows the cursor.
- * Applies `will-change: transform` only during an active drag for GPU compositing.
  * @param {Object} props
- * @param {Object} props.pieceImages - Map of piece keys to preloaded Image elements
- * @param {number} [props.boardSize=400] - Board size in pixels (used to scale the preview image)
- * @returns {JSX.Element|null}
+ * @returns {JSX.Element}
  */
-const CustomDragLayer = memo(({ pieceImages, boardSize = 400 }) => {
+const CustomDragLayer = memo(function CustomDragLayer({
+  pieceImages,
+  boardSize = 400
+}) {
   const dragPreviewRef = useRef(null);
-
-  const { itemType, isDragging, item, currentOffset } = useDragLayer(
-    (monitor) => ({
-      item: monitor.getItem(),
-      itemType: monitor.getItemType(),
-      currentOffset: monitor.getClientOffset(),
-      initialOffset: monitor.getInitialClientOffset(),
-      isDragging: monitor.isDragging()
-    })
-  );
-
-  // Apply will-change only during active drag for performance
+  const {
+    itemType,
+    isDragging,
+    item,
+    currentOffset
+  } = useDragLayer(monitor => ({
+    item: monitor.getItem(),
+    itemType: monitor.getItemType(),
+    currentOffset: monitor.getClientOffset(),
+    initialOffset: monitor.getInitialClientOffset(),
+    isDragging: monitor.isDragging()
+  }));
   useLayoutEffect(() => {
     if (dragPreviewRef.current) {
       if (isDragging) {
@@ -33,19 +31,15 @@ const CustomDragLayer = memo(({ pieceImages, boardSize = 400 }) => {
       }
     }
   }, [isDragging]);
-
   if (!isDragging || itemType !== ItemTypes.PIECE) {
     return null;
   }
-
   const pieceImage = pieceImages[item?.pieceKey];
   if (!pieceImage) {
     return null;
   }
-
   const SQUARE_SIZE = boardSize / 8;
   const PIECE_SIZE = Math.round(SQUARE_SIZE * 0.85);
-
   const layerStyles = {
     position: 'fixed',
     pointerEvents: 'none',
@@ -56,19 +50,19 @@ const CustomDragLayer = memo(({ pieceImages, boardSize = 400 }) => {
     bottom: 0,
     contain: 'strict'
   };
-
   const getItemStyles = () => {
     if (!currentOffset) {
-      return { display: 'none' };
+      return {
+        display: 'none'
+      };
     }
-
-    const { x, y } = currentOffset;
-
-    // translate3d for GPU acceleration, centered on cursor
+    const {
+      x,
+      y
+    } = currentOffset;
     const halfSize = PIECE_SIZE / 2;
     const translateX = Math.round(x - halfSize);
     const translateY = Math.round(y - halfSize);
-
     return {
       position: 'fixed',
       left: 0,
@@ -82,32 +76,21 @@ const CustomDragLayer = memo(({ pieceImages, boardSize = 400 }) => {
       WebkitBackfaceVisibility: 'hidden'
     };
   };
-
-  return (
-    <div style={layerStyles} aria-hidden="true">
+  return <div style={layerStyles} aria-hidden="true">
       <div ref={dragPreviewRef} style={getItemStyles()}>
-        <img
-          src={pieceImage.src}
-          alt=""
-          aria-hidden="true"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            opacity: 0.95,
-            filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5))',
-            pointerEvents: 'none',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            imageRendering: 'auto'
-          }}
-          draggable={false}
-        />
+        <img src={pieceImage.src} alt="" aria-hidden="true" style={{
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
+        opacity: 0.95,
+        filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5))',
+        pointerEvents: 'none',
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        imageRendering: 'auto'
+      }} draggable={false} />
       </div>
-    </div>
-  );
+    </div>;
 });
-
 CustomDragLayer.displayName = 'CustomDragLayer';
-
 export default CustomDragLayer;
