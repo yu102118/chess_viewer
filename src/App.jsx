@@ -1,33 +1,43 @@
-import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+
 import { useLocation } from 'react-router-dom';
+
 import { Navbar } from '@/components/layout';
 import { ErrorBoundary } from '@/components/ui';
-import { ThemeSettingsProvider, FENBatchProvider } from '@/contexts';
+import { FENBatchProvider, ThemeSettingsProvider } from '@/contexts';
 import Routes from '@/routes/Router';
+import { logger } from '@/utils/logger';
 
 /**
  * Tool pages where navbar should be hidden for distraction-free experience.
  */
 const TOOL_PAGES = ['/settings', '/fen-history', '/advanced-fen'];
 
+/** @type {ReadonlySet<string>} */
+const VALID_THEMES = new Set(['light', 'dark']);
+
 /**
  * Retrieves the initial theme from various sources.
  * Priority: window variable > localStorage > system preference.
  *
- * @returns {string} Theme value ('light' or 'dark')
+ * @returns {'light'|'dark'} Theme value
  */
 function getInitialTheme() {
-  if (typeof window !== 'undefined' && window.__INITIAL_THEME__) {
+  if (
+    typeof window !== 'undefined' &&
+    typeof window.__INITIAL_THEME__ === 'string' &&
+    VALID_THEMES.has(window.__INITIAL_THEME__)
+  ) {
     return window.__INITIAL_THEME__;
   }
 
   try {
     const saved = localStorage.getItem('chess-theme');
-    if (saved && (saved === 'light' || saved === 'dark')) {
+    if (saved && VALID_THEMES.has(saved)) {
       return saved;
     }
   } catch (error) {
-    console.warn('localStorage access blocked:', error);
+    logger.warn('localStorage access blocked:', error);
   }
 
   const prefersDark = window.matchMedia?.(
@@ -45,7 +55,7 @@ function saveTheme(theme) {
   try {
     localStorage.setItem('chess-theme', theme);
   } catch (error) {
-    console.warn('localStorage access blocked:', error);
+    logger.warn('localStorage access blocked:', error);
   }
 }
 
@@ -76,7 +86,7 @@ function App() {
           setTheme(event.matches ? 'dark' : 'light');
         }
       } catch (error) {
-        console.warn('localStorage access blocked:', error);
+        logger.warn('localStorage access blocked:', error);
       }
     }
 
@@ -85,9 +95,7 @@ function App() {
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme((currentTheme) =>
-      currentTheme === 'dark' ? 'light' : 'dark'
-    );
+    setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'));
   }, []);
 
   return (
