@@ -3,7 +3,8 @@ import { useEffect, useRef } from 'react';
 import { Palette } from 'lucide-react';
 
 import { ColorInput } from '@/components/features/ColorPicker/parts';
-import { useColorConversion, useColorState } from '@/hooks';
+import { useColorState } from '@/hooks';
+import { hexToRgb, rgbToHex, rgbToHsv, hsvToRgb } from '@/utils/colorConversions';
 
 import PickerModal from './PickerModal';
 
@@ -14,7 +15,6 @@ import PickerModal from './PickerModal';
 function ColorPicker({ label, value = '#3B82F6', onChange, className = '' }) {
   const pickerRef = useRef(null);
   const canvasRef = useRef(null);
-  const { hexToRgb, rgbToHex, rgbToHsv, hsvToRgb } = useColorConversion();
   const {
     hexInput,
     setHexInput,
@@ -107,8 +107,8 @@ function ColorPicker({ label, value = '#3B82F6', onChange, className = '' }) {
   return (
     <div className={`space-y-2 ${className}`} ref={pickerRef}>
       {label && (
-        <label className="text-sm font-semibold text-gray-300 flex items-center gap-2">
-          <Palette className="w-4 h-4 text-blue-400" />
+        <label className="text-sm font-semibold text-text-secondary flex items-center gap-2">
+          <Palette className="w-4 h-4 text-accent" />
           {label}
         </label>
       )}
