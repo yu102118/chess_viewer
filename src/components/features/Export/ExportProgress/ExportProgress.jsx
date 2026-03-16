@@ -1,6 +1,9 @@
-import { memo, useState, useEffect } from 'react';
-import { Modal } from '@/components/ui';
+import { memo, useEffect, useState } from 'react';
+
 import { FileImage, Pause, Play, XCircle } from 'lucide-react';
+
+import { Modal } from '@/components/ui';
+
 /**
  * @param {Object} props
  * @returns {JSX.Element}
@@ -19,7 +22,7 @@ const ExportProgress = memo(function ExportProgress({
   useEffect(() => {
     if (!isExporting || isPaused) return;
     const interval = setInterval(() => {
-      setDisplayProgress(prev => {
+      setDisplayProgress((prev) => {
         if (prev >= progress) return progress;
         const diff = progress - prev;
         const increment = Math.max(2, Math.min(10, diff / 3));
@@ -35,43 +38,94 @@ const ExportProgress = memo(function ExportProgress({
   }, [isExporting]);
   if (!isExporting) return null;
   const format = currentFormat || 'png';
-  return <Modal isOpen={isExporting} onClose={onClose || (() => {})} title={`Exporting ${format.toUpperCase()}`} icon={FileImage} iconColor="text-accent" maxWidth="max-w-md" showCloseButton={!!onClose} disableBackdropClick={true}>
-        <div className="space-y-5">
-          <p className="text-sm text-text-secondary">
-            {isPaused ? '⏸ Paused' : 'Creating high-quality image...'}
-          </p>
+  return (
+    <Modal
+      isOpen={isExporting}
+      onClose={onClose || (() => {})}
+      title={`Exporting ${format.toUpperCase()}`}
+      icon={FileImage}
+      iconColor="text-accent"
+      maxWidth="max-w-md"
+      showCloseButton={!!onClose}
+      disableBackdropClick={true}
+    >
+      <div className="space-y-5">
+        <p className="text-sm text-text-secondary">
+          {isPaused ? '⏸ Paused' : 'Creating high-quality image...'}
+        </p>
 
-          <div className="space-y-3">
-            <div className="relative h-2 bg-surface-elevated rounded-full overflow-hidden" role="progressbar" aria-valuenow={displayProgress} aria-valuemin={0} aria-valuemax={100}>
-              <div className="absolute inset-y-0 left-0 bg-accent rounded-full transition-all duration-150 ease-linear overflow-hidden" style={{
-            width: `${displayProgress}%`
-          }}>
-                {!isPaused && <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/25 to-transparent" />}
-              </div>
+        <div className="space-y-3">
+          <div
+            className="relative h-2 bg-surface-elevated rounded-full overflow-hidden"
+            role="progressbar"
+            aria-valuenow={displayProgress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div
+              className="absolute inset-y-0 left-0 bg-accent rounded-full transition-all duration-150 ease-linear overflow-hidden"
+              style={{
+                width: `${displayProgress}%`
+              }}
+            >
+              {!isPaused && (
+                <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+              )}
             </div>
-            <p className="text-center text-sm font-semibold text-text-primary">
-              {Math.round(displayProgress)}% complete
-            </p>
           </div>
-
-          <div className="flex gap-3">
-            {onPause && onResume && <button onClick={isPaused ? onResume : onPause} className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-surface-elevated hover:bg-surface-hover border border-border rounded-lg transition-colors text-text-primary font-semibold text-sm" aria-label={isPaused ? 'Resume export' : 'Pause export'}>
-                {isPaused ? <>
-                    <Play className="w-4 h-4" strokeWidth={2.5} fill="currentColor" aria-hidden="true" />
-                    <span>Resume</span>
-                  </> : <>
-                    <Pause className="w-4 h-4" strokeWidth={2.5} aria-hidden="true" />
-                    <span>Pause</span>
-                  </>}
-              </button>}
-
-            {onCancel && <button onClick={onCancel} className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-error/10 hover:bg-error/20 border border-error/30 rounded-lg transition-colors text-error font-semibold text-sm" aria-label="Cancel export">
-                <XCircle className="w-4 h-4" strokeWidth={2.5} aria-hidden="true" />
-                <span>Cancel</span>
-              </button>}
-          </div>
+          <p className="text-center text-sm font-semibold text-text-primary">
+            {Math.round(displayProgress)}% complete
+          </p>
         </div>
-      </Modal>;
+
+        <div className="flex gap-3">
+          {onPause && onResume && (
+            <button
+              onClick={isPaused ? onResume : onPause}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-surface-elevated hover:bg-surface-hover border border-border rounded-lg transition-colors text-text-primary font-semibold text-sm"
+              aria-label={isPaused ? 'Resume export' : 'Pause export'}
+            >
+              {isPaused ? (
+                <>
+                  <Play
+                    className="w-4 h-4"
+                    strokeWidth={2.5}
+                    fill="currentColor"
+                    aria-hidden="true"
+                  />
+                  <span>Resume</span>
+                </>
+              ) : (
+                <>
+                  <Pause
+                    className="w-4 h-4"
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                  />
+                  <span>Pause</span>
+                </>
+              )}
+            </button>
+          )}
+
+          {onCancel && (
+            <button
+              onClick={onCancel}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-error/10 hover:bg-error/20 border border-error/30 rounded-lg transition-colors text-error font-semibold text-sm"
+              aria-label="Cancel export"
+            >
+              <XCircle
+                className="w-4 h-4"
+                strokeWidth={2.5}
+                aria-hidden="true"
+              />
+              <span>Cancel</span>
+            </button>
+          )}
+        </div>
+      </div>
+    </Modal>
+  );
 });
 ExportProgress.displayName = 'ExportProgress';
 export default ExportProgress;
