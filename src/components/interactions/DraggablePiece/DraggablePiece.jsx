@@ -1,7 +1,10 @@
 import { memo, useEffect, useLayoutEffect, useRef } from 'react';
+
 import { useDrag } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { ItemTypes, getPieceImageKey } from '@/constants';
+
+import { getPieceImageKey, ItemTypes } from '@/constants';
+
 /**
  * @param {Object} props
  * @returns {JSX.Element}
@@ -17,22 +20,23 @@ const DraggablePiece = memo(function DraggablePiece({
 }) {
   const pieceRef = useRef(null);
   const pieceKey = getPieceImageKey(piece);
-  const [{
-    isDragging
-  }, drag, preview] = useDrag(() => ({
-    type: ItemTypes.PIECE,
-    item: () => ({
-      piece,
-      pieceKey,
-      fromRow: row,
-      fromCol: col,
-      isFromPalette
+  const [{ isDragging }, drag, preview] = useDrag(
+    () => ({
+      type: ItemTypes.PIECE,
+      item: () => ({
+        piece,
+        pieceKey,
+        fromRow: row,
+        fromCol: col,
+        isFromPalette
+      }),
+      canDrag: () => !disabled && !!piece,
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging()
+      })
     }),
-    canDrag: () => !disabled && !!piece,
-    collect: monitor => ({
-      isDragging: monitor.isDragging()
-    })
-  }), [piece, pieceKey, row, col, isFromPalette, disabled]);
+    [piece, pieceKey, row, col, isFromPalette, disabled]
+  );
   useEffect(() => {
     preview(getEmptyImage(), {
       captureDraggingState: true
@@ -48,31 +52,48 @@ const DraggablePiece = memo(function DraggablePiece({
     }
   }, [isDragging]);
   if (!piece || !pieceImage) return null;
-  return <div ref={node => {
-    drag(node);
-    pieceRef.current = node;
-  }} className={`
+  return (
+    <div
+      ref={(node) => {
+        drag(node);
+        pieceRef.current = node;
+      }}
+      className={`
           flex items-center justify-center
           select-none touch-none
           ${disabled ? 'cursor-not-allowed' : 'cursor-grab active:cursor-grabbing'}
-        `} style={{
-    width: size,
-    height: size,
-    opacity: isDragging ? 0 : disabled ? 0.5 : 1,
-    transition: isDragging ? 'none' : 'opacity 50ms ease-out',
-    zIndex: isDragging ? -1 : 1,
-    contain: 'layout style'
-  }} role="button" aria-label={`Drag ${piece}`} aria-grabbed={isDragging} tabIndex={disabled ? -1 : 0} onKeyDown={e => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-    }
-  }}>
-        <img src={pieceImage.src} alt={piece} className="w-full h-full object-contain" style={{
-      pointerEvents: 'none',
-      userSelect: 'none',
-      WebkitUserSelect: 'none'
-    }} draggable={false} />
-      </div>;
+        `}
+      style={{
+        width: size,
+        height: size,
+        opacity: isDragging ? 0 : disabled ? 0.5 : 1,
+        transition: isDragging ? 'none' : 'opacity 50ms ease-out',
+        zIndex: isDragging ? -1 : 1,
+        contain: 'layout style'
+      }}
+      role="button"
+      aria-label={`Drag ${piece}`}
+      aria-grabbed={isDragging}
+      tabIndex={disabled ? -1 : 0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+        }
+      }}
+    >
+      <img
+        src={pieceImage.src}
+        alt={piece}
+        className="w-full h-full object-contain"
+        style={{
+          pointerEvents: 'none',
+          userSelect: 'none',
+          WebkitUserSelect: 'none'
+        }}
+        draggable={false}
+      />
+    </div>
+  );
 });
 DraggablePiece.displayName = 'DraggablePiece';
 export default DraggablePiece;
