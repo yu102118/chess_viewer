@@ -1,14 +1,39 @@
 import { useState } from 'react';
-import { Info, Sparkles, Image, Download, Zap, Shield, CheckCircle2, XCircle, Lightbulb, Keyboard, Copy, RotateCw, Shuffle, FileText, Maximize2, Layers } from 'lucide-react';
+
+import {
+  CheckCircle2,
+  Copy,
+  Download,
+  FileText,
+  Image,
+  Info,
+  Keyboard,
+  Layers,
+  Lightbulb,
+  Maximize2,
+  RotateCw,
+  Shield,
+  Shuffle,
+  Sparkles,
+  XCircle,
+  Zap
+} from 'lucide-react';
+
 /**
  * @param {Object} props
  * @returns {JSX.Element}
  */
 function UserGuide() {
   const [isExpanded, setIsExpanded] = useState(false);
-  return <div className="bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-2xl border border-gray-700/50 shadow-2xl overflow-hidden">
+  return (
+    <div className="bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-2xl border border-gray-700/50 shadow-2xl overflow-hidden">
       {}
-      <button onClick={() => setIsExpanded(!isExpanded)} className="w-full px-6 py-5 flex items-center justify-between text-left group hover:bg-gray-700/30 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset" aria-expanded={isExpanded} aria-controls="user-guide-content">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full px-6 py-5 flex items-center justify-between text-left group hover:bg-gray-700/30 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset"
+        aria-expanded={isExpanded}
+        aria-controls="user-guide-content"
+      >
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
             <Info className="w-6 h-6 text-white" aria-hidden="true" />
@@ -22,15 +47,32 @@ function UserGuide() {
             </p>
           </div>
         </div>
-        <div className={`transform transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} aria-hidden="true">
-          <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        <div
+          className={`transform transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+          aria-hidden="true"
+        >
+          <svg
+            className="w-6 h-6 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </div>
       </button>
 
       {}
-      {isExpanded && <div id="user-guide-content" className="px-6 pb-6 space-y-6 animate-fadeIn">
+      {isExpanded && (
+        <div
+          id="user-guide-content"
+          className="px-6 pb-6 space-y-6 animate-fadeIn"
+        >
           {}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -43,10 +85,43 @@ function UserGuide() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <QualityCard icon={<Zap className="w-5 h-5" />} level="8x Quality" resolution="3,200px × 3,200px" fileSize="~86KB - 1MB" use="Web & Social Media" description="Fast downloads, perfect for online sharing" color="green" />
-              <QualityCard icon={<Shield className="w-5 h-5" />} level="16x Quality" resolution="6,400px × 6,400px" fileSize="~255KB - 3MB" use="Print & Presentations" description="Recommended for most use cases" color="blue" recommended />
-              <QualityCard icon={<Sparkles className="w-5 h-5" />} level="24x Quality" resolution="9,600px × 9,600px" fileSize="~506KB - 6MB" use="Professional Print" description="High-resolution for large formats" color="purple" />
-              <QualityCard icon={<Maximize2 className="w-5 h-5" />} level="32x Quality" resolution="12,800px × 12,800px" fileSize="~837KB - 6MB+" use="Maximum Quality" description="Ultra HD, largest file sizes" color="red" />
+              <QualityCard
+                icon={<Zap className="w-5 h-5" />}
+                level="8x Quality"
+                resolution="3,200px × 3,200px"
+                fileSize="~86KB - 1MB"
+                use="Web & Social Media"
+                description="Fast downloads, perfect for online sharing"
+                color="green"
+              />
+              <QualityCard
+                icon={<Shield className="w-5 h-5" />}
+                level="16x Quality"
+                resolution="6,400px × 6,400px"
+                fileSize="~255KB - 3MB"
+                use="Print & Presentations"
+                description="Recommended for most use cases"
+                color="blue"
+                recommended
+              />
+              <QualityCard
+                icon={<Sparkles className="w-5 h-5" />}
+                level="24x Quality"
+                resolution="9,600px × 9,600px"
+                fileSize="~506KB - 6MB"
+                use="Professional Print"
+                description="High-resolution for large formats"
+                color="purple"
+              />
+              <QualityCard
+                icon={<Maximize2 className="w-5 h-5" />}
+                level="32x Quality"
+                resolution="12,800px × 12,800px"
+                fileSize="~837KB - 6MB+"
+                use="Maximum Quality"
+                description="Ultra HD, largest file sizes"
+                color="red"
+              />
             </div>
           </div>
 
@@ -60,8 +135,28 @@ function UserGuide() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <FormatCard icon={<FileText className="w-5 h-5" />} format="PNG" color="blue" pros={['Transparent background', 'Lossless compression', 'Best quality']} cons={['Larger file size', 'Slower to load']} />
-              <FormatCard icon={<Download className="w-5 h-5" />} format="JPEG" color="amber" pros={['Smaller file size', 'Universal support', 'Fast loading']} cons={['No transparency', 'Lossy compression']} />
+              <FormatCard
+                icon={<FileText className="w-5 h-5" />}
+                format="PNG"
+                color="blue"
+                pros={[
+                  'Transparent background',
+                  'Lossless compression',
+                  'Best quality'
+                ]}
+                cons={['Larger file size', 'Slower to load']}
+              />
+              <FormatCard
+                icon={<Download className="w-5 h-5" />}
+                format="JPEG"
+                color="amber"
+                pros={[
+                  'Smaller file size',
+                  'Universal support',
+                  'Fast loading'
+                ]}
+                cons={['No transparency', 'Lossy compression']}
+              />
             </div>
           </div>
 
@@ -75,12 +170,30 @@ function UserGuide() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <TipCard icon={<CheckCircle2 className="w-4 h-4 text-green-400" />} text="Coordinates show white on screen, black when exported for print" />
-              <TipCard icon={<CheckCircle2 className="w-4 h-4 text-green-400" />} text="Validate FEN notation before exporting to ensure accuracy" />
-              <TipCard icon={<CheckCircle2 className="w-4 h-4 text-green-400" />} text="Use Batch Export to download multiple formats at once" />
-              <TipCard icon={<CheckCircle2 className="w-4 h-4 text-green-400" />} text="Random button generates creative positions for testing" />
-              <TipCard icon={<CheckCircle2 className="w-4 h-4 text-green-400" />} text="Higher quality settings may slow down older browsers" />
-              <TipCard icon={<CheckCircle2 className="w-4 h-4 text-green-400" />} text="Board size range: 150-600px, adjustable in 50px steps" />
+              <TipCard
+                icon={<CheckCircle2 className="w-4 h-4 text-green-400" />}
+                text="Coordinates show white on screen, black when exported for print"
+              />
+              <TipCard
+                icon={<CheckCircle2 className="w-4 h-4 text-green-400" />}
+                text="Validate FEN notation before exporting to ensure accuracy"
+              />
+              <TipCard
+                icon={<CheckCircle2 className="w-4 h-4 text-green-400" />}
+                text="Use Batch Export to download multiple formats at once"
+              />
+              <TipCard
+                icon={<CheckCircle2 className="w-4 h-4 text-green-400" />}
+                text="Random button generates creative positions for testing"
+              />
+              <TipCard
+                icon={<CheckCircle2 className="w-4 h-4 text-green-400" />}
+                text="Higher quality settings may slow down older browsers"
+              />
+              <TipCard
+                icon={<CheckCircle2 className="w-4 h-4 text-green-400" />}
+                text="Board size range: 150-600px, adjustable in 50px steps"
+              />
             </div>
           </div>
 
@@ -96,10 +209,30 @@ function UserGuide() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <ActionCard icon={<Copy className="w-4 h-4" />} action="Copy Image" description="Copy to clipboard instantly" color="green" />
-              <ActionCard icon={<FileText className="w-4 h-4" />} action="Copy FEN" description="Copy position notation" color="blue" />
-              <ActionCard icon={<RotateCw className="w-4 h-4" />} action="Flip Board" description="View from black's perspective" color="purple" />
-              <ActionCard icon={<Shuffle className="w-4 h-4" />} action="Random Position" description="Generate test positions" color="pink" />
+              <ActionCard
+                icon={<Copy className="w-4 h-4" />}
+                action="Copy Image"
+                description="Copy to clipboard instantly"
+                color="green"
+              />
+              <ActionCard
+                icon={<FileText className="w-4 h-4" />}
+                action="Copy FEN"
+                description="Copy position notation"
+                color="blue"
+              />
+              <ActionCard
+                icon={<RotateCw className="w-4 h-4" />}
+                action="Flip Board"
+                description="View from black's perspective"
+                color="purple"
+              />
+              <ActionCard
+                icon={<Shuffle className="w-4 h-4" />}
+                action="Random Position"
+                description="Generate test positions"
+                color="pink"
+              />
             </div>
           </div>
 
@@ -142,9 +275,11 @@ function UserGuide() {
               </div>
             </div>
           </div>
-        </div>}
-    </div>;
-};
+        </div>
+      )}
+    </div>
+  );
+}
 /**
  * @param {Object} props
  * @returns {JSX.Element}
@@ -171,10 +306,15 @@ function QualityCard({
     purple: 'text-purple-400',
     red: 'text-red-400'
   };
-  return <div className={`bg-gradient-to-br ${colors[color]} border rounded-xl p-4 space-y-3 hover:shadow-lg transition-all duration-300 relative`}>
-      {recommended && <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+  return (
+    <div
+      className={`bg-gradient-to-br ${colors[color]} border rounded-xl p-4 space-y-3 hover:shadow-lg transition-all duration-300 relative`}
+    >
+      {recommended && (
+        <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
           Recommended
-        </div>}
+        </div>
+      )}
       <div className="flex items-center gap-2">
         <div className={iconColors[color]}>{icon}</div>
         <h5 className={`font-bold text-base ${iconColors[color]}`}>{level}</h5>
@@ -185,76 +325,88 @@ function QualityCard({
         <p className="text-xs text-gray-400">{description}</p>
         <p className="text-xs text-gray-500 italic">{fileSize}</p>
       </div>
-    </div>;
-};
+    </div>
+  );
+}
 /**
  * @param {Object} props
  * @returns {JSX.Element}
  */
-function FormatCard({
-  icon,
-  format,
-  color,
-  pros,
-  cons
-}) {
+function FormatCard({ icon, format, color, pros, cons }) {
   const colors = {
     blue: 'from-blue-600/10 to-blue-600/5 border-blue-600/30 text-blue-400',
-    amber: 'from-amber-600/10 to-amber-600/5 border-amber-600/30 text-amber-400',
-    purple: 'from-purple-600/10 to-purple-600/5 border-purple-600/30 text-purple-400'
+    amber:
+      'from-amber-600/10 to-amber-600/5 border-amber-600/30 text-amber-400',
+    purple:
+      'from-purple-600/10 to-purple-600/5 border-purple-600/30 text-purple-400'
   };
-  return <div className={`bg-gradient-to-br ${colors[color]} border rounded-xl p-4 space-y-3 hover:shadow-lg transition-all duration-300`}>
+  return (
+    <div
+      className={`bg-gradient-to-br ${colors[color]} border rounded-xl p-4 space-y-3 hover:shadow-lg transition-all duration-300`}
+    >
       <div className="flex items-center gap-2">
         {icon}
         <h5 className="font-bold text-base">{format}</h5>
       </div>
       <div className="space-y-2">
         <div className="space-y-1">
-          {pros.map(pro => <div key={pro} className="flex items-start gap-2 text-xs text-green-400">
+          {pros.map((pro) => (
+            <div
+              key={pro}
+              className="flex items-start gap-2 text-xs text-green-400"
+            >
               <CheckCircle2 className="w-3 h-3 mt-0.5 flex-shrink-0" />
               <span>{pro}</span>
-            </div>)}
+            </div>
+          ))}
         </div>
         <div className="space-y-1">
-          {cons.map(con => <div key={con} className="flex items-start gap-2 text-xs text-red-400">
+          {cons.map((con) => (
+            <div
+              key={con}
+              className="flex items-start gap-2 text-xs text-red-400"
+            >
               <XCircle className="w-3 h-3 mt-0.5 flex-shrink-0" />
               <span>{con}</span>
-            </div>)}
+            </div>
+          ))}
         </div>
       </div>
-    </div>;
-};
+    </div>
+  );
+}
 /**
  * @param {Object} props
  * @returns {JSX.Element}
  */
-function TipCard({
-  icon,
-  text
-}) {
-  return <div className="bg-gray-800/50 rounded-lg p-3 flex items-start gap-3 hover:bg-gray-700/50 transition-all duration-300 border border-gray-700/50">
-    <div className="flex-shrink-0 mt-0.5">{icon}</div>
-    <p className="text-sm text-gray-300 leading-relaxed">{text}</p>
-  </div>;
+function TipCard({ icon, text }) {
+  return (
+    <div className="bg-gray-800/50 rounded-lg p-3 flex items-start gap-3 hover:bg-gray-700/50 transition-all duration-300 border border-gray-700/50">
+      <div className="flex-shrink-0 mt-0.5">{icon}</div>
+      <p className="text-sm text-gray-300 leading-relaxed">{text}</p>
+    </div>
+  );
 }
-function ActionCard({
-  icon,
-  action,
-  description,
-  color
-}) {
+
+function ActionCard({ icon, action, description, color }) {
   const colors = {
-    green: 'from-green-600/10 to-green-600/5 border-green-600/30 text-green-400',
+    green:
+      'from-green-600/10 to-green-600/5 border-green-600/30 text-green-400',
     blue: 'from-blue-600/10 to-blue-600/5 border-blue-600/30 text-blue-400',
-    purple: 'from-purple-600/10 to-purple-600/5 border-purple-600/30 text-purple-400',
+    purple:
+      'from-purple-600/10 to-purple-600/5 border-purple-600/30 text-purple-400',
     pink: 'from-pink-600/10 to-pink-600/5 border-pink-600/30 text-pink-400'
   };
-  return <div className={`bg-gradient-to-br ${colors[color]} border rounded-lg p-4 space-y-2 hover:shadow-lg transition-all duration-300`}>
+  return (
+    <div
+      className={`bg-gradient-to-br ${colors[color]} border rounded-lg p-4 space-y-2 hover:shadow-lg transition-all duration-300`}
+    >
       <div className="flex items-center gap-2">
         {icon}
         <h6 className="font-bold text-sm">{action}</h6>
       </div>
       <p className="text-xs text-gray-400">{description}</p>
-    </div>;
+    </div>
+  );
 }
 export default UserGuide;
