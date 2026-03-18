@@ -1,8 +1,10 @@
-import { useState, useCallback, memo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import HelpCenter from '@/components/features/HelpCenter';
-import Logo from '@/assets/Logo.png';
+import { memo, useCallback, useState } from 'react';
+
 import { HelpCircle, Moon, Sun } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+import Logo from '@/assets/Logo.png';
+import HelpCenter from '@/components/features/HelpCenter';
 
 /**
  * Fixed top navigation bar with logo, theme toggle, and help center button.
@@ -13,7 +15,6 @@ import { HelpCircle, Moon, Sun } from 'lucide-react';
  */
 function Navbar({ theme, toggleTheme }) {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const isDark = theme === 'dark';
   const navigate = useNavigate();
 
   /**
@@ -45,11 +46,7 @@ function Navbar({ theme, toggleTheme }) {
             {/* Logo */}
             <button
               onClick={handleLogoClick}
-              className={`flex items-center space-x-2 transition-colors ${
-                isDark
-                  ? 'text-white hover:text-blue-400'
-                  : 'text-gray-900 hover:text-blue-600'
-              }`}
+              className="flex items-center space-x-2 transition-colors text-text-primary hover:text-accent"
             >
               <div className="flex items-center gap-2">
                 <img
@@ -57,9 +54,9 @@ function Navbar({ theme, toggleTheme }) {
                   alt="Logo"
                   className="w-8 h-12 sm:w-10 sm:h-14"
                 />
-                <h1 className="font-display font-bold text-text-primary leading-tight group-hover:text-accent transition-colors duration-200">
+                <span className="font-display font-bold text-text-primary leading-tight transition-colors duration-200">
                   FENForsty Pro
-                </h1>
+                </span>
               </div>
             </button>
 
@@ -68,14 +65,10 @@ function Navbar({ theme, toggleTheme }) {
               {/* Theme Toggle Button */}
               <button
                 onClick={toggleTheme}
-                className={`p-2 rounded-lg transition-colors ${
-                  isDark
-                    ? 'text-gray-300 hover:text-white hover:bg-gray-800'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                }`}
+                className="p-2 rounded-lg transition-colors text-text-secondary hover:text-text-primary hover:bg-surface-hover"
                 aria-label="Toggle theme"
               >
-                {isDark ? (
+                {theme === 'dark' ? (
                   <Sun className="w-5 h-5" />
                 ) : (
                   <Moon className="w-5 h-5" />
@@ -85,11 +78,7 @@ function Navbar({ theme, toggleTheme }) {
               {/* Help Button */}
               <button
                 onClick={handleHelpClick}
-                className={`flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${
-                  isDark
-                    ? 'text-gray-300 hover:text-white hover:bg-gray-800'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                }`}
+                className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-colors text-text-secondary hover:text-text-primary hover:bg-surface-hover"
               >
                 <HelpCircle className="w-5 h-5" />
                 <span className="font-medium hidden sm:inline">Help</span>
@@ -103,6 +92,6 @@ function Navbar({ theme, toggleTheme }) {
       <HelpCenter isOpen={isHelpOpen} onClose={handleCloseHelp} theme={theme} />
     </>
   );
-};
+}
 
 export default memo(Navbar);
