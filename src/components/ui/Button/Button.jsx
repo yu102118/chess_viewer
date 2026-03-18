@@ -1,5 +1,7 @@
 import { memo } from 'react';
+
 import { getButtonClasses } from '@/utils';
+
 /**
  * @param {Object} props
  * @returns {JSX.Element}
@@ -16,10 +18,23 @@ const Button = memo(function Button({
   type = 'button',
   'aria-label': ariaLabel
 }) {
-  return <button type={type} onClick={onClick} disabled={disabled} aria-label={ariaLabel} aria-disabled={disabled} className={getButtonClasses(variant, size, `${fullWidth ? 'w-full' : ''} ${className}`)}>
-        {Icon && <Icon className="w-4 h-4" aria-hidden="true" />}
-        {children}
-      </button>;
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      aria-disabled={disabled}
+      className={getButtonClasses(
+        variant,
+        size,
+        `${fullWidth ? 'w-full' : ''} ${className}`
+      )}
+    >
+      {Icon && <Icon className="w-4 h-4" aria-hidden="true" />}
+      {children}
+    </button>
+  );
 });
 Button.displayName = 'Button';
 export default Button;
