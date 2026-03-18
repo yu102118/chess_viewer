@@ -1,6 +1,9 @@
-import { memo, useRef, useLayoutEffect } from 'react';
+import { memo, useLayoutEffect, useRef } from 'react';
+
 import { useDragLayer } from 'react-dnd';
+
 import { ItemTypes } from '@/constants';
+
 /**
  * @param {Object} props
  * @returns {JSX.Element}
@@ -10,18 +13,15 @@ const CustomDragLayer = memo(function CustomDragLayer({
   boardSize = 400
 }) {
   const dragPreviewRef = useRef(null);
-  const {
-    itemType,
-    isDragging,
-    item,
-    currentOffset
-  } = useDragLayer(monitor => ({
-    item: monitor.getItem(),
-    itemType: monitor.getItemType(),
-    currentOffset: monitor.getClientOffset(),
-    initialOffset: monitor.getInitialClientOffset(),
-    isDragging: monitor.isDragging()
-  }));
+  const { itemType, isDragging, item, currentOffset } = useDragLayer(
+    (monitor) => ({
+      item: monitor.getItem(),
+      itemType: monitor.getItemType(),
+      currentOffset: monitor.getClientOffset(),
+      initialOffset: monitor.getInitialClientOffset(),
+      isDragging: monitor.isDragging()
+    })
+  );
   useLayoutEffect(() => {
     if (dragPreviewRef.current) {
       if (isDragging) {
@@ -56,10 +56,7 @@ const CustomDragLayer = memo(function CustomDragLayer({
         display: 'none'
       };
     }
-    const {
-      x,
-      y
-    } = currentOffset;
+    const { x, y } = currentOffset;
     const halfSize = PIECE_SIZE / 2;
     const translateX = Math.round(x - halfSize);
     const translateY = Math.round(y - halfSize);
@@ -76,21 +73,29 @@ const CustomDragLayer = memo(function CustomDragLayer({
       WebkitBackfaceVisibility: 'hidden'
     };
   };
-  return <div style={layerStyles} aria-hidden="true">
+  return (
+    <div style={layerStyles} aria-hidden="true">
       <div ref={dragPreviewRef} style={getItemStyles()}>
-        <img src={pieceImage.src} alt="" aria-hidden="true" style={{
-        width: '100%',
-        height: '100%',
-        objectFit: 'contain',
-        opacity: 0.95,
-        filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5))',
-        pointerEvents: 'none',
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        imageRendering: 'auto'
-      }} draggable={false} />
+        <img
+          src={pieceImage.src}
+          alt=""
+          aria-hidden="true"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            opacity: 0.95,
+            filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5))',
+            pointerEvents: 'none',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            imageRendering: 'auto'
+          }}
+          draggable={false}
+        />
       </div>
-    </div>;
+    </div>
+  );
 });
 CustomDragLayer.displayName = 'CustomDragLayer';
 export default CustomDragLayer;
