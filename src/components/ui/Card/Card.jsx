@@ -1,4 +1,5 @@
 import { getCardClasses } from '@/utils';
+
 /**
  * @param {Object} props
  * @returns {JSX.Element}
@@ -10,8 +11,10 @@ function Card({
   glass = false,
   padding = 'md'
 }) {
-  return <div className={getCardClasses(gradient, glass, padding, className)}>
+  return (
+    <div className={`overflow-hidden ${getCardClasses(gradient, glass, padding, className)}`}>
       {children}
-    </div>;
+    </div>
+  );
 }
 export default Card;
