@@ -1,23 +1,27 @@
 import {
   CheckCircle,
   Code,
-  Shield,
-  Info,
-  Zap,
   Copy,
-  RotateCw,
-  Shuffle,
+  Crown,
   FileText,
-  Maximize2,
+  Info,
   Layers,
-  Crown
+  Maximize2,
+  RotateCw,
+  Shield,
+  Shuffle,
+  Zap
 } from 'lucide-react';
 
-const AboutPage = () => {
+/**
+ * @param {Object} props
+ * @returns {JSX.Element}
+ */
+function AboutPage() {
   return (
-    <div className="min-h-screen pt-20 pb-16 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto space-y-8">
-        {/* Hero Section */}
+    <div className="h-full max-h-full overflow-hidden pt-16 sm:pt-20 pb-4 px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto h-full overflow-y-auto space-y-6 pr-1">
+        {}
         <div className="text-center mb-10 animate-fadeIn">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-semibold mb-5">
             <Crown className="w-5 h-5" />
@@ -32,7 +36,7 @@ const AboutPage = () => {
           </p>
         </div>
 
-        {/* Main About Card */}
+        {}
         <div className="glass-card p-6 sm:p-8 rounded-2xl shadow-lg animate-fadeIn">
           <div className="space-y-5 text-text-secondary leading-relaxed">
             <p>
@@ -96,7 +100,7 @@ const AboutPage = () => {
           </div>
         </div>
 
-        {/* How to Use Section */}
+        {}
         <div className="glass-card p-6 sm:p-8 rounded-2xl shadow-lg animate-fadeIn">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
@@ -113,7 +117,7 @@ const AboutPage = () => {
           </div>
 
           <div className="space-y-6">
-            {/* Quality Levels */}
+            {}
             <div>
               <h3 className="flex items-center gap-2 text-base font-semibold text-text-primary mb-3">
                 <Layers className="w-5 h-5 text-accent" />
@@ -127,7 +131,7 @@ const AboutPage = () => {
               </div>
             </div>
 
-            {/* Actions */}
+            {}
             <div>
               <h3 className="flex items-center gap-2 text-base font-semibold text-text-primary mb-3">
                 <Zap className="w-5 h-5 text-accent" />
@@ -171,28 +175,31 @@ const AboutPage = () => {
       </div>
     </div>
   );
-};
+}
 
-const QualityCard = ({ level, label, desc }) => (
-  <div className="p-3 rounded-lg bg-surface-elevated border border-border hover:border-accent text-center transition-all duration-200 hover:scale-105">
-    <div className="text-lg font-bold text-accent mb-0.5">{level}</div>
-    <div className="text-sm font-semibold text-text-primary mb-0.5">
-      {label}
-    </div>
-    <div className="text-xs text-text-muted">{desc}</div>
-  </div>
-);
-
-const ActionCard = ({ icon, title, desc }) => (
-  <div className="flex items-center gap-3 p-3 rounded-lg bg-surface-elevated border border-border hover:border-accent transition-all duration-200 hover:scale-105">
-    <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent shrink-0">
-      {icon}
-    </div>
-    <div className="text-left">
-      <div className="text-sm font-semibold text-text-primary">{title}</div>
+function QualityCard({ level, label, desc }) {
+  return (
+    <div className="p-3 rounded-lg bg-surface-elevated border border-border hover:border-accent text-center transition-all duration-200 hover:scale-105">
+      <div className="text-lg font-bold text-accent mb-0.5">{level}</div>
+      <div className="text-sm font-semibold text-text-primary mb-0.5">
+        {label}
+      </div>
       <div className="text-xs text-text-muted">{desc}</div>
     </div>
-  </div>
-);
+  );
+}
 
+function ActionCard({ icon, title, desc }) {
+  return (
+    <div className="flex items-center gap-3 p-3 rounded-lg bg-surface-elevated border border-border hover:border-accent transition-all duration-200 hover:scale-105">
+      <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent shrink-0">
+        {icon}
+      </div>
+      <div className="text-left">
+        <div className="text-sm font-semibold text-text-primary">{title}</div>
+        <div className="text-xs text-text-muted">{desc}</div>
+      </div>
+    </div>
+  );
+}
 export default AboutPage;
