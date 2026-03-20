@@ -1,21 +1,19 @@
 import { useMemo } from 'react';
 
-import { parseFEN, logger } from '@/utils';
+import { logger, parseFEN } from '@/utils';
 import { createEmptyBoard } from '@/utils/boardUtils';
 
 /**
- * Parses FEN string into a stable board array.
- * Returns memoized board to prevent unnecessary re-renders.
+ * Parses a FEN string into a 2D board array for display.
  *
- * @param {string} fen - FEN notation string
- * @returns {Array<Array<string>>} 8x8 board matrix
+ * @param {string} fen - FEN string
+ * @returns {{ board: string[][], positionStats: Object }}
  */
 export function useChessBoard(fen) {
   const board = useMemo(() => {
     if (!fen || typeof fen !== 'string' || fen.trim() === '') {
       return createEmptyBoard();
     }
-
     try {
       const parsed = parseFEN(fen);
       if (!Array.isArray(parsed) || parsed.length !== 8) {
@@ -30,6 +28,5 @@ export function useChessBoard(fen) {
       return createEmptyBoard();
     }
   }, [fen]);
-
   return board;
 }
