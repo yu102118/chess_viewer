@@ -1,31 +1,34 @@
 import {
-  useState,
-  useRef,
   useCallback,
+  useEffect,
   useMemo,
   useReducer,
-  useEffect
+  useRef,
+  useState
 } from 'react';
+
 import { useLocation } from 'react-router-dom';
+
 import { ChessBoard } from '@/components/board';
-import { ChessEditor } from '@/components/interactions';
 import {
-  ControlPanel,
   ActionButtons,
+  ControlPanel,
   ExportProgress
 } from '@/components/features';
+import { ChessEditor } from '@/components/interactions';
 import { NotificationContainer } from '@/components/ui';
-import { useNotifications, useLocalStorage, useFENHistory } from '@/hooks';
+import { useFENHistory, useLocalStorage, useNotifications } from '@/hooks';
 import {
-  downloadPNG,
-  downloadJPEG,
-  copyToClipboard,
   batchExport,
   cancelExport,
+  copyToClipboard,
+  downloadJPEG,
+  downloadPNG,
   pauseExport,
   resumeExport,
   shouldForceCoordinateBorder
 } from '@/utils';
+import { safeJSONParse, sanitizeHexColor } from '@/utils/validation';
 
 /**
  * Export state reducer - PERFORMANCE OPTIMIZED
@@ -67,20 +70,17 @@ const exportReducer = (state, action) => {
  * Home Page
  * PERFORMANCE OPTIMIZED: Prevents unnecessary re-renders with useCallback, useMemo, and useReducer
  */
-const HomePage = () => {
+function HomePage() {
   const location = useLocation();
 
-  // Persistent state
   const [fen, setFen] = useLocalStorage(
     'chess-fen',
     'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
   );
 
-  // Handle FEN loading from navigation state (when coming back from pages)
   useEffect(() => {
     if (location.state?.loadFEN) {
       setFen(location.state.loadFEN);
-      // Clear the state so it doesn't reload on navigation back/forward
       window.history.replaceState({}, document.title);
     }
   }, [location, setFen]);
@@ -110,7 +110,6 @@ const HomePage = () => {
     '#b58863'
   );
 
-  // Listen for theme changes from theme customization
   useEffect(() => {
     const handleStorageChange = () => {
       const light = localStorage.getItem('chess-light-square');
@@ -118,31 +117,28 @@ const HomePage = () => {
 
       if (light) {
         try {
-          const parsed = JSON.parse(light);
-          setLightSquare(parsed);
+          const parsed = safeJSONParse(light, null);
+          const color = typeof parsed === 'string' ? parsed : light;
+          setLightSquare(sanitizeHexColor(color, '#f0d9b5'));
         } catch {
-          // If not JSON, use as-is
-          setLightSquare(light);
+          setLightSquare(sanitizeHexColor(light, '#f0d9b5'));
         }
       }
       if (dark) {
         try {
-          const parsed = JSON.parse(dark);
-          setDarkSquare(parsed);
+          const parsed = safeJSONParse(dark, null);
+          const color = typeof parsed === 'string' ? parsed : dark;
+          setDarkSquare(sanitizeHexColor(color, '#b58863'));
         } catch {
-          // If not JSON, use as-is
-          setDarkSquare(dark);
+          setDarkSquare(sanitizeHexColor(dark, '#b58863'));
         }
       }
     };
 
-    // Initial check on mount
     handleStorageChange();
 
-    // Listen for custom storage event (same tab)
     window.addEventListener('storage', handleStorageChange);
 
-    // Also check on visibility change (when returning from another tab/page)
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         handleStorageChange();
@@ -161,7 +157,6 @@ const HomePage = () => {
   const [fileName] = useLocalStorage('chess-file-name', 'chess-position');
   const [exportQuality] = useLocalStorage('chess-export-quality', 16);
 
-  // Export state with useReducer for better performance
   const [exportState, dispatchExport] = useReducer(exportReducer, {
     isExporting: false,
     exportProgress: 0,
@@ -303,7 +298,6 @@ const HomePage = () => {
           fileName,
           (progress, format) => {
             dispatchExport({ type: 'UPDATE_PROGRESS', progress });
-            // Update format separately if needed
             if (format !== exportState.currentFormat) {
               dispatchExport({ type: 'START_EXPORT', format });
             }
@@ -382,15 +376,12 @@ const HomePage = () => {
   );
 
   return (
-    <div className="h-screen overflow-hidden pt-16 sm:pt-20 px-3 sm:px-4 lg:px-6">
-      <div className="max-w-[1600px] mx-auto w-full h-full overflow-hidden">
-        {/* Main Content Grid - Responsive */}
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
-          {/* Board Section - Left/Center */}
-          <div className="w-full lg:flex-1 space-y-4 sm:space-y-5 animate-fadeIn">
-            {/* Interactive Chess Editor */}
-            <div className="relative">
-              <div className="glass-card p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg">
+    <div className="h-full max-h-full overflow-y-auto 2xl:overflow-hidden pt-16 sm:pt-20 px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4">
+      <div className="max-w-[1720px] mx-auto w-full min-h-full 2xl:min-h-0">
+        <div className="flex flex-col 2xl:flex-row gap-4 lg:gap-6 items-stretch 2xl:min-h-0 2xl:h-[calc(100dvh-6.75rem)]">
+          <div className="w-full 2xl:flex-1 2xl:h-full space-y-3 sm:space-y-4 animate-fadeIn min-h-0 min-w-0 flex flex-col">
+            <div className="relative glass-card rounded-xl p-3 sm:p-4 2xl:flex-1 2xl:min-h-0">
+              <div className="h-full">
                 <ChessEditor
                   fen={fen}
                   onFenChange={handleEditorFenChange}
@@ -399,17 +390,16 @@ const HomePage = () => {
                   lightSquare={lightSquare}
                   darkSquare={darkSquare}
                   flipped={flipped}
+                  className="2xl:h-full"
                 />
               </div>
             </div>
 
-            {/* Hidden canvas board for export (not visible but used by export functions) */}
             <div className="sr-only" aria-hidden="true">
               <ChessBoard ref={boardRef} {...boardProps} />
             </div>
 
-            {/* Action Buttons */}
-            <div>
+            <div className="glass-card rounded-xl p-3 sm:p-4 lg:p-5">
               <ActionButtons
                 onDownloadPNG={handleDownloadPNG}
                 onDownloadJPEG={handleDownloadJPEG}
@@ -424,8 +414,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* Control Panel - Right Sidebar (Responsive) */}
-          <div className="w-full lg:w-[420px] xl:w-[480px] lg:flex-shrink-0 animate-fadeIn">
+          <div className="w-full 2xl:w-[445px] 2xl:flex-shrink-0 2xl:min-h-0 2xl:h-full animate-fadeIn">
             <ControlPanel
               fen={fen}
               setFen={setFen}
@@ -473,6 +462,6 @@ const HomePage = () => {
       )}
     </div>
   );
-};
+}
 
 export default HomePage;
