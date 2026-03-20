@@ -1,9 +1,5 @@
-/**
- * The standard chess starting position in FEN notation.
- */
 export const STARTING_FEN =
   'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
-
 export const PIECE_MAP = {
   wK: 'wK',
   wQ: 'wQ',
@@ -18,37 +14,100 @@ export const PIECE_MAP = {
   bN: 'bN',
   bP: 'bP'
 };
-
-/**
- * Available piece art styles from Lichess.
- * The "id" is used in the image URL: https://lichess1.org/assets/piece/{id}/{piece}.svg
- */
 export const PIECE_SETS = [
-  { id: 'alpha', name: 'Alpha' },
-  { id: 'cardinal', name: 'Cardinal' },
-  { id: 'california', name: 'California' },
-  { id: 'cburnett', name: 'Classic (CBurnett)' },
-  { id: 'companion', name: 'Companion' },
-  { id: 'dubrovny', name: 'Dubrovny' },
-  { id: 'fantasy', name: 'Fantasy' },
-  { id: 'fresca', name: 'Fresca' },
-  { id: 'gioco', name: 'Gioco' },
-  { id: 'governor', name: 'Governor' },
-  { id: 'horsey', name: 'Horsey' },
-  { id: 'icpieces', name: 'IC Pieces' },
-  { id: 'kosal', name: 'Kosal' },
-  { id: 'leipzig', name: 'Leipzig' },
-  { id: 'merida', name: 'Merida' },
-  { id: 'maestro', name: 'Maestro' },
-  { id: 'pirouetti', name: 'Pirouetti' },
-  { id: 'pixel', name: 'Pixel' },
-  { id: 'reillycraig', name: 'Reilly Craig' },
-  { id: 'riohacha', name: 'Riohacha' },
-  { id: 'spatial', name: 'Spatial' },
-  { id: 'staunty', name: 'Staunty' },
-  { id: 'tatiana', name: 'Tatiana' }
+  {
+    id: 'alpha',
+    name: 'Alpha'
+  },
+  {
+    id: 'cardinal',
+    name: 'Cardinal'
+  },
+  {
+    id: 'california',
+    name: 'California'
+  },
+  {
+    id: 'cburnett',
+    name: 'Classic (CBurnett)'
+  },
+  {
+    id: 'companion',
+    name: 'Companion'
+  },
+  {
+    id: 'dubrovny',
+    name: 'Dubrovny'
+  },
+  {
+    id: 'fantasy',
+    name: 'Fantasy'
+  },
+  {
+    id: 'fresca',
+    name: 'Fresca'
+  },
+  {
+    id: 'gioco',
+    name: 'Gioco'
+  },
+  {
+    id: 'governor',
+    name: 'Governor'
+  },
+  {
+    id: 'horsey',
+    name: 'Horsey'
+  },
+  {
+    id: 'icpieces',
+    name: 'IC Pieces'
+  },
+  {
+    id: 'kosal',
+    name: 'Kosal'
+  },
+  {
+    id: 'leipzig',
+    name: 'Leipzig'
+  },
+  {
+    id: 'merida',
+    name: 'Merida'
+  },
+  {
+    id: 'maestro',
+    name: 'Maestro'
+  },
+  {
+    id: 'pirouetti',
+    name: 'Pirouetti'
+  },
+  {
+    id: 'pixel',
+    name: 'Pixel'
+  },
+  {
+    id: 'reillycraig',
+    name: 'Reilly Craig'
+  },
+  {
+    id: 'riohacha',
+    name: 'Riohacha'
+  },
+  {
+    id: 'spatial',
+    name: 'Spatial'
+  },
+  {
+    id: 'staunty',
+    name: 'Staunty'
+  },
+  {
+    id: 'tatiana',
+    name: 'Tatiana'
+  }
 ];
-
 export const BOARD_THEMES = {
   classic: {
     name: 'Classic',
@@ -151,10 +210,6 @@ export const BOARD_THEMES = {
     dark: '#7eb8da'
   }
 };
-
-/**
- * Export quality presets for professional chess diagram output.
- */
 export const QUALITY_PRESETS = [
   {
     value: 8,
@@ -189,11 +244,6 @@ export const QUALITY_PRESETS = [
     estimatedSize: '800KB-1.2MB'
   }
 ];
-
-/**
- * PRINT MODE: User selects physical board size; quality multiplier increases pixel density only.
- * SOCIAL MODE: Fixed large output regardless of user's board size; coordinate borders always on.
- */
 export const EXPORT_MODE_CONFIG = {
   print: {
     baseDPI: 300,
@@ -209,28 +259,37 @@ export const EXPORT_MODE_CONFIG = {
     description: 'Fixed large output for zoom/social media'
   }
 };
-
 export const ADVANCED_FEN_CONFIG = {
   MAX_FENS: 10,
-
   DEFAULT_FENS: ['', '', ''],
-
   DEFAULT_INTERVAL: 3,
-
   INTERVAL_OPTIONS: [
-    { value: 1, label: '1s' },
-    { value: 2, label: '2s' },
-    { value: 3, label: '3s' },
-    { value: 5, label: '5s' },
-    { value: 10, label: '10s' }
+    {
+      value: 1,
+      label: '1s'
+    },
+    {
+      value: 2,
+      label: '2s'
+    },
+    {
+      value: 3,
+      label: '3s'
+    },
+    {
+      value: 5,
+      label: '5s'
+    },
+    {
+      value: 10,
+      label: '10s'
+    }
   ],
-
   TABS: {
     POSITIONS: 'positions',
     PREVIEW: 'preview',
     EXPORT: 'export'
   },
-
   STORAGE_KEYS: {
     HISTORY: 'advancedFENHistory',
     FAVORITES: 'advancedFENFavorites'
