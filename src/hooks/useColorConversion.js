@@ -1,17 +1,11 @@
 import { useCallback } from 'react';
 
 /**
- * Provides memoized color conversion utilities.
+ * Provides memoised color conversion utilities (hex ↔ RGB ↔ HSL ↔ HSV).
  *
- * @returns {Object} Color conversion functions: hexToRgb, rgbToHex, rgbToHsv, hsvToRgb
+ * @returns {{ hexToRgb: function, rgbToHex: function, rgbToHsl: function, hslToHex: function, hexToHsl: function, hslToRgb: function, hexToHsv: function, hsvToHex: function }}
  */
-export const useColorConversion = () => {
-  /**
-   * Convert hex color string to RGB components.
-   *
-   * @param {string} hex - Hex color (e.g., '#ff0000')
-   * @returns {Object|null} RGB object or null if invalid
-   */
+export function useColorConversion() {
   const hexToRgb = useCallback((hex) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
@@ -22,15 +16,6 @@ export const useColorConversion = () => {
         }
       : null;
   }, []);
-
-  /**
-   * Convert RGB components to hex color string.
-   *
-   * @param {number} r - Red (0-255)
-   * @param {number} g - Green (0-255)
-   * @param {number} b - Blue (0-255)
-   * @returns {string} Hex color string
-   */
   const rgbToHex = useCallback((r, g, b) => {
     return (
       '#' +
@@ -42,15 +27,6 @@ export const useColorConversion = () => {
         .join('')
     );
   }, []);
-
-  /**
-   * Convert RGB to HSV (Hue, Saturation, Value).
-   *
-   * @param {number} r - Red (0-255)
-   * @param {number} g - Green (0-255)
-   * @param {number} b - Blue (0-255)
-   * @returns {{ h: number, s: number, v: number }} HSV values
-   */
   const rgbToHsv = useCallback((r, g, b) => {
     r /= 255;
     g /= 255;
@@ -61,7 +37,6 @@ export const useColorConversion = () => {
     const d = max - min;
     const s = max === 0 ? 0 : d / max;
     let h = 0;
-
     if (max !== min) {
       switch (max) {
         case r:
@@ -78,17 +53,12 @@ export const useColorConversion = () => {
       }
       h /= 6;
     }
-    return { h: h * 360, s: s * 100, v: v * 100 };
+    return {
+      h: h * 360,
+      s: s * 100,
+      v: v * 100
+    };
   }, []);
-
-  /**
-   * Convert HSV to RGB.
-   *
-   * @param {number} h - Hue (0-360)
-   * @param {number} s - Saturation (0-100)
-   * @param {number} v - Value/Brightness (0-100)
-   * @returns {{ r: number, g: number, b: number }} RGB values
-   */
   const hsvToRgb = useCallback((h, s, v) => {
     h /= 360;
     s /= 100;
@@ -99,7 +69,6 @@ export const useColorConversion = () => {
     const p = v * (1 - s);
     const q = v * (1 - f * s);
     const t = v * (1 - (1 - f) * s);
-
     switch (i % 6) {
       case 0:
         [r, g, b] = [v, t, p];
@@ -128,11 +97,10 @@ export const useColorConversion = () => {
       b: Math.round(b * 255)
     };
   }, []);
-
   return {
     hexToRgb,
     rgbToHex,
     rgbToHsv,
     hsvToRgb
   };
-};
+}
