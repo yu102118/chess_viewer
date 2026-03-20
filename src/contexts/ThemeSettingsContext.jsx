@@ -1,20 +1,20 @@
 import {
   createContext,
-  useState,
-  useEffect,
   useCallback,
-  useContext
+  useContext,
+  useEffect,
+  useMemo,
+  useState
 } from 'react';
+
+import { safeJSONParse } from '@/utils/validation';
 
 const ThemeSettingsContext = createContext(null);
 
-// Singleton AudioContext — created once on first use, reused on every playSound call.
-// Creating a new AudioContext per call exhausts the browser's ~6-context limit.
 let _sharedAudioCtx = null;
 
 /**
- * Get or create the shared AudioContext singleton.
- *
+ * Returns the shared AudioContext singleton.
  * @returns {AudioContext}
  */
 function getAudioCtx() {
@@ -25,13 +25,11 @@ function getAudioCtx() {
 }
 
 /**
- * Access the nearest ThemeSettingsContext value.
- *
  * @returns {Object} Theme settings context value
  * @throws {Error} If used outside a ThemeSettingsProvider
  */
 // eslint-disable-next-line react-refresh/only-export-components
-export const useThemeSettings = () => {
+export function useThemeSettings() {
   const context = useContext(ThemeSettingsContext);
   if (!context) {
     throw new Error(
@@ -39,7 +37,7 @@ export const useThemeSettings = () => {
     );
   }
   return context;
-};
+}
 
 const defaultSettings = {
   autoApply: false,
@@ -55,16 +53,18 @@ const defaultSettings = {
 };
 
 /**
- * Provides theme UI settings, recent colors, and sound effects to the component tree.
- *
+ * Provides theme settings state to the component subtree.
  * @param {{ children: React.ReactNode }} props
  * @returns {JSX.Element}
  */
-export const ThemeSettingsProvider = ({ children }) => {
+export function ThemeSettingsProvider({ children }) {
   const [settings, setSettings] = useState(() => {
     try {
       const saved = localStorage.getItem('themeSettings');
-      return saved ? JSON.parse(saved) : defaultSettings;
+      const parsed = safeJSONParse(saved, null);
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+        ? { ...defaultSettings, ...parsed }
+        : defaultSettings;
     } catch {
       return defaultSettings;
     }
@@ -73,15 +73,13 @@ export const ThemeSettingsProvider = ({ children }) => {
   const [recentColors, setRecentColors] = useState(() => {
     try {
       const saved = localStorage.getItem('recentColors');
-      return saved ? JSON.parse(saved) : [];
+      const parsed = safeJSONParse(saved, null);
+      return Array.isArray(parsed) ? parsed : [];
     } catch {
       return [];
     }
   });
 
-  // Merge all DOM-class/style mutations into a single effect keyed on the
-  // three settings that affect the document root. Avoids 3 separate effect
-  // evaluations on every settings change.
   useEffect(() => {
     if (settings.enableAnimations) {
       document.documentElement.style.setProperty('--transition-speed', '0.2s');
@@ -100,7 +98,11 @@ export const ThemeSettingsProvider = ({ children }) => {
       'color-blind-mode',
       Boolean(settings.enableColorBlindMode)
     );
-  }, [settings.enableAnimations, settings.compactMode, settings.enableColorBlindMode]);
+  }, [
+    settings.enableAnimations,
+    settings.compactMode,
+    settings.enableColorBlindMode
+  ]);
 
   useEffect(() => {
     localStorage.setItem('themeSettings', JSON.stringify(settings));
@@ -186,13 +188,13 @@ export const ThemeSettingsProvider = ({ children }) => {
         oscillator.start();
         oscillator.stop(audioCtx.currentTime + 0.05);
       } catch {
-        // Audio not supported, ignore
+        return;
       }
     },
     [settings.enableSoundEffects]
   );
 
-  const value = {
+  const value = useMemo(() => ({
     settings,
     updateSetting,
     updateSettings,
@@ -202,13 +204,13 @@ export const ThemeSettingsProvider = ({ children }) => {
     clearRecentColors,
     playSound,
     defaultSettings
-  };
+  }), [settings, updateSetting, updateSettings, resetSettings, recentColors, addRecentColor, clearRecentColors, playSound]);
 
   return (
     <ThemeSettingsContext.Provider value={value}>
       {children}
     </ThemeSettingsContext.Provider>
   );
-};
+}
 
 export default ThemeSettingsContext;
