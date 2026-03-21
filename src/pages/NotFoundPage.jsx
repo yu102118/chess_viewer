@@ -1,9 +1,13 @@
+import { ArrowLeft, Crown, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Home, ArrowLeft, Crown } from 'lucide-react';
 
-const NotFoundPage = () => {
+/**
+ * @param {Object} props
+ * @returns {JSX.Element}
+ */
+function NotFoundPage() {
   return (
-    <div className="h-screen flex items-center justify-center px-4 bg-bg">
+    <div className="h-full max-h-full overflow-hidden flex items-center justify-center px-4 bg-bg">
       <div className="text-center max-w-lg animate-fadeIn">
         <div className="relative mb-8">
           <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mx-auto animate-float">
@@ -11,7 +15,7 @@ const NotFoundPage = () => {
           </div>
         </div>
 
-        <span className="text-9xl font-display font-bold bg-gradient-to-r from-accent via-text-primary to-accent bg-clip-text text-transparent block mb-6">
+        <span className="text-7xl sm:text-8xl lg:text-9xl font-display font-bold bg-gradient-to-r from-accent via-text-primary to-accent bg-clip-text text-transparent block mb-6">
           404
         </span>
 
@@ -41,6 +45,5 @@ const NotFoundPage = () => {
       </div>
     </div>
   );
-};
-
+}
 export default NotFoundPage;
