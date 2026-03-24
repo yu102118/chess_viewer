@@ -443,7 +443,7 @@ const FENHistoryPage = memo(function FENHistoryPage() {
                   </div>
 
                   <div className="p-3 flex flex-col flex-1 min-h-0">
-                    <div className="font-mono text-[9px] sm:text-[10px] text-text-muted/70 truncate mb-2">
+                    <div className="font-mono text-[10px] sm:text-xs text-text-muted/70 truncate mb-2">
                       {entry.fen.split(' ')[0]}
                     </div>
 
@@ -459,7 +459,7 @@ const FENHistoryPage = memo(function FENHistoryPage() {
                       {(entry.createdAt ||
                         entry.timestamp ||
                         entry.archivedAt) && (
-                        <div className="text-[9px] sm:text-[10px] text-text-muted/60 flex items-center gap-1 font-medium">
+                        <div className="text-[10px] sm:text-xs text-text-muted/60 flex items-center gap-1 font-medium">
                           <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0 opacity-50" />
                           <span>
                             {formatDate(
