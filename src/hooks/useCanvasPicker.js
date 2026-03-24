@@ -39,8 +39,10 @@ export function useCanvasPicker(canvasRef, currentColor) {
       const canvas = canvasRef.current;
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
-      const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
       const ctx = canvas.getContext('2d');
       const imageData = ctx.getImageData(x, y, 1, 1).data;
       const hex = rgbToHex(imageData[0], imageData[1], imageData[2]);
