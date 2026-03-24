@@ -21,7 +21,6 @@ export function useInteractiveBoard(initialFen, onFenChange) {
     }
     return createEmptyBoard();
   });
-  const [boardKey, setBoardKey] = useState(0);
   const lastGeneratedFenRef = useRef('');
   const lastExternalFenRef = useRef(initialFen);
   const syncFromFen = useCallback((fen) => {
@@ -105,7 +104,6 @@ export function useInteractiveBoard(initialFen, onFenChange) {
     lastGeneratedFenRef.current = startingFen;
     lastExternalFenRef.current = startingFen;
     setBoard(startingBoard);
-    setBoardKey((prev) => prev + 1);
     if (onFenChange) {
       onFenChange(startingFen);
     }
@@ -127,7 +125,6 @@ export function useInteractiveBoard(initialFen, onFenChange) {
   }, [board]);
   return {
     board,
-    boardKey,
     currentFen,
     handlePieceDrop,
     handlePieceRemove,
