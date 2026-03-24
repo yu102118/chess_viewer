@@ -105,7 +105,8 @@ const Toast = memo(function Toast({ notification, onRemove }) {
         <div
           className="h-full bg-white/40"
           style={{
-            animation: 'shrinkWidth 4s linear forwards'
+            animation: 'shrinkWidth 4s linear forwards',
+            transformOrigin: 'left'
           }}
         />
       </div>
