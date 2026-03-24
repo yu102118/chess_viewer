@@ -395,10 +395,12 @@ function HomePage() {
               </div>
             </div>
 
+            {/* Hidden export canvas */}
             <div className="sr-only" aria-hidden="true">
               <ChessBoard ref={boardRef} {...boardProps} />
             </div>
 
+            {/* Export / flip buttons */}
             <div className="glass-card rounded-xl p-3 sm:p-4 lg:p-5">
               <ActionButtons
                 onDownloadPNG={handleDownloadPNG}
@@ -414,7 +416,7 @@ function HomePage() {
             </div>
           </div>
 
-          <div className="w-full 2xl:w-[445px] 2xl:flex-shrink-0 2xl:min-h-0 2xl:h-full animate-fadeIn">
+          <div className="w-full 2xl:w-[500px] 2xl:flex-shrink-0 2xl:min-h-0 2xl:h-full animate-fadeIn">
             <ControlPanel
               fen={fen}
               setFen={setFen}
