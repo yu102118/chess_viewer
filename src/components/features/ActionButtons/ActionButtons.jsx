@@ -157,12 +157,12 @@ const ActionButtons = memo(function ActionButtons({
           {copied ? (
             <>
               <Check className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
-              <span className="hidden sm:inline">Copied!</span>
+              <span>Copied!</span>
             </>
           ) : (
             <>
               <Copy className="w-4 h-4 sm:w-4.5 sm:h-4.5 transition-transform duration-200 group-hover:scale-105" />
-              <span className="hidden sm:inline">Copy</span>
+              <span>Copy</span>
             </>
           )}
         </button>
@@ -174,7 +174,7 @@ const ActionButtons = memo(function ActionButtons({
           className="group px-2 sm:px-3 py-2.5 sm:py-3 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed bg-surface-elevated hover:bg-surface-hover text-text-primary border border-border hover:border-accent/50"
         >
           <RefreshCcw className="w-4 h-4 sm:w-4.5 sm:h-4.5 transition-transform duration-300 group-hover:rotate-180" />
-          <span className="hidden sm:inline">Flip</span>
+          <span>Flip</span>
         </button>
       </div>
     </div>
