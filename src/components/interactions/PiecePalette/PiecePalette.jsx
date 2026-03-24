@@ -22,7 +22,7 @@ const PiecePalette = memo(function PiecePalette({
   const renderPieceGroup = useCallback(
     (pieces, label) => (
       <div className="space-y-2 sm:space-y-2.5">
-        <h3 className="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-center py-1.5 rounded-md text-white bg-accent border border-accent-hover">
+        <h3 className="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-center py-2 rounded-md text-white bg-accent border border-accent-hover">
           {label}
         </h3>
         <div className="grid grid-cols-6 gap-1.5 sm:gap-2">
@@ -37,7 +37,7 @@ const PiecePalette = memo(function PiecePalette({
                   aspect-square rounded-md lg:rounded-lg
                   bg-surface-elevated hover:bg-surface-hover
                   border border-border/50 hover:border-accent/50
-                  flex items-center justify-center
+                  flex items-center gap-2 justify-center
                   transition-all duration-150
                   hover:scale-[1.02]
                   min-h-[3.8rem] sm:min-h-[4.1rem]
