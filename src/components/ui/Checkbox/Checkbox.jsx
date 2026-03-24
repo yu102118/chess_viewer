@@ -25,7 +25,7 @@ const Checkbox = memo(function Checkbox({
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer accent-accent rounded focus:outline-none disabled:cursor-not-allowed"
+        className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer accent-accent rounded outline-none border-none focus:ring-0 focus-visible:outline-none focus:outline-none disabled:cursor-not-allowed"
       />
       <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors select-none">
         {label}
