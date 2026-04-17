@@ -12,44 +12,40 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
-## [v5.0.0] - 2026-04-17
-
-### Added
-
-- **Dynamic Board Size Scaling System** - Board exports now correctly respect physical size selection (4cm, 6cm, 8cm) with accurate pixel dimensions
-- **Comprehensive JSDoc Documentation** - Added detailed JSDoc comments across the entire codebase for better code maintainability
-- **Professional Documentation** - Completely rewritten markdown files without emojis, using professional technical writing style
-- **Standardized Import Organization** - All file imports now follow a consistent professional ordering (React/framework, third-party, internal utilities, components, styles)
-
+## [5.0.0] - 2026-04-17
+ 
 ### Fixed
-
-- **CRITICAL: Export Dimension Bug** - Board exports now produce correctly scaled physical dimensions based on board size selection
-  - 8x quality @ 4cm now produces 3,776px (small diagram for print)
-  - 8x quality @ 6cm now produces 5,664px (medium diagram for print)
-  - 8x quality @ 8cm now produces 7,552px (large diagram for print)
-  - Quality multiplier now correctly affects both image quality and resolution without changing physical print size
-- **Coordinate System Positioning** - Dynamically calculated coordinate positions now scale proportionally with board dimensions
-- **Coordinate Container Borders Removed** - Clean export appearance without borders around rank/file labels
-- **Export Module Issues** - Fixed incorrect property access in `getExportInfo` function (`baseSizeCm` → `physicalSizeCm`, `dpi` → `effectiveDPI`)
-- **Circular Export Dependencies** - Resolved all circular export issues in component index files throughout the codebase
-- **React Build Errors** - Fixed all component export patterns to eliminate Vite build failures
-
+ 
+- **CRITICAL — Export Dimension Bug:** Board size selection (4cm / 6cm / 8cm) now correctly determines the physical pixel output of all exports. Previously, the size selector had no effect on actual export dimensions.
+  - `Print 8×` @ 4cm → 3,776px (small print diagram)
+  - `Print 8×` @ 6cm → 5,664px (medium print diagram)
+  - `Print 8×` @ 8cm → 7,552px (large print diagram)
+  - Quality multiplier now scales resolution independently of physical print size.
+- **Export Module Property Access:** Corrected incorrect property names in `getExportInfo` — `baseSizeCm` renamed to `physicalSizeCm`, `dpi` renamed to `effectiveDPI`.
+- **Coordinate Positioning:** Rank and file labels now scale proportionally with board pixel dimensions using dynamic center calculations. Formula: `fontSize = min(480px, max(10px, borderSize × 0.72))`, `borderSize = min(800px, max(18px, boardPixels × 0.05))`.
+- **Coordinate Container Borders:** Removed visual borders around coordinate label containers for clean export output.
+- **Circular Export Dependencies:** Resolved all circular export issues across component index files throughout the codebase.
+- **React Build Errors:** Fixed component export patterns that caused Vite build failures on fresh installs.
+### Added
+ 
+- **Dynamic Board Size Scaling System:** Export pipeline now accurately maps physical size selection to pixel output across all four quality tiers: Print 8×, Print 16×, Social 24×, Max 32×.
+- **Advanced FEN Editor:** New `/advanced-fen` route providing multi-position management. Includes a Positions tab for listing and editing multiple FEN strings, and a Preview/Export tab with single-position and batch export (PNG, JPEG, SVG) and slideshow playback with configurable interval.
+- **FEN History — Archive System:** Positions can now be moved from Active to Archive. Archived items display a Reactivate button. Header badge reflects the currently active tab count.
+- **FEN History — Status Indicators:** Each history entry now displays a freshness label (Fresh / Aging / Stale) with a timestamp.
+- **20 Preset Board Themes:** Theme Studio ships with: Wood, Classic, Brown, Sand, Slate, Marble, Blue, Ocean, Green, Forest, Mint, Purple, Lavender, Red, Coral, Sunset, Pink, Burgundy, Custom 1, Custom 2.
+- **Custom Color Mixer:** Under the Custom tab in Theme Studio, users can independently set Light Square and Dark Square colors via a hue slider and saturation/lightness canvas.
+- **Export Customization Page:** New Settings → Export Customization tab with Board Size selector (4×4 Small / 6×6 Medium / 8×8 Large / Custom cm), File Name input, and Print/Social quality tier selection.
+- **Help Center Panel:** Slide-in panel accessible from the main toolbar with searchable articles covering Interactive Board Editor, FEN Notation Support, Export Options, and all major features.
+- **Light/Dark Mode Toggle:** Persistent light and dark theme preference stored across sessions.
+- **Comprehensive JSDoc Documentation:** Detailed JSDoc comments added across the entire codebase covering all public functions, parameters, return types, and complex logic blocks.
 ### Changed
-
-- **Export Logic Refactored** - Improved calculation accuracy for dimension scaling across all quality/size combinations
-- **Code Organization** - Enhanced file structure and formatting for better readability
-- **Documentation Structure** - Improved markdown formatting with consistent headers, code blocks, and technical examples
-- **Import Statements** - Alphabetically organized and properly categorized all imports
-- **Comment Cleanup** - Removed redundant code comments (e.g., "set state", "return value") while preserving complex logic explanations
-
-### Technical Details
-
-#### Coordinate System Improvements
-
-- Removed visual borders from coordinate containers for cleaner exports
-- Font sizes now scale dynamically: `fontSize = min(480px, max(10px, borderSize × 0.72))`
-- Border sizes scale proportionally: `borderSize = min(800px, max(18px, boardPixels × 0.05))`
-- Coordinates positioned using dynamic center calculations based on actual square pixel dimensions
+ 
+- **Piece Palette Layout:** Redesigned with clearly labeled WHITE and BLACK section headers for improved usability.
+- **Import Organization:** All source files now follow a consistent import ordering: React/framework → third-party libraries → internal utilities → components → styles. Imports within each group are alphabetically sorted.
+- **Documentation:** All markdown files (`README.md`, `CONTRIBUTING.md`, feature docs) rewritten in professional technical style without emoji decorations.
+- **Comment Cleanup:** Removed low-value inline comments (e.g., `// set state`, `// return value`) while preserving explanations for non-obvious logic.
+- **Export Logic Refactored:** Dimension calculation extracted into a dedicated scaling utility for accuracy and testability across all quality/size matrix combinations.
+---
 
 ---
 
