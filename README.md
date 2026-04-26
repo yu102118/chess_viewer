@@ -5,7 +5,7 @@
 [![React](https://img.shields.io/badge/React-19.x-61DAFB?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3.5-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![License: Non-Commercial](https://img.shields.io/badge/License-Non--Commercial-red.svg?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 [Live Demo](https://chess-viewer-site.vercel.app) · [Report Bug](https://github.com/BilgeGates/chess_viewer/issues) · [Request Feature](https://github.com/BilgeGates/chess_viewer/issues)
@@ -159,12 +159,16 @@ Output dimensions scale with the selected board size. Suitable for print-quality
 
 ### Social Mode (24x, 32x)
 
-Fixed large output regardless of board size. Suitable for social media and screen zoom.
+Output dimensions scale with board size, same as Print Mode. Suitable for social media, screen zoom, and professional print.
 
-| Quality | Dimensions          | Est. file size | Use case            |
-| ------- | ------------------- | -------------- | ------------------- |
-| 24x     | 18,112 × 18,112 px  | 1.2–2.0 MB     | Social media        |
-| 32x     | 24,192 × 24,192 px  | 2.5–4.0 MB     | Professional print  |
+| Quality | Board size | Dimensions          | Est. file size |
+| ------- | ---------- | ------------------- | -------------- |
+| 24x     | 4 cm       | 11,328 × 11,328 px  | 1.2–2.0 MB     |
+| 24x     | 6 cm       | 16,992 × 16,992 px  | 2.5–4.0 MB     |
+| 24x     | 8 cm       | 22,656 × 22,656 px  | 4.0–6.5 MB     |
+| 32x     | 4 cm       | 15,104 × 15,104 px  | 4.6–6.0 MB     |
+| 32x     | 6 cm       | 22,656 × 22,656 px  | 7.0–10.0 MB    |
+| 32x     | 8 cm       | 30,208 × 30,208 px  | 12.0–18.0 MB   |
 
 ---
 
@@ -212,17 +216,34 @@ git push origin feature/your-feature
 
 ## License
 
-MIT License — see [LICENSE](LICENSE).
+Non-Commercial Open Source License — see [LICENSE](LICENSE).
+
+---
+
+## Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/BilgeGates">
+        <img src="https://github.com/bilgegates.png?size=100" width="100" style="border-radius:50%;" alt="Khatai Huseynzade" />
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/vektorhub">
+        <img src="https://github.com/vektorhub.png?size=100" width="100" style="border-radius:50%;" alt="Vektor Hub" />
+      </a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ## Author
-
-**Khatai Huseynzada** — Front-End Developer
 
 - GitHub: [BilgeGates](https://github.com/BilgeGates)
 - Email: darkdeveloperassistant@gmail.com
 
 ---
 
-*© 2026 Khatai Huseynzada. Licensed under MIT.*
+*&copy; 2026 Khatai Huseynzada. Non-Commercial Open Source License.*
