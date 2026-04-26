@@ -5,8 +5,8 @@
 [![React](https://img.shields.io/badge/React-19.x-61DAFB?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3.5-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
-[![License: Non-Commercial](https://img.shields.io/badge/License-Non--Commercial-red.svg?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![License: Non-Commercial](https://img.shields.io/badge/License-Non--Commercial-red.svg?style=flat-square)](LICENSE)
 
 [Live Demo](https://chess-viewer-site.vercel.app) · [Report Bug](https://github.com/BilgeGates/chess_viewer/issues) · [Request Feature](https://github.com/BilgeGates/chess_viewer/issues)
 
@@ -23,8 +23,7 @@
 - [Browser Support](#browser-support)
 - [Security and Privacy](#security-and-privacy)
 - [Contributing](#contributing)
-- [License](#license)
-- [Author](#author)
+- [Contributors](#contributors)
 
 ---
 
@@ -42,7 +41,7 @@ All processing happens in the browser. No data leaves the user's device.
 
 - Full FEN notation support with real-time validation
 - Multi-position input — up to 10 positions simultaneously
-- PNG and JPEG export with resolutions up to 24,192 × 24,192 px
+- PNG and JPEG export with resolutions up to 30,208 × 30,208 px
 - SVG export
 - Batch export across multiple positions and formats
 - Clipboard copy
@@ -113,28 +112,28 @@ Each directory exports symbols through an `index.js` barrel file.
 
 ### Key Architecture Decisions
 
-- **Feature-based component grouping**: each major feature has its own subdirectory under `components/features/`
-- **No prop drilling for theme**: theme state is managed through `ThemeSettingsContext`
-- **Canvas pipeline**: high-res export uses a multi-stage canvas pipeline (`canvasRenderer.js` → `canvasExporter.js` → `advancedExport.js`)
-- **Lazy-loaded routes**: all page components are loaded with `React.lazy` / `Suspense`
+- **Feature-based component grouping** — each major feature has its own subdirectory under `components/features/`
+- **No prop drilling for theme** — theme state is managed through `ThemeSettingsContext`
+- **Canvas pipeline** — high-res export uses a multi-stage canvas pipeline (`canvasRenderer.js` → `canvasExporter.js` → `advancedExport.js`)
+- **Lazy-loaded routes** — all page components are loaded with `React.lazy` / `Suspense`
 
 ---
 
 ## Technology Stack
 
-| Category        | Library / Tool   | Version |
-| --------------- | ---------------- | ------- |
-| UI framework    | React            | 19.x    |
-| Build tool      | Vite             | 6.x     |
-| Styling         | Tailwind CSS     | 3.3.5   |
-| Routing         | React Router DOM | 7.x     |
-| Drag and drop   | React DnD        | 16.x    |
-| Animations      | Framer Motion    | 12.x    |
-| Virtual lists   | react-window     | 2.x     |
-| Icons           | Lucide React     | latest  |
-| Rendering       | HTML5 Canvas     | —       |
-| Storage         | localStorage     | —       |
-| Deployment      | Vercel           | —       |
+| Category       | Library / Tool   | Version |
+| -------------- | ---------------- | ------- |
+| UI framework   | React            | 19.x    |
+| Build tool     | Vite             | 6.x     |
+| Styling        | Tailwind CSS     | 3.3.5   |
+| Routing        | React Router DOM | 7.x     |
+| Drag and drop  | React DnD        | 16.x    |
+| Animations     | Framer Motion    | 12.x    |
+| Virtual lists  | react-window     | 2.x     |
+| Icons          | Lucide React     | latest  |
+| Rendering      | HTML5 Canvas     | —       |
+| Storage        | localStorage     | —       |
+| Deployment     | Vercel           | —       |
 
 ---
 
@@ -150,25 +149,27 @@ pixelDimension = boardSizeCm × qualityMultiplier × 118.11
 
 Output dimensions scale with the selected board size. Suitable for print-quality diagrams.
 
-| Quality | Board size | Dimensions          | Est. file size | DPI   |
-| ------- | ---------- | ------------------- | -------------- | ----- |
-| 8x      | 4 cm       | 3,776 × 3,776 px    | 70–150 KB      | 2,400 |
-| 8x      | 6 cm       | 5,664 × 5,664 px    | 140–300 KB     | 2,400 |
-| 8x      | 8 cm       | 7,552 × 7,552 px    | 250–500 KB     | 2,400 |
-| 16x     | 6 cm       | 11,328 × 11,328 px  | 500–900 KB     | 4,800 |
+| Quality | Board size | Dimensions         | Est. file size | DPI   |
+| ------- | ---------- | ------------------ | -------------- | ----- |
+| 8x      | 4 cm       | 3,776 × 3,776 px   | 70–150 KB      | 2,400 |
+| 8x      | 6 cm       | 5,664 × 5,664 px   | 140–300 KB     | 2,400 |
+| 8x      | 8 cm       | 7,552 × 7,552 px   | 250–500 KB     | 2,400 |
+| 16x     | 4 cm       | 7,552 × 7,552 px   | 250–500 KB     | 4,800 |
+| 16x     | 6 cm       | 11,328 × 11,328 px | 500–900 KB     | 4,800 |
+| 16x     | 8 cm       | 15,104 × 15,104 px | 900–1,500 KB   | 4,800 |
 
 ### Social Mode (24x, 32x)
 
-Output dimensions scale with board size, same as Print Mode. Suitable for social media, screen zoom, and professional print.
+Output dimensions scale with the selected board size. Suitable for high-resolution digital use and professional print.
 
-| Quality | Board size | Dimensions          | Est. file size |
-| ------- | ---------- | ------------------- | -------------- |
-| 24x     | 4 cm       | 11,328 × 11,328 px  | 1.2–2.0 MB     |
-| 24x     | 6 cm       | 16,992 × 16,992 px  | 2.5–4.0 MB     |
-| 24x     | 8 cm       | 22,656 × 22,656 px  | 4.0–6.5 MB     |
-| 32x     | 4 cm       | 15,104 × 15,104 px  | 4.6–6.0 MB     |
-| 32x     | 6 cm       | 22,656 × 22,656 px  | 7.0–10.0 MB    |
-| 32x     | 8 cm       | 30,208 × 30,208 px  | 12.0–18.0 MB   |
+| Quality | Board size | Dimensions         | Est. file size | DPI   |
+| ------- | ---------- | ------------------ | -------------- | ----- |
+| 24x     | 4 cm       | 11,328 × 11,328 px | 1.2–2.0 MB     | 7,200 |
+| 24x     | 6 cm       | 16,992 × 16,992 px | 2.5–4.0 MB     | 7,200 |
+| 24x     | 8 cm       | 22,656 × 22,656 px | 4.0–6.5 MB     | 7,200 |
+| 32x     | 4 cm       | 15,104 × 15,104 px | 4.6–6.0 MB     | 9,600 |
+| 32x     | 6 cm       | 22,656 × 22,656 px | 7.0–10.0 MB    | 9,600 |
+| 32x     | 8 cm       | 30,208 × 30,208 px | 12.0–18.0 MB   | 9,600 |
 
 ---
 
@@ -214,36 +215,18 @@ git push origin feature/your-feature
 
 ---
 
-## License
-
-Non-Commercial Open Source License — see [LICENSE](LICENSE).
-
----
-
 ## Contributors
 
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/BilgeGates">
-        <img src="https://github.com/bilgegates.png?size=100" width="100" style="border-radius:50%;" alt="Khatai Huseynzade" />
-      </a>
-    </td>
-    <td align="center">
-      <a href="https://github.com/vektorhub">
-        <img src="https://github.com/vektorhub.png?size=100" width="100" style="border-radius:50%;" alt="Vektor Hub" />
-      </a>
-    </td>
-  </tr>
-</table>
+<p>
+  <a href="https://github.com/BilgeGates">
+    <img src="https://github.com/bilgegates.png?size=100" width="80" height="80" style="border-radius:50%;" alt="Khatai Huseynzade" />
+  </a>
+  &nbsp;
+  <a href="https://github.com/vektorhub">
+    <img src="https://github.com/vektorhub.png?size=100" width="80" height="80" style="border-radius:50%;" alt="Vektor Hub" />
+  </a>
+</p>
 
 ---
 
-## Author
-
-- GitHub: [BilgeGates](https://github.com/BilgeGates)
-- Email: darkdeveloperassistant@gmail.com
-
----
-
-*&copy; 2026 Khatai Huseynzada. Non-Commercial Open Source License.*
+&copy; 2026 Khatai Huseynzada, Non-Commercial Open Source License
