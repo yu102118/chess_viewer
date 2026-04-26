@@ -356,9 +356,9 @@ function HomePage() {
   );
 
   return (
-    <div className="h-full max-h-full overflow-y-auto xl:overflow-hidden pt-16 sm:pt-20 px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4">
-      <div className="max-w-[1720px] mx-auto w-full min-h-full xl:min-h-0">
-        <div className="flex flex-col xl:flex-row gap-4 lg:gap-6 items-stretch xl:min-h-0 xl:h-[calc(100dvh-6.75rem)]">
+    <div className="min-h-full overflow-y-auto pt-16 sm:pt-20 px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4">
+      <div className="max-w-[1720px] mx-auto w-full">
+        <div className="flex flex-col xl:flex-row gap-4 lg:gap-5 xl:gap-6 items-stretch xl:min-h-0 xl:h-[calc(100vh-6.75rem)]">
           <div className="w-full xl:flex-1 xl:h-full space-y-3 sm:space-y-4 animate-pageEnter min-h-0 min-w-0 flex flex-col">
             <div className="relative glass-card rounded-xl p-3 sm:p-4 xl:flex-1 xl:min-h-0 animate-revealUp stagger-1">
               <div className="h-full">
@@ -370,7 +370,7 @@ function HomePage() {
                   lightSquare={lightSquare}
                   darkSquare={darkSquare}
                   flipped={flipped}
-                  className="2xl:h-full"
+                  className="xl:h-full"
                 />
               </div>
             </div>
@@ -390,7 +390,7 @@ function HomePage() {
             </div>
           </div>
 
-          <div className="w-full xl:w-[500px] xl:flex-shrink-0 xl:min-h-0 xl:h-full animate-slideInRight stagger-2">
+          <div className="w-full xl:w-[clamp(380px,28vw,520px)] xl:flex-shrink-0 xl:min-h-0 xl:h-full animate-slideInRight stagger-2">
             <ControlPanel
               fen={fen}
               setFen={setFen}
