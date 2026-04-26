@@ -127,10 +127,14 @@ const ChessEditor = memo(function ChessEditor({
       <CustomDragLayer pieceImages={pieceImages} boardSize={FIXED_BOARD_SIZE} />
 
       <div
-        className={`flex flex-col 2xl:flex-row gap-6 2xl:items-start w-full overflow-visible ${className}`}
+        className={`flex flex-col xl:flex-row gap-6 xl:items-start w-full overflow-visible ${className}`}
       >
         <div
+<<<<<<< HEAD
           className="flex-shrink-0 flex justify-center 2xl:justify-start animate-revealUp stagger-1"
+=======
+          className="flex-shrink-0 flex justify-center xl:justify-start animate-revealUp stagger-1"
+>>>>>>> a970615 (style: update responsive classes for layout consistency in ChessEditor)
           style={{ flexShrink: 0 }}
         >
           <div
