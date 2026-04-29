@@ -62,14 +62,14 @@ effectiveDPI = 300 × qualityMultiplier
 
 **Examples**:
 
-| Quality | Size | Pixel Dimensions | Effective DPI |
-|---|---|---|---|
-| 8× | 4 cm | 3,776 × 3,776 px | 2,400 DPI |
-| 8× | 6 cm | 5,664 × 5,664 px | 2,400 DPI |
-| 8× | 8 cm | 7,552 × 7,552 px | 2,400 DPI |
-| 16× | 4 cm | 7,552 × 7,552 px | 4,800 DPI |
-| 16× | 6 cm | 11,328 × 11,328 px | 4,800 DPI |
-| 16× | 8 cm | 15,104 × 15,104 px | 4,800 DPI |
+| Quality | Size | Pixel Dimensions   | Effective DPI |
+| ------- | ---- | ------------------ | ------------- |
+| 8×      | 4 cm | 3,776 × 3,776 px   | 2,400 DPI     |
+| 8×      | 6 cm | 5,664 × 5,664 px   | 2,400 DPI     |
+| 8×      | 8 cm | 7,552 × 7,552 px   | 2,400 DPI     |
+| 16×     | 4 cm | 7,552 × 7,552 px   | 4,800 DPI     |
+| 16×     | 6 cm | 11,328 × 11,328 px | 4,800 DPI     |
+| 16×     | 8 cm | 15,104 × 15,104 px | 4,800 DPI     |
 
 ### Social Mode (24× and 32× Quality)
 
@@ -83,10 +83,10 @@ effectiveDPI = 300 × qualityMultiplier
 
 **Base Resolutions**:
 
-| Quality | Resolution |
-|---|---|
-| 24× | 18,112 × 18,112 px |
-| 32× | 24,192 × 24,192 px |
+| Quality | Resolution         |
+| ------- | ------------------ |
+| 24×     | 18,112 × 18,112 px |
+| 32×     | 24,192 × 24,192 px |
 
 ---
 
@@ -94,12 +94,12 @@ effectiveDPI = 300 × qualityMultiplier
 
 ### Quality Presets
 
-| Quality | Mode | Effective DPI | Approx. PNG Size | Approx. JPEG Size |
-|---|---|---|---|---|
-| 8× | Print | 2,400 | 70–500 KB | 30–200 KB |
-| 16× | Print | 4,800 | 500–900 KB | 200–400 KB |
-| 24× | Social | — | 1.2–2.0 MB | 500–800 KB |
-| 32× | Social | — | 2.5–4.0 MB | 1.0–1.5 MB |
+| Quality | Mode   | Effective DPI | Approx. PNG Size | Approx. JPEG Size |
+| ------- | ------ | ------------- | ---------------- | ----------------- |
+| 8×      | Print  | 2,400         | 70–500 KB        | 30–200 KB         |
+| 16×     | Print  | 4,800         | 500–900 KB       | 200–400 KB        |
+| 24×     | Social | —             | 1.2–2.0 MB       | 500–800 KB        |
+| 32×     | Social | —             | 2.5–4.0 MB       | 1.0–1.5 MB        |
 
 ---
 
@@ -107,20 +107,20 @@ effectiveDPI = 300 × qualityMultiplier
 
 ### PNG
 
-| Property | Value |
-|---|---|
-| Compression | Lossless |
-| Transparency | Supported |
-| Best for | Print, web, diagrams |
-| Relative size | Larger |
+| Property      | Value                |
+| ------------- | -------------------- |
+| Compression   | Lossless             |
+| Transparency  | Supported            |
+| Best for      | Print, web, diagrams |
+| Relative size | Larger               |
 
 ### JPEG
 
-| Property | Value |
-|---|---|
-| Compression | Lossy |
-| Transparency | Not supported |
-| Best for | Social media, email, web sharing |
+| Property      | Value                               |
+| ------------- | ----------------------------------- |
+| Compression   | Lossy                               |
+| Transparency  | Not supported                       |
+| Best for      | Social media, email, web sharing    |
 | Relative size | Smaller (60–80% reduction over PNG) |
 
 ---
@@ -162,11 +162,11 @@ Download via <a download> link  OR  navigator.clipboard.write()
 let exportState = { cancelled: false, paused: false };
 ```
 
-| Function | Effect |
-|---|---|
-| `cancelExport()` | Sets `cancelled = true` |
-| `pauseExport()` | Sets `paused = true` |
-| `resumeExport()` | Sets `paused = false` |
+| Function             | Effect                       |
+| -------------------- | ---------------------------- |
+| `cancelExport()`     | Sets `cancelled = true`      |
+| `pauseExport()`      | Sets `paused = true`         |
+| `resumeExport()`     | Sets `paused = false`        |
 | `resetExportState()` | Resets both flags to `false` |
 
 The export loop calls `checkCancellation()` and `waitWhilePaused()` at regular checkpoints, allowing cancellation or pausing without hanging the browser.
@@ -214,11 +214,11 @@ fontSize   = clamp(borderSize × 0.72, 10px, 480px)
 
 ### Browser Canvas Limits
 
-| Browser | Max Dimension | Notes |
-|---|---|---|
-| Chrome / Edge | 32,767 px | Chromium limit |
-| Firefox | 32,767 px | |
-| Safari | 16,384 px | Also limited by 268 MP total area |
+| Browser       | Max Dimension | Notes                             |
+| ------------- | ------------- | --------------------------------- |
+| Chrome / Edge | 32,767 px     | Chromium limit                    |
+| Firefox       | 32,767 px     |                                   |
+| Safari        | 16,384 px     | Also limited by 268 MP total area |
 
 `getMaxCanvasSize()` returns the safe maximum for the current browser. `getExportInfo` includes `willBeReduced: true` when requested dimensions exceed this cap.
 
@@ -254,25 +254,25 @@ Batch export (`advancedExport.js`) iterates through the `batchList` from `FENBat
 
 ### Common Error Cases
 
-| Error | Cause | Handling |
-|---|---|---|
-| `Invalid export config` | Missing required field | `validateExportConfig` throws with a descriptive message listing all missing fields |
-| `Canvas creation returned null` | Browser refused canvas creation | Caught and rethrown with context |
-| `Export cancelled` | `cancelExport()` was called | `checkCancellation()` throws; caught by caller |
-| `Failed to create blob` | `canvas.toBlob` returned `null` | Caught and rethrown |
-| Canvas size exceeds browser limit | 32× on Safari | `willBeReduced` flag; actual dimensions capped |
-| Out of memory | 32× on low-RAM devices | May throw or produce blank canvas; no graceful recovery |
+| Error                             | Cause                           | Handling                                                                            |
+| --------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------- |
+| `Invalid export config`           | Missing required field          | `validateExportConfig` throws with a descriptive message listing all missing fields |
+| `Canvas creation returned null`   | Browser refused canvas creation | Caught and rethrown with context                                                    |
+| `Export cancelled`                | `cancelExport()` was called     | `checkCancellation()` throws; caught by caller                                      |
+| `Failed to create blob`           | `canvas.toBlob` returned `null` | Caught and rethrown                                                                 |
+| Canvas size exceeds browser limit | 32× on Safari                   | `willBeReduced` flag; actual dimensions capped                                      |
+| Out of memory                     | 32× on low-RAM devices          | May throw or produce blank canvas; no graceful recovery                             |
 
 ---
 
 ## Browser Compatibility
 
-| Feature | Chrome | Firefox | Safari | Edge |
-|---|---|---|---|---|
-| Canvas API | ✅ | ✅ | ✅ | ✅ |
-| `canvas.toBlob()` | ✅ | ✅ | ✅ | ✅ |
-| Clipboard API (`write`) | ✅ | ✅ | ⚠️ Requires user gesture | ✅ |
-| 24×/32× export | ✅ | ✅ | ⚠️ May fail (16,384 px limit) | ✅ |
+| Feature                 | Chrome | Firefox | Safari                        | Edge |
+| ----------------------- | ------ | ------- | ----------------------------- | ---- |
+| Canvas API              | ✅     | ✅      | ✅                            | ✅   |
+| `canvas.toBlob()`       | ✅     | ✅      | ✅                            | ✅   |
+| Clipboard API (`write`) | ✅     | ✅      | ⚠️ Requires user gesture      | ✅   |
+| 24×/32× export          | ✅     | ✅      | ⚠️ May fail (16,384 px limit) | ✅   |
 
 ---
 
@@ -284,11 +284,11 @@ Exports the board as a PNG file (lossless, supports transparency).
 
 **Parameters:**
 
-| Name | Type | Description |
-|---|---|---|
-| `config` | object | Export configuration object (see above) |
-| `fileName` | string | File name without extension |
-| `onProgress` | function | `(0–100) => void` progress callback |
+| Name         | Type     | Description                             |
+| ------------ | -------- | --------------------------------------- |
+| `config`     | object   | Export configuration object (see above) |
+| `fileName`   | string   | File name without extension             |
+| `onProgress` | function | `(0–100) => void` progress callback     |
 
 **Returns:** `Promise<void>` — triggers browser download.
 
@@ -310,9 +310,9 @@ Copies the board image to the system clipboard as PNG.
 
 **Parameters:**
 
-| Name | Type | Description |
-|---|---|---|
-| `config` | object | Export configuration object |
+| Name         | Type     | Description                         |
+| ------------ | -------- | ----------------------------------- |
+| `config`     | object   | Export configuration object         |
 | `onProgress` | function | `(0–100) => void` progress callback |
 
 **Returns:** `Promise<void>`
