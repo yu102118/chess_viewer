@@ -111,12 +111,14 @@ npx prettier --write src/components/**/*.jsx
 Husky runs automatically on git hooks:
 
 **Pre-commit Hook:**
+
 - Runs `lint-staged` on staged files
 - Fixes ESLint errors
 - Formats code with Prettier
 - Blocks commit if errors remain
 
 **Commit-msg Hook:**
+
 - Validates commit message format
 - Ensures Conventional Commits format
 - Blocks commit if message is invalid
@@ -143,21 +145,22 @@ Format: `<type>(<scope>): <subject>`
 
 **Types:**
 
-| Type | Description | Example |
-|------|-------------|---------|
-| `feat` | New feature | `feat: add SVG export` |
-| `fix` | Bug fix | `fix: resolve Safari rendering issue` |
-| `docs` | Documentation | `docs: update README` |
-| `style` | Code style (formatting) | `style: format with prettier` |
-| `refactor` | Code refactoring | `refactor: simplify FEN parser` |
-| `perf` | Performance improvement | `perf: optimize canvas rendering` |
-| `test` | Tests | `test: add unit tests for parser` |
-| `chore` | Maintenance | `chore: update dependencies` |
-| `ci` | CI/CD changes | `ci: add GitHub Actions workflow` |
-| `build` | Build system | `build: update vite config` |
-| `revert` | Revert previous commit | `revert: undo feature X` |
+| Type       | Description             | Example                               |
+| ---------- | ----------------------- | ------------------------------------- |
+| `feat`     | New feature             | `feat: add SVG export`                |
+| `fix`      | Bug fix                 | `fix: resolve Safari rendering issue` |
+| `docs`     | Documentation           | `docs: update README`                 |
+| `style`    | Code style (formatting) | `style: format with prettier`         |
+| `refactor` | Code refactoring        | `refactor: simplify FEN parser`       |
+| `perf`     | Performance improvement | `perf: optimize canvas rendering`     |
+| `test`     | Tests                   | `test: add unit tests for parser`     |
+| `chore`    | Maintenance             | `chore: update dependencies`          |
+| `ci`       | CI/CD changes           | `ci: add GitHub Actions workflow`     |
+| `build`    | Build system            | `build: update vite config`           |
+| `revert`   | Revert previous commit  | `revert: undo feature X`              |
 
 **Valid Examples:**
+
 ```bash
 feat: add dark mode support
 feat(export): implement batch export
@@ -174,6 +177,7 @@ ci: add automated testing workflow
 ```
 
 **Invalid Examples:**
+
 ```bash
 ❌ Added new feature          # Missing type
 ❌ FEAT: add dark mode        # Type must be lowercase
@@ -189,6 +193,7 @@ ci: add automated testing workflow
 ### ESLint Rules
 
 **Enabled Rules:**
+
 - React Hooks validation
 - Unused variables warning
 - Console statement warnings
@@ -198,12 +203,14 @@ ci: add automated testing workflow
 - Single quotes preference
 
 **Disabled Rules:**
+
 - React in JSX scope (not needed in React 17+)
 - React prop-types (warnings only)
 
 ### Prettier Settings
 
 **Configuration:**
+
 - Print width: 80 characters
 - Tab width: 2 spaces
 - Use spaces (not tabs)
@@ -216,6 +223,7 @@ ci: add automated testing workflow
 ### Lint-staged Behavior
 
 **On commit, automatically:**
+
 1. Run ESLint on `.js` and `.jsx` files
 2. Fix auto-fixable ESLint errors
 3. Format files with Prettier
@@ -223,6 +231,7 @@ ci: add automated testing workflow
 5. Block commit if errors remain
 
 **Files Checked:**
+
 - `*.{js,jsx}` - ESLint + Prettier
 - `*.{json,md,css,scss}` - Prettier only
 - `*.{png,jpg,jpeg,gif,svg}` - Validation only
@@ -235,10 +244,7 @@ ci: add automated testing workflow
 
 ```json
 {
-  "recommendations": [
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode"
-  ]
+  "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
 }
 ```
 
@@ -253,10 +259,7 @@ Create `.vscode/settings.json`:
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact"
-  ],
+  "eslint.validate": ["javascript", "javascriptreact"],
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -362,6 +365,7 @@ git commit -m "feat: your feature description"
 ## Best Practices
 
 ### 1. Always Format Before Commit
+
 ```bash
 npm run format
 git add .
@@ -369,11 +373,13 @@ git commit -m "style: format code"
 ```
 
 ### 2. Fix Linting Errors Regularly
+
 ```bash
 npm run lint:fix
 ```
 
 ### 3. Write Clear Commit Messages
+
 ```bash
 # Good
 git commit -m "feat(export): add PNG quality selection"
@@ -386,6 +392,7 @@ between Low, Medium, High, and Ultra quality settings."
 ```
 
 ### 4. Use Scope When Relevant
+
 ```bash
 git commit -m "feat(board): add flip animation"
 git commit -m "fix(fen): validate rank counts"
@@ -393,6 +400,7 @@ git commit -m "docs(api): document export functions"
 ```
 
 ### 5. Keep Commits Focused
+
 ```bash
 # Instead of:
 git commit -m "feat: add multiple features"
@@ -458,21 +466,21 @@ on: [push, pull_request]
 jobs:
   lint:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Run ESLint
         run: npm run lint
-        
+
       - name: Check Prettier formatting
         run: npm run format:check
 ```
