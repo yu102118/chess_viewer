@@ -167,7 +167,10 @@ function HomePage() {
   } = useFENHistory(fen, setIsFavorite);
 
   const addToFavoritesRef = useRef(null);
-  const [pieceImages, setPieceImages] = useState({});
+  const pieceImagesRef = useRef({});
+  const handlePieceImagesChange = useCallback((images) => {
+    pieceImagesRef.current = images;
+  }, []);
 
   const { notifications, success, error, info, removeNotification } =
     useNotifications();
@@ -188,7 +191,7 @@ function HomePage() {
       darkSquare,
       flipped,
       fen,
-      pieceImages,
+      pieceImages: pieceImagesRef.current,
       exportQuality
     };
   }, [
@@ -200,7 +203,6 @@ function HomePage() {
     darkSquare,
     flipped,
     fen,
-    pieceImages,
     exportQuality
   ]);
 
@@ -370,7 +372,7 @@ function HomePage() {
                   lightSquare={lightSquare}
                   darkSquare={darkSquare}
                   flipped={flipped}
-                  onPieceImagesChange={setPieceImages}
+                  onPieceImagesChange={handlePieceImagesChange}
                   className="xl:h-full"
                 />
               </div>
