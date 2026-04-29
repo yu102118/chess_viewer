@@ -52,7 +52,7 @@ function ColorPicker({ label, value = '#3B82F6', onChange, className = '' }) {
   useEffect(() => {
     if (isOpen && canvasRef.current) {
       const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
       const width = canvas.width;
       const height = canvas.height;
       const rgb = hexToRgb(tempColor);
