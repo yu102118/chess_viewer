@@ -39,7 +39,7 @@ const FENInputRow = memo(function FENInputRow({
   return (
     <div className="space-y-1">
       <div className="flex items-center gap-2 group">
-        <div className="flex-shrink-0 w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center text-sm font-bold text-gray-400 border border-gray-700">
+        <div className="flex-shrink-0 w-8 h-8 bg-surface rounded-lg flex items-center justify-center text-sm font-bold text-text-muted border border-border">
           {index + 1}
         </div>
         <div className="flex-1 relative">
@@ -48,7 +48,7 @@ const FENInputRow = memo(function FENInputRow({
             value={fen}
             onChange={handleInputChange}
             placeholder="Enter FEN notation..."
-            className={`w-full px-4 py-2.5 pr-24 bg-gray-800/50 border rounded-lg text-sm text-white font-mono outline-none focus:border-blue-500 transition-colors ${error ? 'border-red-500' : 'border-gray-700'}`}
+            className={`w-full px-4 py-2.5 pr-24 bg-surface border rounded-lg text-sm text-text-primary font-mono outline-none focus:border-accent transition-colors ${error ? 'border-error' : 'border-border'}`}
             aria-label={`FEN position ${index + 1}`}
             aria-invalid={!!error}
           />
@@ -56,7 +56,7 @@ const FENInputRow = memo(function FENInputRow({
             <button
               onClick={handleToggleFavorite}
               disabled={!fen.trim() || !validateFEN(fen)}
-              className={`p-1.5 rounded-md transition-all ${isFavorite ? 'bg-yellow-600 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'} disabled:opacity-30 disabled:cursor-not-allowed`}
+              className={`p-1.5 rounded-md transition-all ${isFavorite ? 'bg-warning text-bg' : 'bg-surface-elevated hover:bg-surface-hover text-text-secondary'} disabled:opacity-30 disabled:cursor-not-allowed`}
               title="Toggle favorite"
               aria-label={
                 isFavorite ? 'Remove from favorites' : 'Add to favorites'
@@ -69,14 +69,14 @@ const FENInputRow = memo(function FENInputRow({
             </button>
             <button
               onClick={handlePaste}
-              className={`p-1.5 rounded-md transition-all ${isPasted ? 'bg-green-600' : 'bg-gray-700 hover:bg-gray-600'}`}
+              className={`p-1.5 rounded-md transition-all ${isPasted ? 'bg-success text-bg' : 'bg-surface-elevated hover:bg-surface-hover'}`}
               title="Paste FEN"
               aria-label="Paste FEN from clipboard"
             >
               {isPasted ? (
-                <Check className="w-4 h-4 text-white" />
+                <Check className="w-4 h-4 text-bg" />
               ) : (
-                <Clipboard className="w-4 h-4 text-gray-300" />
+                <Clipboard className="w-4 h-4 text-text-secondary" />
               )}
             </button>
           </div>
@@ -92,7 +92,7 @@ const FENInputRow = memo(function FENInputRow({
       </div>
       {error && (
         <div
-          className="flex items-center gap-2 text-red-400 text-xs ml-10"
+          className="flex items-center gap-2 text-error text-xs ml-10"
           role="alert"
         >
           <AlertCircle className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ const FENInputRow = memo(function FENInputRow({
       )}
       {isDuplicate && (
         <div
-          className="flex items-center gap-2 text-yellow-400 text-xs ml-10"
+          className="flex items-center gap-2 text-warning text-xs ml-10"
           role="alert"
         >
           <AlertCircle className="w-3.5 h-3.5" />
@@ -132,15 +132,17 @@ const FENInputList = memo(function FENInputList({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-white">FEN Positions</h3>
+        <h3 className="text-lg font-semibold text-text-primary">
+          FEN Positions
+        </h3>
         <div className="flex items-center gap-3">
-          <div className="text-xs text-gray-400">
+          <div className="text-xs text-text-muted">
             {fens.length} / {maxFens} slots
           </div>
           <button
             onClick={onAddFen}
             disabled={fens.length >= maxFens}
-            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-2 text-white text-sm font-semibold"
+            className="px-3 py-1.5 bg-accent hover:bg-accent-hover disabled:bg-surface-elevated disabled:text-text-muted disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-2 text-bg text-sm font-semibold"
             aria-label="Add new FEN position"
           >
             <span>+</span>
