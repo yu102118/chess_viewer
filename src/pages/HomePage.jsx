@@ -370,6 +370,7 @@ function HomePage() {
                   lightSquare={lightSquare}
                   darkSquare={darkSquare}
                   flipped={flipped}
+                  onPieceImagesChange={setPieceImages}
                   className="xl:h-full"
                 />
               </div>
