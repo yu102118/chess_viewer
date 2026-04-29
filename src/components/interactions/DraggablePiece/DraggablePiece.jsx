@@ -68,7 +68,7 @@ const DraggablePiece = memo(function DraggablePiece({
         height: size,
         opacity: isDragging ? 0 : disabled ? 0.5 : 1,
         transition: isDragging ? 'none' : 'opacity 50ms ease-out',
-        zIndex: isDragging ? -1 : 1,
+        visibility: isDragging ? 'hidden' : 'visible',
         contain: 'layout style'
       }}
       role="button"
