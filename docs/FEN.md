@@ -26,6 +26,7 @@ Guide to Forsyth-Edwards Notation (FEN) for chess positions.
 **Forsyth-Edwards Notation (FEN)** is a standard notation for describing a particular board position in chess.
 
 ### Purpose
+
 - Compact representation of board state
 - Human-readable and machine-parsable
 - Industry standard (used by chess engines, databases)
@@ -33,6 +34,7 @@ Guide to Forsyth-Edwards Notation (FEN) for chess positions.
 - Contains all information needed to reconstruct position
 
 ### History
+
 - Created by Scottish journalist **David Forsyth** (19th century)
 - Extended by **Steven J. Edwards** for computer use (1990s)
 - Universal standard for chess position notation
@@ -56,14 +58,14 @@ rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 
 ### Field Breakdown
 
-| Field | Description | Example |
-|-------|-------------|---------|
-| 1. Piece Placement | Board position from rank 8 to rank 1 | `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR` |
-| 2. Active Color | Side to move next | `w` (white) or `b` (black) |
-| 3. Castling Rights | Available castling moves | `KQkq`, `Kk`, `-` |
-| 4. En Passant | En passant target square | `e3`, `-` |
-| 5. Halfmove Clock | Moves since last pawn move or capture | `0`, `5`, `42` |
-| 6. Fullmove Number | Current move number | `1`, `20`, `100` |
+| Field              | Description                           | Example                                       |
+| ------------------ | ------------------------------------- | --------------------------------------------- |
+| 1. Piece Placement | Board position from rank 8 to rank 1  | `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR` |
+| 2. Active Color    | Side to move next                     | `w` (white) or `b` (black)                    |
+| 3. Castling Rights | Available castling moves              | `KQkq`, `Kk`, `-`                             |
+| 4. En Passant      | En passant target square              | `e3`, `-`                                     |
+| 5. Halfmove Clock  | Moves since last pawn move or capture | `0`, `5`, `42`                                |
+| 6. Fullmove Number | Current move number                   | `1`, `20`, `100`                              |
 
 ---
 
@@ -71,20 +73,20 @@ rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 
 ### Piece Letters
 
-| Letter | Piece | Color |
-|--------|-------|-------|
-| `K` | King | White |
-| `Q` | Queen | White |
-| `R` | Rook | White |
-| `B` | Bishop | White |
-| `N` | Knight | White |
-| `P` | Pawn | White |
-| `k` | King | Black |
-| `q` | Queen | Black |
-| `r` | Rook | Black |
-| `b` | Bishop | Black |
-| `n` | Knight | Black |
-| `p` | Pawn | Black |
+| Letter | Piece  | Color |
+| ------ | ------ | ----- |
+| `K`    | King   | White |
+| `Q`    | Queen  | White |
+| `R`    | Rook   | White |
+| `B`    | Bishop | White |
+| `N`    | Knight | White |
+| `P`    | Pawn   | White |
+| `k`    | King   | Black |
+| `q`    | Queen  | Black |
+| `r`    | Rook   | Black |
+| `b`    | Bishop | Black |
+| `n`    | Knight | Black |
+| `p`    | Pawn   | Black |
 
 **Rule:** Uppercase = White pieces, Lowercase = Black pieces
 
@@ -114,29 +116,34 @@ rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
 ```
 
 ### Rank 8 (Black's back rank)
+
 ```
 r n b q k b n r
 a8 b8 c8 d8 e8 f8 g8 h8
 ```
 
 ### Rank 7 (Black pawns)
+
 ```
 p p p p p p p p
 a7 b7 c7 d7 e7 f7 g7 h7
 ```
 
 ### Rank 6-3 (Empty)
+
 ```
 8 = all squares empty
 ```
 
 ### Rank 2 (White pawns)
+
 ```
 P P P P P P P P
 a2 b2 c2 d2 e2 f2 g2 h2
 ```
 
 ### Rank 1 (White's back rank)
+
 ```
 R N B Q K B N R
 a1 b1 c1 d1 e1 f1 g1 h1
@@ -154,6 +161,7 @@ b = Black to move
 ```
 
 ### Examples
+
 ```
 rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w ...
                                             ↑
@@ -171,6 +179,7 @@ rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b ...
 **Third field** shows which castling moves are still legal.
 
 ### Notation
+
 - `K` = White can castle kingside (O-O)
 - `Q` = White can castle queenside (O-O-O)
 - `k` = Black can castle kingside (O-O)
@@ -179,18 +188,19 @@ rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b ...
 
 ### Examples
 
-| Notation | Meaning |
-|----------|---------|
-| `KQkq` | All castling rights available (starting position) |
-| `KQ` | Only White can castle (both sides) |
-| `kq` | Only Black can castle (both sides) |
-| `Kk` | Both sides can castle kingside only |
-| `Q` | Only White can castle queenside |
-| `-` | No castling available |
+| Notation | Meaning                                           |
+| -------- | ------------------------------------------------- |
+| `KQkq`   | All castling rights available (starting position) |
+| `KQ`     | Only White can castle (both sides)                |
+| `kq`     | Only Black can castle (both sides)                |
+| `Kk`     | Both sides can castle kingside only               |
+| `Q`      | Only White can castle queenside                   |
+| `-`      | No castling available                             |
 
 ### Castling Requirements
 
 For castling to be legal:
+
 1. King has not moved
 2. Relevant rook has not moved
 3. No pieces between king and rook
@@ -209,6 +219,7 @@ For castling to be legal:
 ### What is En Passant?
 
 Special pawn capture rule:
+
 - If a pawn moves **two squares forward** from starting position
 - And lands **beside** an opponent's pawn
 - That opponent can capture "in passing" on the next move only
@@ -255,6 +266,7 @@ rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2
 Counts moves since last **pawn advance** or **capture**.
 
 **Purpose:** Used for the **50-move rule**
+
 - If 50 moves (100 half-moves) occur with no pawn move or capture, game is a draw
 
 **Range:** 0 to 100+ (theoretically unlimited, but usually ≤ 50)
@@ -288,6 +300,7 @@ After 1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Bxc6:
 Counts the number of **full moves** in the game.
 
 **Rules:**
+
 - Starts at 1
 - Increments after **Black's move**
 - White's first move is move 1, Black's response is still move 1
@@ -326,10 +339,13 @@ After 10... Nc6 (Black's 10th move):
 ## Examples
 
 ### Starting Position
+
 ```
 rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 ```
+
 **Explanation:**
+
 - All pieces in starting squares
 - White to move
 - All castling available
@@ -340,10 +356,13 @@ rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 ---
 
 ### After 1. e4
+
 ```
 rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1
 ```
+
 **Changes:**
+
 - White pawn moved from e2 to e4
 - Black to move
 - En passant available on e3
@@ -352,10 +371,13 @@ rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1
 ---
 
 ### After 1. e4 c5 (Sicilian Defense)
+
 ```
 rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2
 ```
+
 **Changes:**
+
 - Black pawn moved from c7 to c5
 - White to move
 - En passant available on c6
@@ -364,10 +386,13 @@ rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2
 ---
 
 ### After 1. e4 e5 2. Nf3 Nc6 3. Bb5 (Ruy Lopez)
+
 ```
 r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3
 ```
+
 **Changes:**
+
 - Multiple pieces moved
 - Black to move
 - No en passant (last move wasn't two-square pawn advance)
@@ -377,10 +402,13 @@ r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3
 ---
 
 ### Middle Game Position
+
 ```
 r3k2r/ppp2ppp/2n1b3/3pp3/2BPP3/2N2N2/PPP2PPP/R1BQK2R w KQkq d6 0 7
 ```
+
 **Complex position with:**
+
 - Both sides developed
 - En passant available
 - Both sides can still castle
@@ -389,10 +417,13 @@ r3k2r/ppp2ppp/2n1b3/3pp3/2BPP3/2N2N2/PPP2PPP/R1BQK2R w KQkq d6 0 7
 ---
 
 ### Endgame Position
+
 ```
 8/5k2/8/8/8/3K4/8/8 w - - 50 100
 ```
+
 **King and pawn endgame:**
+
 - Only two kings on board
 - Neither side can castle
 - No en passant
@@ -429,7 +460,7 @@ export function isValidFENFormat(fen) {
       } else if (/[pnbrqkPNBRQK]/.test(char)) {
         squareCount += 1;
       } else {
-        return false;  // invalid character
+        return false; // invalid character
       }
     }
     if (squareCount !== 8) return false;
@@ -446,13 +477,13 @@ export function isValidFENFormat(fen) {
 ```javascript
 const validatePosition = (position) => {
   const ranks = position.split('/');
-  
+
   // Must have exactly 8 ranks
   if (ranks.length !== 8) return false;
-  
+
   for (const rank of ranks) {
     let squareCount = 0;
-    
+
     for (const char of rank) {
       if (char >= '1' && char <= '8') {
         // Empty squares
@@ -465,11 +496,11 @@ const validatePosition = (position) => {
         return false;
       }
     }
-    
+
     // Each rank must have exactly 8 squares
     if (squareCount !== 8) return false;
   }
-  
+
   return true;
 };
 ```
@@ -487,22 +518,20 @@ const validateColor = (color) => {
 ```javascript
 const validateCastling = (castling) => {
   if (castling === '-') return true;
-  
+
   // Must only contain K, Q, k, q
   const valid = /^[KQkq]+$/.test(castling);
-  
+
   // No duplicates
   const noDuplicates = new Set(castling).size === castling.length;
-  
+
   // Correct order (K before Q, k before q)
-  const correctOrder = (
-    castling.indexOf('K') < castling.indexOf('Q') || 
-    castling.indexOf('Q') === -1
-  ) && (
-    castling.indexOf('k') < castling.indexOf('q') || 
-    castling.indexOf('q') === -1
-  );
-  
+  const correctOrder =
+    (castling.indexOf('K') < castling.indexOf('Q') ||
+      castling.indexOf('Q') === -1) &&
+    (castling.indexOf('k') < castling.indexOf('q') ||
+      castling.indexOf('q') === -1);
+
   return valid && noDuplicates && correctOrder;
 };
 ```
@@ -512,14 +541,14 @@ const validateCastling = (castling) => {
 ```javascript
 const validateEnPassant = (enPassant) => {
   if (enPassant === '-') return true;
-  
+
   // Must be like "e3" or "a6"
   const match = enPassant.match(/^([a-h])([36])$/);
-  
+
   if (!match) return false;
-  
+
   const [, file, rank] = match;
-  
+
   // Rank must be 3 (for black) or 6 (for white)
   return rank === '3' || rank === '6';
 };
@@ -546,26 +575,31 @@ const validateFullmove = (fullmove) => {
 ### Famous Positions
 
 #### 1. Starting Position
+
 ```
 rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 ```
 
 #### 2. Scholar's Mate
+
 ```
 r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4
 ```
 
 #### 3. Fool's Mate (Fastest Checkmate)
+
 ```
 rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3
 ```
 
 #### 4. Lucena Position (Endgame Study)
+
 ```
 1K1k4/1P6/8/8/8/8/r7/2R5 w - - 0 1
 ```
 
 #### 5. Philidor Position (Endgame Study)
+
 ```
 3k4/R7/8/8/8/8/r7/4K3 b - - 0 1
 ```
@@ -597,21 +631,21 @@ export function parseFEN(fenString) {
       if (VALID_DIGITS.has(char)) {
         const emptySquares = parseInt(char, 10);
         for (let i = 0; i < emptySquares; i++) {
-          boardRow.push('');  // empty string, not null
+          boardRow.push(''); // empty string, not null
         }
       } else {
-        boardRow.push(char);  // piece letter, e.g. 'K', 'p'
+        boardRow.push(char); // piece letter, e.g. 'K', 'p'
       }
     }
 
     board.push(boardRow);
   }
 
-  return board;  // string[][8][8]
+  return board; // string[][8][8]
 }
 ```
 
-Returns an 8×8 array of strings:  `''` = empty square, piece letter (`'K'`, `'p'`, etc.) = occupied.
+Returns an 8×8 array of strings: `''` = empty square, piece letter (`'K'`, `'p'`, etc.) = occupied.
 
 A memoised wrapper around this function is provided by the `useChessBoard(fen)` hook.
 
@@ -622,7 +656,7 @@ The reverse conversion is in `src/utils/boardUtils.js`:
 ```javascript
 // src/utils/boardUtils.js
 export function boardToFEN(board) {
-  const ranks = board.map(row => {
+  const ranks = board.map((row) => {
     let rankStr = '';
     let emptyCount = 0;
 
@@ -656,6 +690,7 @@ Used by `useInteractiveBoard` to convert the drag-and-drop board state back to a
 ### Common Errors
 
 #### 1. Wrong Number of Ranks
+
 ```
 ❌ rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP
     Missing rank 1!
@@ -664,6 +699,7 @@ Used by `useInteractiveBoard` to convert the drag-and-drop board state back to a
 ```
 
 #### 2. Wrong Number of Squares in Rank
+
 ```
 ❌ rnbqkbnr/ppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     Rank 7 only has 7 squares!
@@ -672,6 +708,7 @@ Used by `useInteractiveBoard` to convert the drag-and-drop board state back to a
 ```
 
 #### 3. Invalid Piece Character
+
 ```
 ❌ rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBXKBNR
     'X' is not a valid piece!
@@ -680,6 +717,7 @@ Used by `useInteractiveBoard` to convert the drag-and-drop board state back to a
 ```
 
 #### 4. Missing Fields
+
 ```
 ❌ rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     Missing color, castling, en passant, counters!
@@ -688,6 +726,7 @@ Used by `useInteractiveBoard` to convert the drag-and-drop board state back to a
 ```
 
 #### 5. Invalid En Passant Square
+
 ```
 ❌ ... e4
     En passant must be on rank 3 or 6!
@@ -702,15 +741,18 @@ Used by `useInteractiveBoard` to convert the drag-and-drop board state back to a
 ## Resources
 
 ### Online Tools
+
 - [Lichess Board Editor](https://lichess.org/editor) - Visual FEN editor
 - [Chess.com Analysis Board](https://www.chess.com/analysis) - FEN input and analysis
 - [FEN Validator](https://www.chess.com/analysis/game/pgn) - Check FEN validity
 
 ### Documentation
+
 - [FEN Wikipedia](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation)
 - [Chess Programming Wiki - FEN](https://www.chessprogramming.org/Forsyth-Edwards_Notation)
 
 ### Libraries
+
 - [chess.js](https://github.com/jhlywa/chess.js) - Full-featured chess library with FEN support
 - [python-chess](https://python-chess.readthedocs.io/) - Python chess library
 
