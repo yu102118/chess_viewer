@@ -401,7 +401,6 @@ const HelpCenterDrawer = memo(function HelpCenterDrawer({ isOpen, onClose }) {
           {renderContent()}
         </div>
       </div>
-
     </>
   );
 });
