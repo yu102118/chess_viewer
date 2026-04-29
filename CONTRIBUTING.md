@@ -94,13 +94,13 @@ git checkout -b fix/bug-description
 
 Prefix commits with a type:
 
-| Prefix     | Use case                                         |
-| ---------- | ------------------------------------------------ |
-| `Add:`     | New feature or file                              |
-| `Fix:`     | Bug fix                                          |
-| `Update:`  | Modification to existing functionality           |
-| `Refactor:`| Code cleanup without behavior change             |
-| `Docs:`    | Documentation only                               |
+| Prefix      | Use case                               |
+| ----------- | -------------------------------------- |
+| `Add:`      | New feature or file                    |
+| `Fix:`      | Bug fix                                |
+| `Update:`   | Modification to existing functionality |
+| `Refactor:` | Code cleanup without behavior change   |
+| `Docs:`     | Documentation only                     |
 
 Example:
 
