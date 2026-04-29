@@ -45,7 +45,13 @@ function PickerModal({
   const currentView = viewConfig[activeView];
   return (
     <div
-      className="absolute z-50 mt-2 w-[380px] bg-surface border border-border/50 rounded-2xl shadow-2xl overflow-hidden"
+      className="absolute z-50 mt-2 bg-surface border border-border/50 rounded-2xl shadow-2xl overflow-hidden"
+      style={{
+        width: 'min(380px, calc(100vw - 2rem))',
+        maxHeight: 'calc(100dvh - 8rem)',
+        overflowY: 'auto',
+        right: 0
+      }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="color-picker-title"
@@ -59,7 +65,10 @@ function PickerModal({
             className="p-1.5 hover:bg-surface-hover/80 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label="Go back to main view"
           >
-            <ArrowLeft className="w-5 h-5 text-text-secondary" aria-hidden="true" />
+            <ArrowLeft
+              className="w-5 h-5 text-text-secondary"
+              aria-hidden="true"
+            />
           </button>
         )}
         <div className="flex items-center gap-2 flex-1">
@@ -149,14 +158,14 @@ function PickerModal({
           >
             <button
               onClick={onRandom}
-              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-gradient-to-br from-purple-600/20 to-pink-600/20 hover:from-purple-600/30 hover:to-pink-600/30 border border-purple-500/50 rounded-lg text-purple-300 text-xs font-semibold transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-info/20 hover:bg-info/30 border border-info/50 rounded-lg text-info text-xs font-semibold transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               type="button"
             >
               Random
             </button>
             <button
               onClick={onReset}
-              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-gradient-to-br from-amber-600/20 to-orange-600/20 hover:from-amber-600/30 hover:to-orange-600/30 border border-amber-500/50 rounded-lg text-amber-300 text-xs font-semibold transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-warning/20 hover:bg-warning/30 border border-warning/50 rounded-lg text-warning text-xs font-semibold transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               type="button"
             >
               Reset
