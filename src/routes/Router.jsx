@@ -16,7 +16,7 @@ const pageTransition = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -20 },
-  transition: { duration: 0.3, ease: 'easeInOut' },
+  transition: { duration: 0.3, ease: 'easeInOut' }
 };
 
 /** Suspense fallback spinner displayed while lazy page chunks load. */
@@ -68,14 +68,70 @@ function AppRoutes() {
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<AnimatedPage><HomePage /></AnimatedPage>} />
-          <Route path="/about" element={<AnimatedPage><AboutPage /></AnimatedPage>} />
-          <Route path="/download" element={<AnimatedPage><DownloadPage /></AnimatedPage>} />
-          <Route path="/support" element={<AnimatedPage><SupportPage /></AnimatedPage>} />
-          <Route path="/settings" element={<AnimatedPage><SettingsPage /></AnimatedPage>} />
-          <Route path="/fen-history" element={<AnimatedPage><FENHistoryPage /></AnimatedPage>} />
-          <Route path="/advanced-fen" element={<AnimatedPage><AdvancedFENInputPage /></AnimatedPage>} />
-          <Route path="*" element={<AnimatedPage><NotFoundPage /></AnimatedPage>} />
+          <Route
+            path="/"
+            element={
+              <AnimatedPage>
+                <HomePage />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <AnimatedPage>
+                <AboutPage />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/download"
+            element={
+              <AnimatedPage>
+                <DownloadPage />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/support"
+            element={
+              <AnimatedPage>
+                <SupportPage />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <AnimatedPage>
+                <SettingsPage />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/fen-history"
+            element={
+              <AnimatedPage>
+                <FENHistoryPage />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/advanced-fen"
+            element={
+              <AnimatedPage>
+                <AdvancedFENInputPage />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <AnimatedPage>
+                <NotFoundPage />
+              </AnimatedPage>
+            }
+          />
         </Routes>
       </AnimatePresence>
     </Suspense>
