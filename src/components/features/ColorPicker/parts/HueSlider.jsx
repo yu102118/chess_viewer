@@ -116,37 +116,6 @@ const HueSlider = memo(
             HSL({Math.round(currentHue)}, 100%, 50%)
           </span>
         </div>
-
-        <style>{`
-          .hue-slider {
-            background: linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%,
-              hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%,
-              hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%);
-          }
-          .hue-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 32px; height: 32px; border-radius: 50%;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-            border: 3px solid rgb(var(--color-bg)); cursor: grab;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 0 3px rgb(var(--color-accent) / 0.4),
-              inset 0 2px 4px rgba(255, 255, 255, 0.3);
-            transition: all 0.2s ease;
-          }
-          .hue-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.25);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 0 4px rgb(var(--color-accent) / 0.6),
-              inset 0 2px 4px rgba(255, 255, 255, 0.5);
-          }
-          .hue-slider::-webkit-slider-thumb:active {
-            cursor: grabbing; transform: scale(1.2);
-          }
-          @keyframes ping {
-            75%, 100% { transform: scale(2); opacity: 0; }
-          }
-          .animate-ping {
-            animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-          }
-        `}</style>
       </div>
     );
   },
