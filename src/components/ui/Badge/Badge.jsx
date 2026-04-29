@@ -9,8 +9,7 @@ function Badge({ children, variant = 'default', size = 'md' }) {
     success: 'bg-success/10 text-success border border-success/30',
     warning: 'bg-warning/10 text-warning border border-warning/30',
     danger: 'bg-error/10 text-error border border-error/30',
-    purple:
-      'bg-secondary/10 text-secondary border border-secondary/30'
+    purple: 'bg-secondary/10 text-secondary border border-secondary/30'
   };
   const sizes = {
     sm: 'px-2 py-0.5 text-xs',

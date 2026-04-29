@@ -35,7 +35,7 @@ function Navbar({ theme, toggleTheme }) {
                 <img
                   src={Logo}
                   alt="Logo"
-                  className="w-8 h-8 sm:w-10 sm:h-10 object-contain animate-iconBounceIn transition-transform duration-300 hover:rotate-6"
+                  className="w-8 h-8 sm:w-10 sm:h-10 object-contain animate-iconBounceIn"
                 />
                 <span className="font-display font-bold text-text-primary leading-tight transition-all duration-300 hover:text-accent">
                   FENForsty Pro
@@ -50,9 +50,9 @@ function Navbar({ theme, toggleTheme }) {
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? (
-                  <Sun className="w-5 h-5 transition-transform duration-500" />
+                  <Sun className="w-5 h-5" />
                 ) : (
-                  <Moon className="w-5 h-5 transition-transform duration-500" />
+                  <Moon className="w-5 h-5" />
                 )}
               </button>
 
