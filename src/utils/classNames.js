@@ -1,10 +1,8 @@
 export const classNames = {
   button: {
     base: 'rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent/50',
-    primary:
-      'bg-accent hover:bg-accent/90 text-bg shadow-sm hover:shadow-glow',
-    secondary:
-      'bg-secondary hover:bg-secondary/90 text-bg',
+    primary: 'bg-accent hover:bg-accent/90 text-bg shadow-sm hover:shadow-glow',
+    secondary: 'bg-secondary hover:bg-secondary/90 text-bg',
     success: 'bg-success hover:bg-success/90 text-bg',
     danger: 'bg-error hover:bg-error/90 text-bg',
     outline:
