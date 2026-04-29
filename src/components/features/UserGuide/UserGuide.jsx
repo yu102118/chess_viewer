@@ -26,23 +26,23 @@ import {
 function UserGuide() {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <div className="bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-2xl border border-gray-700/50 shadow-2xl overflow-hidden">
+    <div className="bg-surface rounded-2xl border border-border shadow-2xl overflow-hidden">
       {}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-6 py-5 flex items-center justify-between text-left group hover:bg-gray-700/30 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset"
+        className="w-full px-6 py-5 flex items-center justify-between text-left group hover:bg-surface-hover/30 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset"
         aria-expanded={isExpanded}
         aria-controls="user-guide-content"
       >
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-            <Info className="w-6 h-6 text-white" aria-hidden="true" />
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent/60 to-secondary/60 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+            <Info className="w-6 h-6 text-bg" aria-hidden="true" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors flex items-center gap-2">
+            <h3 className="text-xl font-bold text-text-primary group-hover:text-accent transition-colors flex items-center gap-2">
               User Guide
             </h3>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-text-muted">
               {isExpanded ? 'Hide guide' : 'Learn how to use this tool'}
             </p>
           </div>
